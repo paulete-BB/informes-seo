@@ -1,0 +1,38 @@
+name: Actualizar informes de posicionamiento
+
+on:
+  schedule:
+    # Día 3 de cada mes a las 12:00 UTC (los datos de GSC tienen ~2 días de retraso)
+    - cron: "0 12 3 * *"
+  workflow_dispatch: {}   # permite ejecutarlo manualmente desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  generar-informes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install requests google-auth
+
+      - name: Generar datos de informes
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python scripts/fetch_data.py
+
+      - name: Publicar datos actualizados
+        run: |
+          git config user.name "informes-bot"
+          git config user.email "actions@github.com"
+          git add docs/data/
+          git diff --cached --quiet || git commit -m "Informes $(date +'%Y-%m')"
+          git push
