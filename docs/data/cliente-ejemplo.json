@@ -1,0 +1,204 @@
+{
+  "cliente": "Cliente Ejemplo SpA",
+  "url": "https://www.clienteejemplo.cl",
+  "generado": "2026-06-03T12:00:00+00:00",
+  "periodo": {
+    "actual": {
+      "inicio": "2026-05-01",
+      "fin": "2026-05-31"
+    },
+    "anterior": {
+      "inicio": "2026-04-01",
+      "fin": "2026-04-30"
+    }
+  },
+  "gsc": {
+    "actual": {
+      "clics": 1240,
+      "impresiones": 48200,
+      "ctr": 2.57,
+      "posicion": 14.2
+    },
+    "anterior": {
+      "clics": 980,
+      "impresiones": 41500,
+      "ctr": 2.36,
+      "posicion": 16.8
+    },
+    "distribucion": {
+      "actual": {
+        "top3": 18,
+        "top10": 64,
+        "top100": 412
+      },
+      "anterior": {
+        "top3": 12,
+        "top10": 51,
+        "top100": 387
+      }
+    },
+    "pct_clics_marca": 38.4,
+    "keywords_objetivo": [
+      {
+        "keyword": "arriendo oficinas santiago",
+        "posicion": 7.3,
+        "posicion_anterior": 11.2,
+        "clics": 86,
+        "impresiones": 3100
+      },
+      {
+        "keyword": "oficinas providencia",
+        "posicion": 2.8,
+        "posicion_anterior": 4.1,
+        "clics": 142,
+        "impresiones": 2400
+      },
+      {
+        "keyword": "coworking las condes",
+        "posicion": 18.5,
+        "posicion_anterior": 22.0,
+        "clics": 4,
+        "impresiones": 890
+      }
+    ],
+    "top_queries": [
+      {
+        "query": "cliente ejemplo",
+        "clics": 310,
+        "impresiones": 1800,
+        "posicion": 1.1
+      },
+      {
+        "query": "oficinas providencia",
+        "clics": 142,
+        "impresiones": 2400,
+        "posicion": 2.8
+      },
+      {
+        "query": "arriendo oficinas santiago",
+        "clics": 86,
+        "impresiones": 3100,
+        "posicion": 7.3
+      },
+      {
+        "query": "oficinas amobladas santiago centro",
+        "clics": 54,
+        "impresiones": 1950,
+        "posicion": 8.9
+      },
+      {
+        "query": "arriendo oficina pequeña",
+        "clics": 41,
+        "impresiones": 1620,
+        "posicion": 9.4
+      }
+    ],
+    "top_paginas": [
+      {
+        "pagina": "https://www.clienteejemplo.cl/",
+        "clics": 520,
+        "impresiones": 12400,
+        "posicion": 6.2
+      },
+      {
+        "pagina": "https://www.clienteejemplo.cl/oficinas-providencia",
+        "clics": 290,
+        "impresiones": 8800,
+        "posicion": 5.1
+      }
+    ]
+  },
+  "ga4": {
+    "actual": {
+      "sesiones": 1580,
+      "usuarios": 1320,
+      "usuarios_nuevos": 1105,
+      "engagement_rate": 61.4,
+      "duracion_media_seg": 142,
+      "conversiones": 47,
+      "tasa_conversion": 2.97
+    },
+    "anterior": {
+      "sesiones": 1290,
+      "usuarios": 1080,
+      "usuarios_nuevos": 920,
+      "engagement_rate": 58.2,
+      "duracion_media_seg": 131,
+      "conversiones": 33,
+      "tasa_conversion": 2.56
+    },
+    "landing_pages": [
+      {
+        "pagina": "/",
+        "sesiones": 610,
+        "engagement_rate": 58.1
+      },
+      {
+        "pagina": "/oficinas-providencia",
+        "sesiones": 340,
+        "engagement_rate": 67.3
+      },
+      {
+        "pagina": "/contacto",
+        "sesiones": 180,
+        "engagement_rate": 71.0
+      }
+    ],
+    "dispositivos": {
+      "mobile": 980,
+      "desktop": 540,
+      "tablet": 60
+    }
+  },
+  "psi": {
+    "performance": 87,
+    "lcp_lab": "2.1 s",
+    "cls_lab": "0.04",
+    "lcp_campo": {
+      "valor": 2300,
+      "categoria": "GOOD"
+    },
+    "inp_campo": {
+      "valor": 180,
+      "categoria": "GOOD"
+    },
+    "cls_campo": {
+      "valor": 8,
+      "categoria": "GOOD"
+    }
+  },
+  "ia": {
+    "actual": {
+      "total_sesiones": 64,
+      "total_usuarios": 58,
+      "fuentes": {
+        "ChatGPT": {
+          "sesiones": 41,
+          "usuarios": 37
+        },
+        "Perplexity": {
+          "sesiones": 14,
+          "usuarios": 13
+        },
+        "Gemini": {
+          "sesiones": 9,
+          "usuarios": 8
+        }
+      }
+    },
+    "anterior": {
+      "total_sesiones": 38,
+      "total_usuarios": 35,
+      "fuentes": {
+        "ChatGPT": {
+          "sesiones": 26,
+          "usuarios": 24
+        },
+        "Perplexity": {
+          "sesiones": 12,
+          "usuarios": 11
+        }
+      }
+    }
+  }
+}

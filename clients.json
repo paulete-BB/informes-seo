@@ -1,0 +1,17 @@
+{
+  "clientes": [
+    {
+      "id": "cliente-ejemplo",
+      "nombre": "Cliente Ejemplo SpA",
+      "ga4_property_id": "123456789",
+      "gsc_site_url": "sc-domain:clienteejemplo.cl",
+      "url_principal": "https://www.clienteejemplo.cl",
+      "terminos_marca": ["cliente ejemplo", "clienteejemplo"],
+      "keywords_objetivo": [
+        "arriendo oficinas santiago",
+        "oficinas providencia",
+        "coworking las condes"
+      ]
+    }
+  ]
+}

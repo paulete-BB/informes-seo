@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe de Posicionamiento Web</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0B0B0E; --tinta-suave:#5B5B66; --papel:#F5F5F4; --blanco:#FFFFFF;
+    --linea:#E4E4E2; --violeta:#7C5CFF; --violeta-suave:#B9A7FF;
+    --ambar:#FCDFAF; --ambar-texto:#3C2E12;
+    --senal:#0E9B68; --senal-fondo:#E4F4EC;
+    --alerta:#B97E1F; --alerta-fondo:#F8EEDA; --rojo:#C2503F; --rojo-fondo:#F9E7E3;
+    --display:"Instrument Sans",sans-serif; --cuerpo:"Instrument Sans",sans-serif;
+    --mono:"IBM Plex Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{font-family:var(--cuerpo);background:var(--papel);color:var(--tinta);line-height:1.5}
+  a{color:inherit}
+
+  .barra{background:var(--tinta);color:var(--papel);padding:14px 24px;display:flex;
+    align-items:center;gap:16px;flex-wrap:wrap}
+  .marca-logo{height:20px;width:auto;display:block}
+  .barra .submarca{font-size:12px;opacity:.55;border-left:1px solid rgba(245,245,244,.25);padding-left:14px}
+  .barra .sello{font-family:var(--mono);font-size:11px;opacity:.65;margin-left:auto}
+  select{font-family:var(--cuerpo);font-size:14px;padding:7px 12px;border-radius:8px;
+    border:1px solid rgba(246,247,244,.3);background:rgba(246,247,244,.08);color:var(--papel)}
+  select:focus-visible{outline:2px solid var(--violeta)}
+  .btn-print{font:600 12px var(--cuerpo);padding:8px 16px;border-radius:99px;cursor:pointer;
+    border:none;background:var(--ambar);color:var(--ambar-texto)}
+  .btn-print:hover{filter:brightness(1.04)}
+
+  main{max-width:1060px;margin:0 auto;padding:36px 24px 72px}
+  .encabezado h1{font-family:var(--display);font-weight:700;letter-spacing:-.03em;font-size:clamp(26px,4vw,38px);
+    line-height:1.1;letter-spacing:-.01em}
+  .encabezado .periodo{font-family:var(--mono);font-size:13px;color:var(--tinta-suave);margin-top:8px}
+  .encabezado .url{font-size:14px;color:var(--tinta-suave);margin-top:2px}
+
+  h2{font-family:var(--display);font-weight:700;font-size:18px;margin:44px 0 4px}
+  .nota-seccion{font-size:13px;color:var(--tinta-suave);margin-bottom:14px}
+
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+  .kpi{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:16px 18px}
+  .kpi .etiqueta{font-size:12px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--tinta-suave)}
+  .kpi .valor{font-family:var(--mono);font-weight:600;font-size:30px;margin-top:6px}
+  .kpi .delta{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:500;
+    margin-top:8px;padding:3px 9px;border-radius:99px}
+  .delta.sube{background:var(--senal-fondo);color:var(--senal)}
+  .delta.baja{background:var(--rojo-fondo);color:var(--rojo)}
+  .delta.igual{background:#ECEFEA;color:var(--tinta-suave)}
+
+  .dist{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:20px}
+  .dist-barra{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:14px}
+  .dist-barra span{display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;min-width:36px}
+  .seg-top3{background:var(--tinta)}
+  .seg-top10{background:var(--violeta)}
+  .seg-resto{background:var(--violeta-suave)}
+  .leyenda{display:flex;gap:22px;margin-top:12px;flex-wrap:wrap;font-size:13px;color:var(--tinta-suave)}
+  .leyenda i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+
+  table{width:100%;border-collapse:collapse;background:var(--blanco);border:1px solid var(--linea);
+    border-radius:12px;overflow:hidden;font-size:14px}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-suave);
+    text-align:left;padding:11px 14px;border-bottom:1px solid var(--linea);background:#FBFCFA}
+  td{padding:11px 14px;border-bottom:1px solid var(--linea)}
+  tr:last-child td{border-bottom:none}
+  td.num{font-family:var(--mono);font-size:13px;text-align:right;white-space:nowrap}
+  th.num{text-align:right}
+  .tabla-scroll{overflow-x:auto;border-radius:12px}
+  .pos-chip{font-family:var(--mono);font-weight:600;padding:2px 8px;border-radius:6px}
+  .pos-buena{background:var(--senal-fondo);color:var(--senal)}
+  .pos-media{background:var(--alerta-fondo);color:var(--alerta)}
+  .pos-mala{background:var(--rojo-fondo);color:var(--rojo)}
+  .pos-na{color:var(--tinta-suave)}
+
+  .dos-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:760px){.dos-col{grid-template-columns:1fr}}
+
+  .psi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .estado{font-size:11px;font-family:var(--mono);margin-top:4px}
+  .estado.FAST,.estado.GOOD{color:var(--senal)}
+  .estado.AVERAGE{color:var(--alerta)}
+  .estado.SLOW,.estado.POOR{color:var(--rojo)}
+
+  .vacio,.cargando{padding:60px 24px;text-align:center;color:var(--tinta-suave);font-size:15px}
+  footer{max-width:1060px;margin:0 auto;padding:0 24px 40px;font-size:12px;
+    color:var(--tinta-suave);font-family:var(--mono)}
+
+
+
+  .fuentes-ia{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .fuente-ia{background:var(--blanco);border:1px solid var(--linea);border-radius:99px;
+    padding:8px 16px;font-size:13px;color:var(--tinta-suave)}
+  .fuente-ia b{color:var(--tinta);font-weight:600;margin-right:4px}
+  .ia-vacio{background:var(--blanco);border:1px dashed var(--violeta-suave);border-radius:12px;
+    padding:20px 22px;font-size:14px;color:var(--tinta-suave)}
+  .cta-seo{background:var(--tinta);color:var(--papel);border-radius:16px;
+    padding:34px 32px;margin-top:52px;position:relative;overflow:hidden}
+  .cta-seo::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(620px 260px at 88% -20%,rgba(124,92,255,.38),transparent 70%);
+    pointer-events:none}
+  .cta-seo .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--violeta-suave)}
+  .cta-seo h2{margin:10px 0 10px;font-size:24px;color:var(--papel);letter-spacing:-.02em}
+  .cta-seo p{font-size:14px;max-width:640px;color:rgba(245,245,244,.82)}
+  .cta-seo .oportunidad{font-weight:600;color:#fff}
+  .cta-beneficios{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:8px 24px;margin:18px 0 24px;padding:0;list-style:none}
+  .cta-beneficios li{font-size:13.5px;color:rgba(245,245,244,.88);padding-left:20px;position:relative}
+  .cta-beneficios li::before{content:"✓";position:absolute;left:0;color:var(--violeta-suave);font-weight:700}
+  .cta-acciones{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .btn-cta{display:inline-block;font:600 14px var(--cuerpo);padding:11px 22px;
+    border-radius:99px;background:var(--ambar);color:var(--ambar-texto);text-decoration:none}
+  .btn-cta:hover{filter:brightness(1.04)}
+  .link-cta{font-size:13.5px;color:var(--violeta-suave);text-decoration:underline;
+    text-underline-offset:3px}
+
+  .btn-admin{font:600 12px var(--cuerpo);padding:8px 14px;border-radius:99px;cursor:pointer;
+    border:1px solid rgba(245,245,244,.35);background:transparent;color:var(--papel)}
+  .btn-admin:hover{border-color:var(--violeta-suave);color:var(--violeta-suave)}
+  dialog{border:none;border-radius:16px;padding:0;max-width:560px;width:92vw;
+    margin:auto;box-shadow:0 24px 80px rgba(11,11,14,.35)}
+  dialog::backdrop{background:rgba(11,11,14,.55)}
+  .modal-cab{background:var(--tinta);color:var(--papel);padding:18px 24px;
+    display:flex;justify-content:space-between;align-items:center}
+  .modal-cab h3{font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .modal-cerrar{background:none;border:none;color:var(--papel);font-size:20px;
+    cursor:pointer;line-height:1;padding:4px 8px}
+  .modal-cuerpo{padding:22px 24px;max-height:70vh;overflow-y:auto}
+  .campo{margin-bottom:14px}
+  .campo label{display:block;font-size:12px;font-weight:600;margin-bottom:5px}
+  .campo .ayuda{font-weight:400;color:var(--tinta-suave)}
+  .campo input,.campo textarea{width:100%;font:14px var(--cuerpo);padding:9px 12px;
+    border:1px solid var(--linea);border-radius:8px;background:var(--papel)}
+  .campo input:focus-visible,.campo textarea:focus-visible{outline:2px solid var(--violeta)}
+  .campo textarea{resize:vertical;min-height:64px}
+  details.cfg{border:1px solid var(--linea);border-radius:10px;padding:12px 14px;margin:18px 0}
+  details.cfg summary{font-size:13px;font-weight:600;cursor:pointer}
+  details.cfg .nota{font-size:12px;color:var(--tinta-suave);margin:8px 0 12px}
+  .recordatorio{background:var(--alerta-fondo);color:var(--alerta);border-radius:10px;
+    padding:12px 14px;font-size:12.5px;margin:16px 0}
+  .modal-pie{display:flex;gap:12px;align-items:center;padding:0 24px 22px}
+  .btn-guardar{font:600 14px var(--cuerpo);padding:11px 22px;border-radius:99px;
+    border:none;cursor:pointer;background:var(--ambar);color:var(--ambar-texto)}
+  .btn-guardar:disabled{opacity:.55;cursor:wait}
+  .estado-modal{font-size:13px}
+  .estado-modal.ok{color:var(--senal)}
+  .estado-modal.error{color:var(--rojo)}
+  @media print{.cta-seo::before{display:none}}
+  @media print{
+    .barra select,.btn-print,.btn-admin{display:none}
+    .barra{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff}
+    .kpi,.dist,table{border-color:#ccc;break-inside:avoid}
+    main{padding:10px 0}
+  }
+  @media(prefers-reduced-motion:no-preference){
+    .kpi,.dist{transition:transform .15s ease}
+  }
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <img class="marca-logo" src="assets/logo-bigbuda.png" alt="bigbuda"><span class="submarca">Informe de Posicionamiento</span>
+  <label for="selector" class="sr-only" style="position:absolute;left:-9999px">Cliente</label>
+  <select id="selector" aria-label="Seleccionar cliente"></select>
+  <button class="btn-admin" id="btnAgregar">＋ Agregar cliente</button>
+  <button class="btn-print" onclick="window.print()">Exportar PDF</button>
+  <span class="sello" id="sello"></span>
+</div>
+
+<main id="contenido"><div class="cargando">Cargando informe…</div></main>
+<footer id="pie"></footer>
+
+
+<dialog id="modalCliente">
+  <div class="modal-cab">
+    <h3>Agregar cliente al informe</h3>
+    <button class="modal-cerrar" id="btnCerrarModal" aria-label="Cerrar">×</button>
+  </div>
+  <div class="modal-cuerpo">
+    <div class="campo"><label for="fNombre">Nombre del cliente</label>
+      <input id="fNombre" placeholder="Panadería Luna"></div>
+    <div class="campo"><label for="fGa4">ID de propiedad GA4
+      <span class="ayuda">— GA4 → Admin → Detalles de la propiedad (9 dígitos)</span></label>
+      <input id="fGa4" placeholder="123456789" inputmode="numeric"></div>
+    <div class="campo"><label for="fGsc">Propiedad de Search Console
+      <span class="ayuda">— sc-domain:dominio.cl o https://www.dominio.cl/</span></label>
+      <input id="fGsc" placeholder="sc-domain:panaderialuna.cl"></div>
+    <div class="campo"><label for="fUrl">URL principal del sitio</label>
+      <input id="fUrl" placeholder="https://www.panaderialuna.cl"></div>
+    <div class="campo"><label for="fMarca">Términos de marca
+      <span class="ayuda">— separados por coma</span></label>
+      <input id="fMarca" placeholder="panaderia luna, panaderialuna"></div>
+    <div class="campo"><label for="fKw">Keywords objetivo
+      <span class="ayuda">— una por línea (5 a 10)</span></label>
+      <textarea id="fKw" placeholder="panaderia providencia&#10;pan amasado santiago"></textarea></div>
+
+    <details class="cfg" id="cfgGithub">
+      <summary>Conexión con GitHub (solo la primera vez)</summary>
+      <p class="nota">Crea un token en GitHub → Settings → Developer settings →
+        Fine-grained tokens, limitado a este repositorio, con permisos
+        <b>Contents: Read &amp; write</b> y <b>Actions: Read &amp; write</b>.
+        Se guarda únicamente en este navegador.</p>
+      <div class="campo"><label for="fOwner">Usuario u organización</label><input id="fOwner"></div>
+      <div class="campo"><label for="fRepo">Repositorio</label><input id="fRepo"></div>
+      <div class="campo"><label for="fBranch">Rama</label><input id="fBranch" value="main"></div>
+      <div class="campo"><label for="fToken">Token de GitHub</label>
+        <input id="fToken" type="password" autocomplete="off" placeholder="github_pat_…"></div>
+    </details>
+
+    <div class="recordatorio">Recuerda: antes de guardar, agrega el email de tu
+      service account como <b>Lector</b> en el GA4 del cliente y como usuario en su
+      Search Console. Sin ese acceso, el informe saldrá vacío.</div>
+  </div>
+  <div class="modal-pie">
+    <button class="btn-guardar" id="btnGuardar">Guardar y generar informe</button>
+    <span class="estado-modal" id="estadoModal"></span>
+  </div>
+</dialog>
+
+<script>
+const MESES=["enero","febrero","marzo","abril","mayo","junio","julio",
+  "agosto","septiembre","octubre","noviembre","diciembre"];
+const $=s=>document.querySelector(s);
+
+const fmt=n=>n==null?"—":Number(n).toLocaleString("es-CL");
+const fmtPct=n=>n==null?"—":Number(n).toLocaleString("es-CL",{maximumFractionDigits:2})+"%";
+const fmtDur=s=>{if(s==null)return"—";const m=Math.floor(s/60);return`${m}m ${Math.round(s%60)}s`};
+
+function nombreMes(iso){const d=new Date(iso+"T12:00:00");return`${MESES[d.getMonth()]} ${d.getFullYear()}`}
+
+function delta(actual,anterior,{inverso=false,sufijo="%",absoluto=false}={}){
+  if(anterior==null||actual==null||(!absoluto&&anterior===0))
+    return`<span class="delta igual">sin base</span>`;
+  // absoluto=true → diferencia en puntos (para métricas que ya son %)
+  const v=absoluto?(actual-anterior):(actual-anterior)/Math.abs(anterior)*100;
+  const mejora=inverso? v<0 : v>0;
+  const clase=Math.abs(v)<0.05?"igual":(mejora?"sube":"baja");
+  const flecha=Math.abs(v)<0.05?"=":(v>0?"▲":"▼");
+  return`<span class="delta ${clase}">${flecha} ${Math.abs(v).toLocaleString("es-CL",{maximumFractionDigits:1})}${sufijo}</span>`;
+}
+
+function chipPos(p){
+  if(p==null)return`<span class="pos-na">sin datos</span>`;
+  const c=p<=3?"pos-buena":p<=10?"pos-media":"pos-mala";
+  return`<span class="pos-chip ${c}">${p.toLocaleString("es-CL")}</span>`;
+}
+
+function kpi(etiqueta,valor,deltaHtml){
+  return`<div class="kpi"><div class="etiqueta">${etiqueta}</div>
+    <div class="valor">${valor}</div>${deltaHtml||""}</div>`;
+}
+
+function render(d){
+  const g=d.gsc,a=d.ga4,pa=d.periodo.actual;
+  const ga=a.actual,gp=a.anterior,sa=g.actual,sp=g.anterior;
+  const dist=g.distribucion.actual,distAnt=g.distribucion.anterior;
+  const total=Math.max(dist.top100,1);
+  const w3=dist.top3/total*100, w10=(dist.top10-dist.top3)/total*100,
+        wr=(dist.top100-dist.top10)/total*100;
+
+  $("#sello").textContent=`generado ${new Date(d.generado).toLocaleDateString("es-CL")}`;
+  $("#pie").textContent="Fuentes: Google Search Console · Google Analytics 4 · PageSpeed Insights (Chrome UX Report)";
+
+  let html=`
+  <div class="encabezado">
+    <h1>${d.cliente}</h1>
+    <div class="periodo">Período: ${nombreMes(pa.inicio)} · comparado contra el mes anterior</div>
+    ${d.url?`<div class="url">${d.url}</div>`:""}
+  </div>
+
+  <h2>Visibilidad en Google</h2>
+  <p class="nota-seccion">Rendimiento del sitio en los resultados de búsqueda (Search Console).</p>
+  <div class="kpis">
+    ${kpi("Clics orgánicos",fmt(sa.clics),delta(sa.clics,sp.clics))}
+    ${kpi("Impresiones",fmt(sa.impresiones),delta(sa.impresiones,sp.impresiones))}
+    ${kpi("CTR promedio",fmtPct(sa.ctr),delta(sa.ctr,sp.ctr,{sufijo:" pts",absoluto:true}))}
+    ${kpi("Posición promedio",sa.posicion?sa.posicion.toLocaleString("es-CL"):"—",
+        delta(sa.posicion,sp.posicion,{inverso:true}))}
+  </div>
+
+  <h2>Distribución de rankings</h2>
+  <p class="nota-seccion">Cantidad de consultas de búsqueda según la posición en que aparece el sitio.</p>
+  <div class="dist">
+    <div class="dist-barra" role="img"
+      aria-label="Top 3: ${dist.top3} consultas, Top 10: ${dist.top10}, Top 100: ${dist.top100}">
+      ${w3>0?`<span class="seg-top3" style="width:${w3}%">${dist.top3}</span>`:""}
+      ${w10>0?`<span class="seg-top10" style="width:${w10}%">${dist.top10-dist.top3}</span>`:""}
+      ${wr>0?`<span class="seg-resto" style="width:${wr}%">${dist.top100-dist.top10}</span>`:""}
+    </div>
+    <div class="leyenda">
+      <span><i class="seg-top3"></i>Top 3: <b>${dist.top3}</b> ${delta(dist.top3,distAnt.top3)}</span>
+      <span><i class="seg-top10"></i>Top 10: <b>${dist.top10}</b> ${delta(dist.top10,distAnt.top10)}</span>
+      <span><i class="seg-resto"></i>Top 100: <b>${dist.top100}</b> ${delta(dist.top100,distAnt.top100)}</span>
+      <span>Clics de marca: <b>${fmtPct(g.pct_clics_marca)}</b></span>
+    </div>
+  </div>
+
+  <h2>Keywords objetivo</h2>
+  <p class="nota-seccion">Posición del sitio para las palabras clave acordadas. Verde: top 3 · Ámbar: top 10 · Rojo: fuera del top 10.</p>
+  <div class="tabla-scroll"><table>
+    <thead><tr><th>Keyword</th><th class="num">Posición</th><th class="num">Mes anterior</th>
+      <th class="num">Clics</th><th class="num">Impresiones</th></tr></thead>
+    <tbody>${g.keywords_objetivo.map(k=>`
+      <tr><td>${k.keyword}</td>
+        <td class="num">${chipPos(k.posicion)}</td>
+        <td class="num">${k.posicion_anterior!=null?k.posicion_anterior.toLocaleString("es-CL"):"—"}</td>
+        <td class="num">${fmt(k.clics)}</td><td class="num">${fmt(k.impresiones)}</td></tr>`).join("")}
+    </tbody></table></div>
+
+  <h2>Tráfico y conversión</h2>
+  <p class="nota-seccion">Comportamiento de los visitantes que llegan desde búsqueda orgánica (GA4).</p>
+  <div class="kpis">
+    ${kpi("Sesiones orgánicas",fmt(ga.sesiones),delta(ga.sesiones,gp.sesiones))}
+    ${kpi("Usuarios nuevos",fmt(ga.usuarios_nuevos),delta(ga.usuarios_nuevos,gp.usuarios_nuevos))}
+    ${kpi("Conversiones",fmt(ga.conversiones),delta(ga.conversiones,gp.conversiones))}
+    ${kpi("Tasa de conversión",fmtPct(ga.tasa_conversion),delta(ga.tasa_conversion,gp.tasa_conversion,{sufijo:" pts",absoluto:true}))}
+    ${kpi("Engagement rate",fmtPct(ga.engagement_rate),delta(ga.engagement_rate,gp.engagement_rate,{sufijo:" pts",absoluto:true}))}
+    ${kpi("Duración media",fmtDur(ga.duracion_media_seg),delta(ga.duracion_media_seg,gp.duracion_media_seg))}
+  </div>`;
+
+  const disp=a.dispositivos||{};
+  const totDisp=Object.values(disp).reduce((x,y)=>x+y,0);
+  if(totDisp){
+    html+=`<p class="nota-seccion" style="margin-top:14px">Dispositivos: ${
+      Object.entries(disp).sort((x,y)=>y[1]-x[1])
+        .map(([k,v])=>`${{mobile:"móvil",desktop:"escritorio",tablet:"tablet"}[k]||k} ${Math.round(v/totDisp*100)}%`)
+        .join(" · ")}</p>`;
+  }
+
+  // --- Visibilidad en buscadores IA ---
+  if(d.ia){
+    const ia=d.ia.actual, iap=d.ia.anterior;
+    html+=`
+    <h2>Visibilidad en buscadores IA</h2>
+    <p class="nota-seccion">Visitas que llegan a tu sitio desde asistentes de inteligencia artificial — la señal de que tu marca aparece en sus respuestas (GA4).</p>`;
+    if(ia.total_sesiones>0){
+      html+=`<div class="kpis">
+        ${kpi("Sesiones desde IA",fmt(ia.total_sesiones),delta(ia.total_sesiones,iap.total_sesiones))}
+        ${kpi("Usuarios desde IA",fmt(ia.total_usuarios),delta(ia.total_usuarios,iap.total_usuarios))}
+        ${kpi("% del tráfico orgánico",
+          ga.sesiones?fmtPct(Math.round(ia.total_sesiones/ga.sesiones*1000)/10):"—","")}
+      </div>
+      <div class="fuentes-ia">${Object.entries(ia.fuentes)
+        .sort((a,b)=>b[1].sesiones-a[1].sesiones)
+        .map(([n,v])=>`<span class="fuente-ia"><b>${n}</b> ${fmt(v.sesiones)} sesiones · ${fmt(v.usuarios)} usuarios</span>`)
+        .join("")}</div>`;
+    }else{
+      html+=`<div class="ia-vacio">Tu sitio aún no registra visitas desde ChatGPT, Gemini, Perplexity, Copilot ni Claude.
+        Cada vez más clientes preguntan directamente a la IA antes de comprar — posicionarte ahí es el objetivo del GEO.</div>`;
+    }
+  }
+
+  html+=`
+  <div class="dos-col">
+    <div>
+      <h2>Consultas con más clics</h2>
+      <div class="tabla-scroll"><table>
+        <thead><tr><th>Consulta</th><th class="num">Clics</th><th class="num">Pos.</th></tr></thead>
+        <tbody>${g.top_queries.slice(0,10).map(q=>`
+          <tr><td>${q.query}</td><td class="num">${fmt(q.clics)}</td>
+          <td class="num">${q.posicion.toLocaleString("es-CL")}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </div>
+    <div>
+      <h2>Páginas de entrada (orgánico)</h2>
+      <div class="tabla-scroll"><table>
+        <thead><tr><th>Página</th><th class="num">Sesiones</th><th class="num">Engag.</th></tr></thead>
+        <tbody>${a.landing_pages.slice(0,10).map(p=>`
+          <tr><td style="word-break:break-all">${p.pagina}</td>
+          <td class="num">${fmt(p.sesiones)}</td>
+          <td class="num">${fmtPct(p.engagement_rate)}</td></tr>`).join("")}</tbody>
+      </table></div>
+    </div>
+  </div>`;
+
+  if(d.psi){
+    const c=d.psi;
+    const campo=(m,div,uni)=>m?`<div class="valor">${(m.valor/div).toLocaleString("es-CL",{maximumFractionDigits:2})}${uni}</div>
+      <div class="estado ${m.categoria}">${{FAST:"Bueno",GOOD:"Bueno",AVERAGE:"Mejorable",SLOW:"Deficiente",POOR:"Deficiente"}[m.categoria]||m.categoria}</div>`
+      :`<div class="valor">${"—"}</div><div class="estado">sin datos de campo</div>`;
+    html+=`
+    <h2>Salud técnica (móvil)</h2>
+    <p class="nota-seccion">Core Web Vitals medidos por usuarios reales de Chrome y puntaje de laboratorio de PageSpeed Insights.</p>
+    <div class="psi-grid">
+      <div class="kpi"><div class="etiqueta">Rendimiento</div>
+        <div class="valor">${c.performance}<span style="font-size:14px;color:var(--tinta-suave)">/100</span></div></div>
+      <div class="kpi"><div class="etiqueta">LCP</div>${campo(c.lcp_campo,1000," s")}</div>
+      <div class="kpi"><div class="etiqueta">INP</div>${campo(c.inp_campo,1," ms")}</div>
+      <div class="kpi"><div class="etiqueta">CLS</div>${campo(c.cls_campo,100,"")}</div>
+    </div>`;
+  }
+
+  // --- Recomendación: servicio SEO + AEO + GEO ---
+  const fueraTop10=d.gsc.keywords_objetivo.filter(k=>k.posicion==null||k.posicion>10).length;
+  const oportunidad=fueraTop10>0
+    ? `Hoy <span class="oportunidad">${fueraTop10} de tus ${d.gsc.keywords_objetivo.length} keywords objetivo</span> ${fueraTop10===1?"sigue":"siguen"} fuera del top 10 de Google: ${fueraTop10===1?"es":"cada una es"} tráfico y ventas que están captando tus competidores.`
+    : `Tu sitio ya tiene una base sólida en Google: el siguiente paso es defender esas posiciones y aparecer también donde tus clientes preguntan hoy — ChatGPT, Gemini y Perplexity.`;
+  const notaIA=(d.ia&&d.ia.actual.total_sesiones===0)
+    ? ` Y tu sitio aún no recibe visitas desde ChatGPT, Gemini ni Perplexity — el canal donde tus clientes ya están preguntando.`
+    : "";
+  html+=`
+  <section class="cta-seo">
+    <div class="eyebrow">Recomendación bigbuda · SEO + AEO + GEO</div>
+    <h2>Convierte estos datos en más posiciones y más ventas.</h2>
+    <p>${oportunidad}${notaIA} Con nuestro servicio de posicionamiento trabajamos cada mes para que tu marca suba en Google y sea recomendada por los buscadores de inteligencia artificial.</p>
+    <ul class="cta-beneficios">
+      <li>Estrategia y optimización técnica continua de tu sitio</li>
+      <li>Posicionamiento en Google y en IA (ChatGPT, Gemini, Perplexity)</li>
+      <li>Contenido optimizado y gestión de Google Business</li>
+      <li>Análisis de competidores y este informe mensual incluido</li>
+    </ul>
+    <div class="cta-acciones">
+      <a class="btn-cta" href="https://bigbuda.cl/agendar" target="_blank" rel="noopener">Reserva tu reunión</a>
+      <a class="link-cta" href="https://bigbuda.cl/soluciones/posicionamiento-web" target="_blank" rel="noopener">Conocer el servicio SEO + AEO + GEO →</a>
+    </div>
+  </section>`;
+
+  $("#contenido").innerHTML=html;
+}
+
+// ===== Modal de alta de clientes (escribe clients.json vía API de GitHub) =====
+const CFG_KEY="bb_informes_cfg";
+const modal=$("#modalCliente"), estadoM=$("#estadoModal");
+
+function cfgGuardada(){try{return JSON.parse(localStorage.getItem(CFG_KEY))||{}}catch{return{}}}
+function detectarRepo(){
+  // usuario.github.io/repo/ → owner=usuario, repo=repo
+  const m=location.hostname.match(/^([^.]+)\.github\.io$/);
+  return{owner:m?m[1]:"",repo:m?location.pathname.split("/").filter(Boolean)[0]||"":""};
+}
+$("#btnAgregar").addEventListener("click",()=>{
+  const c=cfgGuardada(), det=detectarRepo();
+  $("#fOwner").value=c.owner||det.owner||"";
+  $("#fRepo").value=c.repo||det.repo||"";
+  $("#fBranch").value=c.branch||"main";
+  $("#fToken").value=c.token||"";
+  $("#cfgGithub").open=!(c.token);
+  estadoM.textContent="";estadoM.className="estado-modal";
+  modal.showModal();
+});
+$("#btnCerrarModal").addEventListener("click",()=>modal.close());
+
+const aB64=t=>btoa(String.fromCharCode(...new TextEncoder().encode(t)));
+const deB64=b=>new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g,"")),c=>c.charCodeAt(0)));
+const slug=t=>t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+  .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+
+async function gh(cfg,ruta,opts={}){
+  const r=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${ruta}`,{
+    ...opts,headers:{Authorization:`Bearer ${cfg.token}`,
+      Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",
+      ...(opts.body?{"Content-Type":"application/json"}:{})}});
+  if(!r.ok){const e=await r.json().catch(()=>({}));
+    throw new Error(`${r.status} ${e.message||""}`)}
+  return r.status===204?null:r.json();
+}
+
+$("#btnGuardar").addEventListener("click",async()=>{
+  const btn=$("#btnGuardar");
+  const cfg={owner:$("#fOwner").value.trim(),repo:$("#fRepo").value.trim(),
+    branch:$("#fBranch").value.trim()||"main",token:$("#fToken").value.trim()};
+  const nombre=$("#fNombre").value.trim();
+  const cliente={
+    id:slug(nombre),nombre,
+    ga4_property_id:$("#fGa4").value.trim(),
+    gsc_site_url:$("#fGsc").value.trim(),
+    url_principal:$("#fUrl").value.trim(),
+    terminos_marca:$("#fMarca").value.split(",").map(s=>s.trim()).filter(Boolean),
+    keywords_objetivo:$("#fKw").value.split("\n").map(s=>s.trim()).filter(Boolean),
+  };
+  const falta=[!nombre&&"nombre",!cliente.ga4_property_id&&"ID GA4",
+    !cliente.gsc_site_url&&"Search Console",
+    !cfg.owner&&"usuario GitHub",!cfg.repo&&"repositorio",!cfg.token&&"token"]
+    .filter(Boolean);
+  if(falta.length){estadoM.textContent="Falta: "+falta.join(", ");
+    estadoM.className="estado-modal error";return}
+
+  btn.disabled=true;estadoM.className="estado-modal";estadoM.textContent="Guardando…";
+  try{
+    // 1) Leer clients.json actual
+    const archivo=await gh(cfg,`contents/clients.json?ref=${cfg.branch}`);
+    const datos=JSON.parse(deB64(archivo.content));
+    const i=datos.clientes.findIndex(c=>c.id===cliente.id);
+    if(i>=0)datos.clientes[i]=cliente;else datos.clientes.push(cliente);
+    // 2) Confirmar el cambio
+    await gh(cfg,"contents/clients.json",{method:"PUT",body:JSON.stringify({
+      message:`Agregar cliente: ${nombre}`,branch:cfg.branch,sha:archivo.sha,
+      content:aB64(JSON.stringify(datos,null,2)+"\n")})});
+    // 3) Disparar la generación del informe
+    await gh(cfg,"actions/workflows/actualizar-informes.yml/dispatches",
+      {method:"POST",body:JSON.stringify({ref:cfg.branch})});
+    localStorage.setItem(CFG_KEY,JSON.stringify(cfg));
+    estadoM.textContent="✓ Cliente guardado. El informe se está generando — recarga esta página en 1 o 2 minutos.";
+    estadoM.className="estado-modal ok";
+    ["fNombre","fGa4","fGsc","fUrl","fMarca","fKw"].forEach(id=>$("#"+id).value="");
+  }catch(e){
+    estadoM.textContent="Error: "+e.message+". Revisa el token y sus permisos.";
+    estadoM.className="estado-modal error";
+  }finally{btn.disabled=false}
+});
+
+async function cargarCliente(id){
+  $("#contenido").innerHTML=`<div class="cargando">Cargando informe…</div>`;
+  try{
+    const r=await fetch(`data/${id}.json`,{cache:"no-store"});
+    if(!r.ok)throw new Error(r.status);
+    render(await r.json());
+  }catch(e){
+    $("#contenido").innerHTML=`<div class="vacio">No se pudo cargar el informe de este cliente.
+      Verifica que el workflow de GitHub Actions se haya ejecutado correctamente.</div>`;
+  }
+}
+
+(async function init(){
+  try{
+    const r=await fetch("data/index.json",{cache:"no-store"});
+    if(!r.ok)throw new Error(r.status);
+    const idx=await r.json();
+    const sel=$("#selector");
+    idx.clientes.forEach(c=>{
+      const o=document.createElement("option");
+      o.value=c.id;o.textContent=c.nombre;sel.appendChild(o);
+    });
+    sel.addEventListener("change",()=>cargarCliente(sel.value));
+    const hash=location.hash.slice(1);
+    if(hash&&idx.clientes.some(c=>c.id===hash))sel.value=hash;
+    if(idx.clientes.length)cargarCliente(sel.value);
+    else $("#contenido").innerHTML=`<div class="vacio">Aún no hay informes generados.
+      Configura tus clientes en <code>clients.json</code> y ejecuta el workflow.</div>`;
+  }catch(e){
+    $("#contenido").innerHTML=`<div class="vacio">No se encontró <code>data/index.json</code>.
+      Ejecuta el workflow «Actualizar informes» desde la pestaña Actions de GitHub.</div>`;
+  }
+})();
+</script>
+</body>
+</html>
