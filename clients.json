@@ -6,11 +6,27 @@
       "ga4_property_id": "123456789",
       "gsc_site_url": "sc-domain:clienteejemplo.cl",
       "url_principal": "https://www.clienteejemplo.cl",
-      "terminos_marca": ["cliente ejemplo", "clienteejemplo"],
+      "terminos_marca": [
+        "cliente ejemplo",
+        "clienteejemplo"
+      ],
       "keywords_objetivo": [
         "arriendo oficinas santiago",
         "oficinas providencia",
         "coworking las condes"
+      ]
+    },
+    {
+      "id": "cheff-staff",
+      "nombre": "Cheff Staff",
+      "ga4_property_id": "508197276",
+      "gsc_site_url": "https://cheffstaff.cl",
+      "url_principal": "https://cheffstaff.cl",
+      "terminos_marca": [
+        "staff gastronomico"
+      ],
+      "keywords_objetivo": [
+        "chefs, cocineros, aydante de cocina"
       ]
     }
   ]
