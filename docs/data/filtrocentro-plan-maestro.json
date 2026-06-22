@@ -1,0 +1,449 @@
+{
+  "cliente": "Filtrocentro",
+  "url": "https://filtrocentro.cl",
+  "generado": "2026-06-22T00:00:00Z",
+  "periodo_gsc": "2026-03-21 – 2026-06-20",
+  "periodo_ga4": "2026-05-25 – 2026-06-21",
+  "fuentes": ["GSC", "GA4", "Surfer SEO"],
+
+  "diagnostico_ejecutivo": {
+    "ai_visibility_score": 51,
+    "ai_visibility_lider": "Donaldson",
+    "ai_visibility_lider_score": 63,
+    "posicion_industria": 2,
+    "mention_rate": 33,
+    "average_position_ia": 2.7,
+    "direct_citations_ia": 298,
+    "pages_indexed_by_ia": 27,
+    "topical_map_coverage": "0/24 clusters",
+    "content_score_promedio": 12,
+    "ttfb_ms": 2140,
+    "ttfb_objetivo_ms": 1274
+  },
+
+  "kpis_gsc_90dias": {
+    "clics": 218,
+    "clics_variacion_pct": 93,
+    "impresiones": 10600,
+    "impresiones_variacion_pct": 94,
+    "ctr_promedio_pct": 2.1,
+    "posicion_promedio": 6.6,
+    "keywords_top3": 39,
+    "keywords_pos4_10": 118,
+    "keywords_pos11_20": 52,
+    "total_keywords_rastreadas": 229
+  },
+
+  "kpis_ga4_28dias": {
+    "sesiones_total": 273,
+    "sesiones_organico": 174,
+    "pct_organico": 63.7,
+    "engagement_rate_organico_pct": 74.14,
+    "eventos_clave_configurados": 1,
+    "ingresos_registrados": 0,
+    "sesiones_paid_search": 18,
+    "google_ads_vinculado": false,
+    "sesiones_ia": 7
+  },
+
+  "top_pages_gsc": [
+    { "url": "/", "clics": 81, "impresiones": 2700, "ctr_pct": 3.0, "posicion": 5.2 },
+    { "url": "/2026/04/16/que-micraje-necesita-un-filtro-hidraulico/", "clics": 14, "impresiones": 909, "ctr_pct": 1.5, "posicion": 5.6 },
+    { "url": "/nosotros/", "clics": 11, "impresiones": 0, "ctr_pct": 0, "posicion": 0 },
+    { "url": "/categoria-producto/retorno/", "clics": 9, "impresiones": 127, "ctr_pct": 7.1, "posicion": 7.4 },
+    { "url": "/producto/hf1052mn025b-2/", "clics": 8, "impresiones": 10, "ctr_pct": 80.0, "posicion": 0 },
+    { "url": "/filtros-hidraulicos-mineria-oem/", "clics": 3, "impresiones": 1239, "ctr_pct": 0.2, "posicion": 5.6 },
+    { "url": "/categoria-producto/alta-presion/", "clics": 6, "impresiones": 898, "ctr_pct": 0.7, "posicion": 0 },
+    { "url": "/2026/05/30/senales-de-filtro-saturado-industrial/", "clics": 3, "impresiones": 390, "ctr_pct": 0.77, "posicion": 4.83 },
+    { "url": "/filtros-hidraulicos-mineria-chile/", "clics": 3, "impresiones": 340, "ctr_pct": 0.88, "posicion": 0 },
+    { "url": "/2026/04/28/contaminacion-aceite-hidraulico-causas-y-control/", "clics": 5, "impresiones": 633, "ctr_pct": 0.8, "posicion": 0 }
+  ],
+
+  "keywords_oportunidad_top10": [
+    { "query": "filtros hidraulicos", "posicion": 5.9, "impresiones": 176, "ctr_pct": 3.4, "accion": "Optimizar landing con H1 exacto y tabla de productos" },
+    { "query": "filtros industriales", "posicion": 6.1, "impresiones": 107, "ctr_pct": 1.9, "accion": "Landing con clusters semánticos" },
+    { "query": "filtros para equipos mineros", "posicion": 4.3, "impresiones": 78, "ctr_pct": 0, "accion": "Crear LP dedicada" },
+    { "query": "filtro de succion", "posicion": 6.1, "impresiones": 70, "ctr_pct": 0, "accion": "Crear /categoria-producto/succion/" },
+    { "query": "micraje de filtros", "posicion": 9.8, "impresiones": 39, "ctr_pct": 2.6, "accion": "Optimizar artículo existente con tabla y FAQ schema" },
+    { "query": "filtros hidráulicos (con tilde)", "posicion": 6.5, "impresiones": 69, "ctr_pct": 0, "accion": "Unificar intent con filtros hidraulicos" },
+    { "query": "eliminación de partículas del aceite hidráulico", "posicion": 8.9, "impresiones": 58, "ctr_pct": 0, "accion": "Expandir artículo de contaminación" },
+    { "query": "filtro hidraulico de succion", "posicion": 7.1, "impresiones": 53, "ctr_pct": 0, "accion": "Crear página de categoría o producto" }
+  ],
+
+  "queries_aio_0ctr": [
+    {
+      "query": "¿cuáles son los mejores filtros hidráulicos para minería en Chile (presión, retorno, succión y alta presión)?",
+      "impresiones": 231,
+      "ctr_pct": 0,
+      "posicion": 1.3,
+      "accion": "Crear artículo guía AEO con tabla comparativa, respuesta directa en 50 palabras, schema FAQ",
+      "url_objetivo": "/guia-filtros-hidraulicos-mineria-chile/"
+    },
+    {
+      "query": "¿dónde comprar filtros industriales para minería en Chile con compatibilidad por código OEM?",
+      "impresiones": 224,
+      "ctr_pct": 0,
+      "posicion": 1.1,
+      "accion": "Optimizar /filtros-hidraulicos-mineria-oem/ con respuesta directa y buscador por código OEM",
+      "url_objetivo": "/filtros-hidraulicos-mineria-oem/"
+    },
+    {
+      "query": "¿cuáles son los mejores filtros industriales para faenas mineras de cobre en Chile?",
+      "impresiones": 155,
+      "ctr_pct": 0,
+      "posicion": 6.0,
+      "accion": "Crear artículo especializado con casos de uso, normativas, schema FAQ",
+      "url_objetivo": "/filtros-industriales-mineria-cobre-chile/"
+    }
+  ],
+
+  "surfer_content_audit": {
+    "content_score_homepage": 51,
+    "terminos_usados": 17,
+    "terminos_disponibles": 120,
+    "palabras_body_actual": 752,
+    "palabras_body_minimo": 802,
+    "elementos_strong_actual": 0,
+    "elementos_strong_minimo": 14,
+    "h2_h6_actual": 11,
+    "h2_h6_minimo": 14,
+    "titulo_chars_actual": 53,
+    "titulo_chars_minimo": 55,
+    "paginas_auditadas": 19,
+    "paginas_urgentes": [
+      { "titulo": "Alta Presión", "keyword": "filtros de alta presión", "score": 16, "posicion": 12.1, "impresiones": 213, "urgencia": "CRÍTICA" },
+      { "titulo": "Succión", "keyword": "filtro de succion", "score": 8, "posicion": 10.9, "impresiones": 112, "urgencia": "CRÍTICA" },
+      { "titulo": "Retorno", "keyword": "filtro de retorno", "score": 9, "posicion": 7.4, "impresiones": 127, "urgencia": "ALTA" },
+      { "titulo": "Presión (Coming Soon)", "keyword": "filtros de presión", "score": 6, "posicion": null, "impresiones": 0, "urgencia": "ALTA" },
+      { "titulo": "Ecológico (Próximamente)", "keyword": "filtro ecológico", "score": 2, "posicion": 5, "impresiones": 0, "urgencia": "ALTA" }
+    ],
+    "drafts_listos_para_publicar": [
+      { "titulo_surfer": "filtros hidraulicos", "score": 87, "accion": "Añadir título SEO y publicar YA" },
+      { "titulo_surfer": "fabricacion de filtros industriales", "score": 75, "accion": "Añadir título y publicar" },
+      { "titulo_surfer": "mantenimiento de gruas", "score": 79, "accion": "Añadir título y publicar" },
+      { "titulo_surfer": "filtros industriales 1 micron", "score": 17, "accion": "Optimizar antes de publicar" }
+    ]
+  },
+
+  "topical_map_surfer": {
+    "total_clusters": 24,
+    "clusters_creados": 0,
+    "cobertura_pct": 0,
+    "volumen_potencial_total_mes": 153000,
+    "clusters_prioritarios": [
+      { "keyword": "filtros de agua", "volumen_mes": 42900, "kd": 15.8, "prioridad": 1 },
+      { "keyword": "filtro para piscina", "volumen_mes": 39900, "kd": 19.8, "prioridad": 2 },
+      { "keyword": "purificador de aire", "volumen_mes": 15700, "kd": 19.5, "prioridad": 3 },
+      { "keyword": "purificadores de agua", "volumen_mes": 9370, "kd": 10.0, "prioridad": 4 },
+      { "keyword": "filtración", "volumen_mes": 9470, "kd": 42.4, "prioridad": 5 },
+      { "keyword": "filtros de aire", "volumen_mes": 6310, "kd": 11.6, "prioridad": 6 },
+      { "keyword": "filtrado de agua", "volumen_mes": 5030, "kd": 8.7, "prioridad": 7 },
+      { "keyword": "filtro para calefont", "volumen_mes": 3280, "kd": 19.5, "prioridad": 8 },
+      { "keyword": "ósmosis inversa filtros", "volumen_mes": 960, "kd": 15.2, "prioridad": 9 },
+      { "keyword": "filtros hidráulicos", "volumen_mes": 320, "kd": 0, "prioridad": 10 }
+    ]
+  },
+
+  "ai_visibility_geo": {
+    "score_filtrocentro": 51,
+    "score_donaldson": 63,
+    "score_metso": 45,
+    "score_mann_hummel": 44,
+    "score_camfil": 43,
+    "mention_rate_pct": 33,
+    "average_position": 2.7,
+    "direct_citations": 298,
+    "pages_indexed": 27,
+    "mention_gap_vs_donaldson": 86,
+    "prompts_domina": [
+      { "prompt": "¿Dónde comprar filtros industriales para minería en Chile con compatibilidad OEM?", "score": 100, "posicion": 1.1, "mention_rate_pct": 100 },
+      { "prompt": "¿Cuáles son los mejores filtros hidráulicos para minería en Chile?", "score": 95, "posicion": 3.5, "mention_rate_pct": 100 }
+    ],
+    "prompts_brecha_0": [
+      "¿Cuáles son las marcas más confiables de filtros de aire para camiones mineros y maquinaria pesada?",
+      "¿Qué filtros industriales son más usados en plantas de procesamiento de minerales en Chile?",
+      "¿Qué marcas de filtros recomiendan para sistemas de ventilación en minería subterránea?"
+    ],
+    "urls_mas_citadas_ia": [
+      { "url": "/filtros-hidraulicos-mineria-oem/", "citas": 69 },
+      { "url": "/filtros-hidraulicos-mineria-chile/", "citas": 64 },
+      { "url": "/", "citas": 49 },
+      { "url": "/preguntas-frecuentes/", "citas": 22 }
+    ]
+  },
+
+  "errores_tecnicos": [
+    { "problema": "11.464 URLs bloqueadas por robots.txt", "impacto": "CRÍTICO", "accion": "Auditar y corregir robots.txt esta semana" },
+    { "problema": "6.042 URLs rastreadas sin indexar (thin content)", "impacto": "CRÍTICO", "accion": "Auditar calidad, consolidar o noindex" },
+    { "problema": "2.588 URLs duplicadas sin canónica", "impacto": "ALTO", "accion": "Implementar rel=canonical en todos los productos" },
+    { "problema": "TTFB 2.140ms (límite óptimo: 1.274ms)", "impacto": "ALTO", "accion": "Activar caché servidor, revisar hosting, Cloudflare" },
+    { "problema": "0 Rich Snippets válidos / 6 con errores en schema", "impacto": "ALTO", "accion": "Corregir JSON-LD: price, availability, priceCurrency, brand" },
+    { "problema": "Títulos en inglés en páginas de categoría", "impacto": "ALTO", "accion": "Reescribir 2 páginas completamente en español" },
+    { "problema": "Páginas de paginación indexadas (página 13, 17, 20, 29, 30 de 37)", "impacto": "MEDIO", "accion": "Añadir noindex a todas las páginas de archivo paginadas" },
+    { "problema": "19 URLs soft 404", "impacto": "MEDIO", "accion": "Identificar y corregir contenido o devolver 404/301" },
+    { "problema": "1 error 5xx", "impacto": "ALTO", "accion": "Identificar URL exacta en GSC → Indexación → Error de servidor" },
+    { "problema": "Google Ads ID 150-129-9524 no vinculado a GA4", "impacto": "CRÍTICO_NEGOCIO", "accion": "Vincular en GA4 → Administrar → Integraciones → Google Ads" },
+    { "problema": "0 eventos de conversión configurados en 6 de 7 canales", "impacto": "CRÍTICO_NEGOCIO", "accion": "Crear generate_lead, contact_form_submit, whatsapp_click" }
+  ],
+
+  "plan_accion": {
+    "semana_1": {
+      "titulo": "Correcciones Urgentes — Impacto Inmediato",
+      "tareas": [
+        {
+          "id": "S1-T1",
+          "prioridad": "CRÍTICA",
+          "tarea": "Auditar y corregir robots.txt",
+          "detalle": "Acceder a filtrocentro.cl/robots.txt, identificar reglas Disallow que bloquean /producto/, /categoria-producto/ y similares. Eliminarlas. Solicitar re-rastreo del sitemap en GSC.",
+          "impacto": "+11.464 páginas elegibles para indexación",
+          "tiempo_estimado": "1-2 horas",
+          "responsable": "Dev / WordPress admin",
+          "como_medir": "GSC → Indexación → Bloqueada por robots.txt → contador debe bajar semana a semana"
+        },
+        {
+          "id": "S1-T2",
+          "prioridad": "CRÍTICA",
+          "tarea": "Vincular Google Ads con GA4",
+          "detalle": "GA4 → Administrar → Integraciones de productos → Google Ads → vincular cuenta ID 150-129-9524. Desbloquea Smart Bidding y atribución cruzada.",
+          "impacto": "Activar medición de ROI en pauta activa",
+          "tiempo_estimado": "15 minutos",
+          "responsable": "Google Ads admin",
+          "como_medir": "GA4 → Adquisición → Paid Search debe mostrar conversiones"
+        },
+        {
+          "id": "S1-T3",
+          "prioridad": "CRÍTICA",
+          "tarea": "Publicar draft 'filtros hidraulicos' (Surfer Score 87)",
+          "detalle": "En Surfer SEO Content Editor, abrir el draft 'filtros hidraulicos' (Score 87). Solo necesita título SEO optimizado. Publicar en WordPress. Es el contenido más cercano a listo del sitio.",
+          "titulo_sugerido": "Filtros Hidráulicos Industriales en Chile — Guía Completa de Selección | Filtrocentro",
+          "impacto": "Nuevo contenido indexable con alta probabilidad de posicionar top 5",
+          "tiempo_estimado": "1-2 horas",
+          "responsable": "Contenido",
+          "como_medir": "GSC → inspección de URL → aparece indexado en 7-14 días"
+        },
+        {
+          "id": "S1-T4",
+          "prioridad": "ALTA",
+          "tarea": "Optimizar página Alta Presión en Surfer (Score 16 → 60+)",
+          "detalle": "Abrir /categoria-producto/alta-presion/ en Surfer Content Editor. Subir Score de 16 a mínimo 60. Esta página tiene 213 impresiones y posición 12.1 — está a punto de entrar al top 10.",
+          "impacto": "De posición 12 a posición 3-5: estimado +10x clics (de 1 a 10+/mes)",
+          "tiempo_estimado": "3-4 horas",
+          "responsable": "Contenido + SEO",
+          "como_medir": "GSC → Rendimiento → /categoria-producto/alta-presion/ → posición promedio debe bajar"
+        },
+        {
+          "id": "S1-T5",
+          "prioridad": "ALTA",
+          "tarea": "Reescribir títulos en inglés a español",
+          "detalle": "Corregir 2 páginas: (1) 'Filtrocentro Succión Filters: Discover Our Solutions (2025)' → 'Filtros de Succión Hidráulica e Industrial Chile — Catálogo | Filtrocentro'. (2) 'Filtrocentro: Presión Filters – Coming Soon!' → 'Filtros de Presión Industrial Chile — Cotiza Online | Filtrocentro'.",
+          "impacto": "Eliminar señal negativa de localización, mejorar CTR",
+          "tiempo_estimado": "30 minutos",
+          "responsable": "WordPress admin",
+          "como_medir": "GSC → inspeccionar URLs → ver título nuevo en snippet"
+        },
+        {
+          "id": "S1-T6",
+          "prioridad": "ALTA",
+          "tarea": "Configurar eventos clave en GA4",
+          "detalle": "Crear y marcar como clave: contact_form_submit (/contacto/), generate_lead (Home + fichas de producto), whatsapp_click (si existe botón). Implementar vía GTM. Sin esto es imposible medir retorno de ningún canal.",
+          "impacto": "Activar medición real de conversiones",
+          "tiempo_estimado": "1-2 días con GTM",
+          "responsable": "Dev / GTM admin",
+          "como_medir": "GA4 → Configurar → Eventos → verificar que eventos disparan en modo debug"
+        }
+      ]
+    },
+    "semana_2": {
+      "titulo": "Contenido de Alto Impacto",
+      "tareas": [
+        {
+          "id": "S2-T1",
+          "prioridad": "CRÍTICA",
+          "tarea": "Crear artículo AEO: 'Guía filtros hidráulicos para minería Chile 2026'",
+          "detalle": "Responde la query de 231 impresiones / 0% CTR / posición 1.3. Estructura: respuesta directa en primeras 50 palabras, tabla comparativa (tipo filtro / presión / aplicación / código OEM), schema FAQ con las preguntas exactas del AIO. El objetivo es que el texto de la página sea el que cita la IA, no solo el dominio.",
+          "url_objetivo": "/guia-filtros-hidraulicos-mineria-chile-2026/",
+          "palabras_minimo": 1200,
+          "schema": ["FAQPage", "Article"],
+          "impacto": "Capturar tráfico AIO de 231 impresiones/mes + citar como fuente en ChatGPT/Perplexity",
+          "tiempo_estimado": "1 día",
+          "responsable": "Contenido SEO",
+          "como_medir": "GSC → Performance → query exacta → CTR debe subir de 0% a 3%+"
+        },
+        {
+          "id": "S2-T2",
+          "prioridad": "CRÍTICA",
+          "tarea": "Optimizar /filtros-hidraulicos-mineria-oem/ para AEO",
+          "detalle": "Añadir sección de respuesta directa al tope: 'En Filtrocentro puedes cotizar filtros industriales por código OEM (ej: HF1020, HF1052), con despacho rápido a todo Chile y asesoría especializada.' Integrar buscador por código OEM visible. Esta URL ya es citada 69 veces por las IAs — hay que aumentar el CTR desde 0.2%.",
+          "impacto": "1.239 impresiones actuales con CTR 0.2% → objetivo 3%+ = +37 clics/mes",
+          "tiempo_estimado": "4-6 horas",
+          "responsable": "Dev + Contenido",
+          "como_medir": "GSC → /filtros-hidraulicos-mineria-oem/ → CTR semana a semana"
+        },
+        {
+          "id": "S2-T3",
+          "prioridad": "ALTA",
+          "tarea": "Crear artículo AEO: 'Filtros industriales para faenas mineras de cobre en Chile'",
+          "detalle": "Responde query de 155 impresiones / posición 6.0. Incluir casos de uso, normativas, especificaciones técnicas. Schema FAQ con la pregunta exacta y respuesta de 40-60 palabras.",
+          "url_objetivo": "/filtros-industriales-mineria-cobre-chile/",
+          "impacto": "Capturar nicho de altísima intención transaccional (minería del cobre Chile)",
+          "tiempo_estimado": "1 día",
+          "responsable": "Contenido SEO",
+          "como_medir": "GSC → query 'filtros industriales minería cobre' → impresiones y CTR"
+        },
+        {
+          "id": "S2-T4",
+          "prioridad": "ALTA",
+          "tarea": "Publicar drafts 'fabricacion de filtros industriales' (Score 75) y 'mantenimiento de gruas' (Score 79)",
+          "detalle": "Añadir título SEO optimizado a cada uno y publicar. No requieren más trabajo de contenido.",
+          "impacto": "2 nuevas URLs indexables con alto content score",
+          "tiempo_estimado": "2 horas",
+          "responsable": "Contenido",
+          "como_medir": "GSC → inspección URLs → indexación en 7-14 días"
+        },
+        {
+          "id": "S2-T5",
+          "prioridad": "ALTA",
+          "tarea": "Corregir Schema JSON-LD de productos (Rich Snippets)",
+          "detalle": "Usar Rich Results Test en 3-5 páginas de producto. Añadir campos faltantes: price, availability, priceCurrency, brand, name. Validar los 6 errores en GSC → Compras → Fragmentos de productos.",
+          "impacto": "Habilitar Rich Snippets con precio en SERP → CTR +30-50% en páginas de producto",
+          "tiempo_estimado": "4-8 horas desarrollo",
+          "responsable": "Dev WordPress",
+          "como_medir": "GSC → Compras → Fragmentos de productos → contador 'válidas' debe subir de 0"
+        }
+      ]
+    },
+    "semana_3_4": {
+      "titulo": "Autoridad Tópica y Expansión AEO/GEO",
+      "tareas": [
+        {
+          "id": "S34-T1",
+          "prioridad": "CRÍTICA",
+          "tarea": "Crear artículo 'Filtros de agua' — Topical Map #1",
+          "detalle": "42.900 búsquedas/mes con KD 15.8. Es la oportunidad de tráfico más grande identificada. Usar Content Editor de Surfer, target Score 60+. Incluir las 31 keywords secundarias del cluster. Estructura: guía completa, tabla comparativa, FAQ, schema FAQPage.",
+          "url_objetivo": "/guia-filtros-de-agua-chile/",
+          "palabras_minimo": 1500,
+          "impacto": "Potencial de 1.000+ visitas/mes desde un solo artículo",
+          "tiempo_estimado": "1-2 días",
+          "responsable": "Contenido SEO + Surfer"
+        },
+        {
+          "id": "S34-T2",
+          "prioridad": "ALTA",
+          "tarea": "Crear 3 artículos para prompts con 0% mención en IA",
+          "detalle": "1) 'Filtros de aire para camiones mineros y maquinaria pesada en Chile' — 2) 'Filtros industriales en plantas de procesamiento de minerales en Chile' — 3) 'Filtros para sistemas de ventilación en minería subterránea'. Estructura AEO: respuesta directa en 40 palabras, datos técnicos, schema FAQ.",
+          "impacto": "Cerrar brecha en 3 prompts donde Filtrocentro tiene 0% de mención en IAs",
+          "tiempo_estimado": "1 día por artículo",
+          "responsable": "Contenido SEO"
+        },
+        {
+          "id": "S34-T3",
+          "prioridad": "ALTA",
+          "tarea": "Expandir masivamente la página FAQ",
+          "detalle": "La FAQ actual es citada 22 veces por las IAs. Añadir 20+ preguntas nuevas basadas en los prompts de AI Visibility y las queries sin CTR de GSC. Implementar schema FAQPage con JSON-LD en todas las preguntas.",
+          "impacto": "Aumentar citas de IAs desde 22 hacia 50+. Mejorar Mention Rate de 33% a 50%+",
+          "tiempo_estimado": "1 día",
+          "responsable": "Contenido SEO + Dev"
+        },
+        {
+          "id": "S34-T4",
+          "prioridad": "ALTA",
+          "tarea": "Resolver TTFB (2.140ms → <1.274ms)",
+          "detalle": "1) Activar caché de servidor (Redis/Varnish o plugin de caché WordPress). 2) Activar Cloudflare CDN. 3) Identificar y desactivar plugins lentos con Query Monitor. 4) Evaluar cambio de hosting si persiste.",
+          "impacto": "Mejora directa en rankings y experiencia de usuario",
+          "tiempo_estimado": "1 día técnico",
+          "responsable": "Dev / Hosting admin"
+        },
+        {
+          "id": "S34-T5",
+          "prioridad": "ALTA",
+          "tarea": "Implementar rel=canonical en todo el catálogo",
+          "detalle": "2.588 URLs tienen duplicados sin canónica. Configurar en WordPress (plugin Yoast/RankMath) para que cada página de producto y categoría tenga canonical apuntando a la URL correcta. Revisar parámetros de URL y paginación.",
+          "impacto": "Eliminar 2.588 páginas duplicadas que diluyen autoridad",
+          "tiempo_estimado": "4-8 horas",
+          "responsable": "Dev WordPress"
+        },
+        {
+          "id": "S34-T6",
+          "prioridad": "ALTA",
+          "tarea": "Añadir noindex a páginas de paginación de archivo",
+          "detalle": "Las páginas 'Alta presión archivos – página 13, 17, 20, 29, 30 de 37' están indexadas con Content Score 3-6. Añadir meta noindex en WordPress → Ajustes → Lectura o vía Yoast para archivos de categoría paginados.",
+          "impacto": "Detener dilución de autoridad inmediatamente",
+          "tiempo_estimado": "1 hora",
+          "responsable": "WordPress admin"
+        }
+      ]
+    },
+    "mes_2": {
+      "titulo": "Dominio del Mercado Local — GEO + SEO Local",
+      "tareas": [
+        {
+          "id": "M2-T1",
+          "prioridad": "ALTA",
+          "tarea": "Completar Topical Map: clusters 2-5 por volumen y KD bajo",
+          "clusters": [
+            { "keyword": "filtrado de agua", "volumen": 5030, "kd": 8.7 },
+            { "keyword": "purificadores de agua", "volumen": 9370, "kd": 10.0 },
+            { "keyword": "filtros de aire", "volumen": 6310, "kd": 11.6 },
+            { "keyword": "filtro para piscina", "volumen": 39900, "kd": 19.8 }
+          ],
+          "impacto": "Construir autoridad tópica real. Meta: 8/24 clusters al final del mes 2"
+        },
+        {
+          "id": "M2-T2",
+          "prioridad": "ALTA",
+          "tarea": "Aumentar fuentes externas que citan a Filtrocentro (cerrar Mention Gap vs Donaldson)",
+          "detalle": "Donaldson tiene 86 fuentes que Filtrocentro no tiene. Acciones: (1) Publicar artículos como invitado en medios de la industria minera chilena. (2) Aparecer en directorios sectoriales: Construye2025, ChileProveedores, MineraOnline. (3) Conseguir menciones en artículos técnicos de proveedores mineros.",
+          "impacto": "Aumentar Direct Citations de IAs de 298 hacia 500+"
+        },
+        {
+          "id": "M2-T3",
+          "prioridad": "MEDIA",
+          "tarea": "Google Business Profile — activar y optimizar",
+          "detalle": "Verificar y completar perfil GBP. Publicar posts semanales sobre productos. Responder todas las reseñas. Añadir fotos de productos, instalaciones y equipo. Habilita aparición en Google Maps y búsquedas locales.",
+          "impacto": "SEO local + señales de confianza para las IAs"
+        },
+        {
+          "id": "M2-T4",
+          "prioridad": "MEDIA",
+          "tarea": "Schema markup completo: Organization, LocalBusiness, Product",
+          "detalle": "Añadir en homepage: Organization schema + LocalBusiness schema (dirección, teléfono, horario, área de servicio Chile). En fichas de producto: Product schema completo. En FAQ: FAQPage schema. Esto alimenta directamente las citas de las IAs.",
+          "impacto": "Mejorar AI Visibility Score de 51 hacia 65+ (superar a Donaldson)"
+        }
+      ]
+    }
+  },
+
+  "metas_kpis": {
+    "30_dias": {
+      "clics_mes": 350,
+      "content_score_promedio": 45,
+      "keywords_top3": 60,
+      "eventos_clave_ga4": 4,
+      "rich_snippets_validos": 6,
+      "ttfb_ms": 1400,
+      "urls_bloqueadas_robots": 0
+    },
+    "90_dias": {
+      "clics_mes": 600,
+      "impresiones_mes": 20000,
+      "ctr_promedio_pct": 3.5,
+      "content_score_promedio": 55,
+      "keywords_top3": 80,
+      "ai_visibility_score": 58,
+      "mention_rate_pct": 50,
+      "topical_map_coverage": "8/24",
+      "ttfb_ms": 1274
+    },
+    "6_meses": {
+      "clics_mes": 1000,
+      "content_score_promedio": 70,
+      "keywords_top3": 150,
+      "ai_visibility_score": 65,
+      "posicion_industria_ia": 1,
+      "mention_rate_pct": 70,
+      "topical_map_coverage": "20/24",
+      "ttfb_ms": 800,
+      "rich_snippets_validos": 50
+    }
+  }
+}

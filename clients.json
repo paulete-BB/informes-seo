@@ -17,6 +17,28 @@
       ]
     },
     {
+      "id": "filtrocentro",
+      "nombre": "Filtrocentro",
+      "ga4_property_id": "497417890",
+      "gsc_site_url": "sc-domain:filtrocentro.cl",
+      "url_principal": "https://filtrocentro.cl",
+      "terminos_marca": [
+        "filtrocentro",
+        "filtro centro"
+      ],
+      "keywords_objetivo": [
+        "filtros hidraulicos",
+        "filtros industriales",
+        "filtros de alta presion",
+        "filtro de succion",
+        "filtro de retorno",
+        "filtros para mineria",
+        "filtros hidraulicos mineria",
+        "filtros de agua",
+        "filtros de aire"
+      ]
+    },
+    {
       "id": "cheff-staff",
       "nombre": "Cheff Staff",
       "ga4_property_id": "508197276",
