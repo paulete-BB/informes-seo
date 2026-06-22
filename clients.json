@@ -17,6 +17,29 @@
       ]
     },
     {
+      "id": "filtrocentro",
+      "nombre": "Filtrocentro.cl",
+      "ga4_property_id": "497417890",
+      "gsc_site_url": "sc-domain:filtrocentro.cl",
+      "url_principal": "https://filtrocentro.cl",
+      "plataforma": "wordpress",
+      "google_ads_id": "150-129-9524",
+      "terminos_marca": [
+        "filtrocentro",
+        "filtro centro"
+      ],
+      "keywords_objetivo": [
+        "filtros hidraulicos",
+        "filtros industriales",
+        "filtros para mineria",
+        "filtros alta presion",
+        "filtro de succion",
+        "filtros hidraulicos mineria oem",
+        "micraje filtros hidraulicos",
+        "eliminacion particulas aceite hidraulico"
+      ]
+    },
+    {
       "id": "cheff-staff",
       "nombre": "Cheff Staff",
       "ga4_property_id": "508197276",
