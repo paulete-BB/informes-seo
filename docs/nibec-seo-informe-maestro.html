@@ -1,0 +1,1748 @@
+<title>Informe SEO Maestro · Nibec · Junio 2026</title>
+<meta name="description" content="Auditoría SEO consolidada de GA4, Google Search Console y SurferSEO para Nibec. Diagnóstico, quick wins, oportunidades y roadmap 90 días.">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:        #0C1120;
+    --ink-muted:  #4B5366;
+    --ink-faint:  #8B92A3;
+    --ground:     #F4F6FB;
+    --surface:    #FFFFFF;
+    --border:     #DDE2EE;
+    --accent:     #1C52E0;
+    --accent-dim: #E8EEFB;
+    --crit:       #C41C1C;
+    --crit-bg:    #FEF2F2;
+    --warn:       #C07000;
+    --warn-bg:    #FFFBEB;
+    --ok:         #15803D;
+    --ok-bg:      #F0FDF4;
+    --info:       #0369A1;
+    --info-bg:    #F0F9FF;
+
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+
+    --r: 6px;
+    --r-lg: 10px;
+    --max: 1080px;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--ground);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────────────── */
+  .report-header {
+    background: var(--ink);
+    color: #fff;
+    padding: 0;
+  }
+
+  .header-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 48px 32px 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+  }
+
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6B7FA8;
+    margin-bottom: 12px;
+  }
+
+  .header-client {
+    font-size: 13px;
+    font-weight: 500;
+    color: #A3B0CC;
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .header-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .header-title span {
+    color: #4B7BF5;
+  }
+
+  .header-meta {
+    text-align: right;
+  }
+
+  .meta-item {
+    font-size: 12px;
+    color: #6B7FA8;
+    line-height: 1.8;
+  }
+
+  .meta-item strong {
+    color: #A3B0CC;
+    font-weight: 500;
+  }
+
+  .header-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, #4B7BF5 40%, #6B3CF5 100%);
+  }
+
+  /* ── SCORE BAND ──────────────────────────────────── */
+  .score-band {
+    background: var(--ink);
+    border-top: 1px solid #1E2840;
+    padding: 0 32px 40px;
+  }
+
+  .score-band-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: #1E2840;
+    border: 1px solid #1E2840;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+
+  .score-card {
+    background: #111827;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .score-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6B7FA8;
+  }
+
+  .score-value {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .score-value.crit  { color: #F87171; }
+  .score-value.warn  { color: #FCD34D; }
+  .score-value.ok    { color: #4ADE80; }
+  .score-value.blue  { color: #93C5FD; }
+
+  .score-sub {
+    font-size: 12px;
+    color: #4B5366;
+    margin-top: 2px;
+  }
+
+  /* ── MAIN LAYOUT ─────────────────────────────────── */
+  .main {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+
+  /* ── SECTION ─────────────────────────────────────── */
+  .section {}
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  /* ── ALERT CARDS ─────────────────────────────────── */
+  .alert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .alert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+
+  .alert-card-body {
+    padding: 20px 20px 20px 24px;
+  }
+
+  .alert-card.crit  { border-left: 4px solid var(--crit); }
+  .alert-card.warn  { border-left: 4px solid #F59E0B; }
+  .alert-card.ok    { border-left: 4px solid var(--ok); }
+  .alert-card.info  { border-left: 4px solid var(--accent); }
+
+  .alert-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+
+  .alert-tag.crit { background: var(--crit-bg); color: var(--crit); }
+  .alert-tag.warn { background: var(--warn-bg); color: var(--warn); }
+  .alert-tag.ok   { background: var(--ok-bg);   color: var(--ok); }
+  .alert-tag.info { background: var(--accent-dim); color: var(--accent); }
+
+  .alert-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .alert-card p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .alert-card p strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ── PROBLEM LIST ────────────────────────────────── */
+  .problem-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .problem-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 4px 1fr;
+  }
+
+  .problem-item .stripe {
+    background: var(--crit);
+  }
+  .problem-item.warn .stripe { background: #F59E0B; }
+  .problem-item.info .stripe { background: var(--accent); }
+
+  .problem-content {
+    padding: 18px 20px;
+  }
+
+  .problem-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .problem-rank {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .problem-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  .badge.crit  { background: var(--crit-bg); color: var(--crit); }
+  .badge.warn  { background: var(--warn-bg); color: var(--warn); }
+  .badge.info  { background: var(--accent-dim); color: var(--accent); }
+  .badge.ok    { background: var(--ok-bg); color: var(--ok); }
+
+  .problem-desc {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .problem-desc strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .problem-action {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .problem-action::before {
+    content: "→";
+    flex-shrink: 0;
+  }
+
+  /* ── QUICK WIN CARDS ─────────────────────────────── */
+  .qw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .qw-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .qw-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .qw-num {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+  }
+
+  .qw-effort {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--ground);
+    color: var(--ink-muted);
+    border: 1px solid var(--border);
+  }
+
+  .qw-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .qw-card p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .qw-card p strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .qw-impact {
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .qw-impact-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 4px;
+  }
+
+  .qw-impact-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ok);
+  }
+
+  .qw-measure {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+  }
+
+  /* ── TABLES ──────────────────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 600px;
+  }
+
+  thead {
+    background: #F1F4FA;
+  }
+
+  th {
+    text-align: left;
+    padding: 11px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #EEF1F8;
+    vertical-align: top;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.4;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: #FAFBFE; }
+
+  .td-url {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .td-num { font-weight: 600; }
+
+  .td-up   { color: var(--ok);   font-weight: 600; }
+  .td-down { color: var(--crit); font-weight: 600; }
+  .td-flat { color: var(--ink-muted); }
+
+  .td-action {
+    font-size: 12px;
+    color: var(--ink-muted);
+    max-width: 280px;
+    line-height: 1.45;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .pill.crit  { background: var(--crit-bg); color: var(--crit); }
+  .pill.warn  { background: var(--warn-bg); color: var(--warn); }
+  .pill.ok    { background: var(--ok-bg);   color: var(--ok); }
+  .pill.info  { background: var(--accent-dim); color: var(--accent); }
+  .pill.low   { background: #F5F5F5; color: #6B7280; }
+
+  .anomaly-flag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--crit);
+    background: var(--crit-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+  }
+
+  /* ── AEO SECTION ─────────────────────────────────── */
+  .aeo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  .aeo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 24px;
+  }
+
+  .aeo-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .aeo-query {
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    flex: 1;
+  }
+
+  .aeo-vis {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .aeo-vis.high  { background: var(--ok-bg);     color: var(--ok);   }
+  .aeo-vis.mid   { background: var(--warn-bg);    color: var(--warn); }
+  .aeo-vis.low   { background: var(--crit-bg);    color: var(--crit); }
+  .aeo-vis.none  { background: #F5F5F5;           color: #6B7280;     }
+
+  .aeo-stat-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .aeo-stat {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  .aeo-stat strong {
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .aeo-rec {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .aeo-rec strong {
+    color: var(--ink);
+  }
+
+  /* ── AI SCORE WIDGET ─────────────────────────────── */
+  .ai-overview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+  }
+
+  .ai-stat { display: flex; flex-direction: column; gap: 4px; }
+
+  .ai-stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .ai-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ai-stat-value.lead { color: var(--ok); }
+  .ai-stat-value.warn { color: var(--warn); }
+
+  .ai-stat-sub {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* ── ROADMAP ─────────────────────────────────────── */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+
+  @media (max-width: 680px) {
+    .roadmap { grid-template-columns: 1fr; }
+  }
+
+  .rm-phase {
+    background: var(--surface);
+    padding: 24px;
+  }
+
+  .rm-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .rm-phase-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  .rm-phase-label.p1 { background: var(--crit-bg); color: var(--crit); }
+  .rm-phase-label.p2 { background: var(--warn-bg); color: var(--warn); }
+  .rm-phase-label.p3 { background: var(--accent-dim); color: var(--accent); }
+
+  .rm-phase-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .rm-phase h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+
+  .rm-tasks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rm-task {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+    padding-left: 16px;
+    position: relative;
+  }
+
+  .rm-task::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 1.5px solid var(--ink-faint);
+  }
+
+  .rm-task strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ── CALLOUT BOX ─────────────────────────────────── */
+  .callout {
+    background: var(--accent-dim);
+    border: 1px solid #C5D5F9;
+    border-radius: var(--r-lg);
+    padding: 18px 20px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  .callout strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .callout.warn {
+    background: var(--warn-bg);
+    border-color: #FDE68A;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0;
+  }
+
+  /* ── INLINE METRIC ───────────────────────────────── */
+  .inline-metrics {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+  }
+
+  .im-item { display: flex; flex-direction: column; gap: 2px; }
+
+  .im-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .im-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .im-val.bad  { color: var(--crit); }
+  .im-val.warn { color: var(--warn); }
+  .im-val.good { color: var(--ok); }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  .report-footer {
+    background: var(--ink);
+    color: #4B5366;
+    text-align: center;
+    padding: 24px 32px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .report-footer strong { color: #8B92A3; }
+
+  /* ── RESPONSIVE ──────────────────────────────────── */
+  @media (max-width: 640px) {
+    .header-inner { grid-template-columns: 1fr; }
+    .header-meta  { text-align: left; }
+    .main { padding: 32px 16px 60px; gap: 40px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<!-- ═══════════════════════════════════════ HEADER ══ -->
+<header class="report-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">Informe SEO Estratégico</div>
+      <div class="header-client">nibec.cl · Mobiliario metálico industrial y de oficina · Chile</div>
+      <h1 class="header-title">Auditoría Consolidada:<br><span>Diagnóstico, Oportunidades<br>y Plan de Dominio SEO</span></h1>
+    </div>
+    <div class="header-meta">
+      <div class="meta-item"><strong>Período GA4:</strong> 29 may – 25 jun 2026</div>
+      <div class="meta-item"><strong>Período GSC/Surfer:</strong> 25 mar – 24 jun 2026</div>
+      <div class="meta-item"><strong>Fuentes:</strong> GA4 · GSC · SurferSEO</div>
+      <div class="meta-item"><strong>Fecha de informe:</strong> 26 jun 2026</div>
+    </div>
+  </div>
+
+  <!-- KPI band -->
+  <div class="score-band">
+    <div class="score-band-inner">
+      <div class="score-card">
+        <div class="score-label">Sesiones orgánicas</div>
+        <div class="score-value crit">4,4%</div>
+        <div class="score-sub">del total — 1.132 de 25.657</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Conversiones rastreadas</div>
+        <div class="score-value crit">€0</div>
+        <div class="score-sub">0 eventos de conversión configurados</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Páginas indexadas</div>
+        <div class="score-value crit">164</div>
+        <div class="score-sub">de ~2.245 conocidas — 92% invisible</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">CTR global GSC</div>
+        <div class="score-value warn">1,1%</div>
+        <div class="score-sub">260.100 impresiones → 2.910 clics</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">AI Visibility Score</div>
+        <div class="score-value ok">48</div>
+        <div class="score-sub">Lidera competidores (35–36) · Surfer</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">SEO Score homepage</div>
+        <div class="score-value crit">19/100</div>
+        <div class="score-sub">La página más importante del sitio</div>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="header-stripe"></div>
+
+<!-- ═══════════════════════════════════════ MAIN ════ -->
+<main class="main">
+
+  <!-- ── 1. DIAGNÓSTICO EJECUTIVO ───────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Diagnóstico Ejecutivo</h2>
+    </div>
+
+    <div class="alert-grid">
+      <div class="alert-card ok">
+        <div class="alert-card-body">
+          <div class="alert-tag ok">✓ Funciona</div>
+          <h3>La demanda existe — Nibec la está empezando a capturar</h3>
+          <p>
+            <strong>/lockers/ crece +228%</strong> y <strong>/gabinete-de-archivos-metalico/ explota +886%</strong> en vistas.
+            El canal orgánico, aunque marginal en volumen, tiene <strong>65,99% de tasa de interacción</strong> — mejor que cualquier canal de pago.
+            En AI Visibility, Nibec <strong>lidera la industria con score 48</strong> frente a competidores en 35–36. La marca tiene
+            CTR del 12,3% con posición media 1,5 en búsquedas branded.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert-card crit">
+        <div class="alert-card-body">
+          <div class="alert-tag crit">✗ Crítico #1</div>
+          <h3>El sitio opera completamente a ciegas</h3>
+          <p>
+            GA4 registra <strong>0 eventos de conversión y €0 de ingresos</strong> con 115.434 eventos totales y ~18K usuarios al mes.
+            Nibec invierte en 5+ canales de pago sin poder medir el ROI de ninguno.
+            Es imposible optimizar gasto publicitario, priorizar SEO o defender presupuesto sin esta base.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert-card crit">
+        <div class="alert-card-body">
+          <div class="alert-tag crit">✗ Crítico #2</div>
+          <h3>92% del sitio es invisible para Google</h3>
+          <p>
+            Solo <strong>164 de ~2.245 páginas están indexadas</strong>. 1.341 URLs bloqueadas por robots.txt, 570 rastreadas sin indexar,
+            119 con canonicals mal configurados. Si las páginas de producto y categoría están entre las bloqueadas,
+            Nibec está literalmente ocultando su catálogo completo a Google.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert-card crit">
+        <div class="alert-card-body">
+          <div class="alert-tag crit">✗ Crítico #3</div>
+          <h3>Caída estructural del tráfico: -16,6% en 28 días</h3>
+          <p>
+            La homepage cae <strong>-28,68%</strong>, la categoría principal /estantes/ cae <strong>-41,07%</strong>,
+            el producto estrella -22,2%. Android cae <strong>-24,3%</strong> vs iOS -5,2%: señal de problema
+            de Core Web Vitals en móvil. El sitio tiene 63 URLs desktop con CLS &gt; 0,25 catalogadas como "Malas" por Google.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert-card warn">
+        <div class="alert-card-body">
+          <div class="alert-tag warn">⚠ Brecha de CTR</div>
+          <h3>260K impresiones, 2.910 clics — CTR al 1,1%</h3>
+          <p>
+            El sitio <em>aparece</em> en Google pero los usuarios no hacen clic. Solo las 5 páginas top suman 135K+ impresiones
+            con CTR menor al 1%. A CTR conservador del 2,5%, el tráfico orgánico se triplicaría
+            <strong>sin mover ninguna posición</strong>. La causa es casi siempre el snippet.
+          </p>
+        </div>
+      </div>
+
+      <div class="alert-card warn">
+        <div class="alert-card-body">
+          <div class="alert-tag warn">⚠ Dependencia de paid</div>
+          <h3>Más del 70% del tráfico viene de publicidad de pago</h3>
+          <p>
+            Paid Social, Paid Shopping, Cross-network y Paid Other suman &gt;70% de las 25.657 sesiones.
+            Google / organic está en <strong>puesto #8</strong> entre canales.
+            Sin tracking de conversiones, es imposible saber si ese gasto publicitario genera ventas o solo visitas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. PROBLEMAS CRÍTICOS ORDENADOS POR IMPACTO ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Problemas Críticos — Ordenados por Impacto</h2>
+    </div>
+
+    <div class="problem-list">
+
+      <div class="problem-item">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P1</span>
+            <span class="problem-title">Cero conversiones rastreadas en GA4</span>
+            <span class="badge crit">Crítico</span>
+            <span class="badge info">Toda la web</span>
+          </div>
+          <p class="problem-desc">
+            GA4 muestra <strong>115.434 eventos totales</strong> y <strong>€0 en ingresos</strong>. Los eventos de ecommerce
+            (<code>add_to_cart</code>, <code>begin_checkout</code>, <code>purchase</code>) no están configurados.
+            Sin esto, ninguna decisión de SEO, paid ni CRO tiene sustento en datos. Es el problema de mayor impacto
+            porque bloquea la optimización de todos los demás canales.
+          </p>
+          <div class="problem-action">Activar eventos clave vía GTM. Prioridad absoluta: add_to_cart, begin_checkout, purchase y generate_lead si hay formulario de contacto. Tiempo estimado: 1–2 días.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P2</span>
+            <span class="problem-title">1.341 URLs bloqueadas por robots.txt</span>
+            <span class="badge crit">Crítico</span>
+            <span class="badge info">Indexación</span>
+          </div>
+          <p class="problem-desc">
+            El 92% del contenido del sitio es invisible para Google. Con solo 164 páginas indexadas de ~2.245 conocidas,
+            hay 1.341 bloqueadas por una (o varias) reglas <code>Disallow:</code> en robots.txt.
+            Si las rutas <code>/producto/</code> o <code>/categoria-producto/</code> están bloqueadas,
+            <strong>el catálogo completo de Nibec no puede rankear</strong>.
+          </p>
+          <div class="problem-action">Navegar a nibec.cl/robots.txt hoy mismo. Verificar en GSC → Indexación → "Bloqueada por robots.txt" si hay páginas de producto o categoría en esa lista. Eliminar Disallow incorrectos.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P3</span>
+            <span class="problem-title">CLS crítico en desktop: 63 URLs con score "Malo"</span>
+            <span class="badge crit">Crítico</span>
+            <span class="badge info">Core Web Vitals</span>
+          </div>
+          <p class="problem-desc">
+            63 URLs tienen <strong>CLS &gt; 0,25</strong> en desktop (clasificación "Mala" de Google) y otras 63 tienen
+            LCP &gt; 2,5s (clasificación "Necesita mejora"). Desde la actualización Page Experience, estos son
+            factores de ranking directos. La causa más frecuente en WordPress/WooCommerce: imágenes sin atributos
+            <code>width</code> y <code>height</code>, sliders dinámicos sin reserva de espacio.
+          </p>
+          <div class="problem-action">GSC → Core Web Vitals → Desktop → "CLS más de 0,25" → revisar URLs con PageSpeed Insights. Fix: añadir dimensiones explícitas a imágenes de producto.</div>
+        </div>
+      </div>
+
+      <div class="problem-item warn">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P4</span>
+            <span class="problem-title">570 URLs rastreadas pero no indexadas</span>
+            <span class="badge warn">Alto</span>
+            <span class="badge info">Indexación</span>
+          </div>
+          <p class="problem-desc">
+            Google las visita pero decide no incluirlas en el índice, normalmente por contenido delgado
+            (thin content), paginación duplicada, o páginas de producto sin descripción única.
+            Estas representan oportunidades de ranking perdidas o señales que diluyen la autoridad del dominio.
+          </p>
+          <div class="problem-action">Auditar estas URLs: aplicar canonical a las que sean duplicados, noindex a las que no aporten valor, y enriquecer contenido en las que sí sean relevantes.</div>
+        </div>
+      </div>
+
+      <div class="problem-item warn">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P5</span>
+            <span class="problem-title">Anomalía crítica de CTR: posición top con tasa de clic mínima</span>
+            <span class="badge warn">Alto</span>
+            <span class="badge info">Snippets</span>
+          </div>
+          <p class="problem-desc">
+            <strong>/que-es-una-estanteria/</strong> está en posición 2,3 con 9.300–29.254 impresiones y solo
+            <strong>0,3% CTR</strong>. En posición 2, el CTR esperado es 8–10%. Esto indica que un competidor
+            tiene el featured snippet y absorbe los clics. <strong>estante plegable</strong> está en posición
+            2,4 con 3.064 impresiones y solo 0,6% CTR — mismo diagnóstico.
+          </p>
+          <div class="problem-action">Reestructurar /que-es-una-estanteria/ con definición en párrafo de 40–60 palabras al inicio + FAQ schema para recapturar el Position 0.</div>
+        </div>
+      </div>
+
+      <div class="problem-item warn">
+        <div class="stripe"></div>
+        <div class="problem-content">
+          <div class="problem-header">
+            <span class="problem-rank">P6</span>
+            <span class="problem-title">Imágenes indexadas como páginas web</span>
+            <span class="badge warn">Alto</span>
+            <span class="badge info">Crawl budget</span>
+          </div>
+          <p class="problem-desc">
+            Archivos como <code>/wp-content/uploads/2022/04/RACK-INDUSTRIAL-5.jpg</code> están indexados
+            como páginas web en GSC. Consumen crawl budget, diluyen la autoridad del dominio y
+            contaminan los datos de indexación.
+          </p>
+          <div class="problem-action">Añadir Disallow: /wp-content/uploads/ en robots.txt + solicitar eliminación de URLs de imagen ya indexadas mediante la herramienta de eliminación de URLs en GSC.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 3. QUICK WINS ──────────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Quick Wins — Impacto Máximo en 0–30 Días</h2>
+    </div>
+
+    <div class="qw-grid">
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-1</span>
+          <span class="qw-effort">1–2 días · GTM</span>
+        </div>
+        <h3>Implementar tracking de conversiones en GA4</h3>
+        <p>
+          Activar <strong>add_to_cart, begin_checkout, purchase</strong> y generate_lead (si hay formulario).
+          Verificar si el módulo de ecommerce está desactivado en el back-end de WooCommerce.
+          Sin esto, ninguna optimización de paid o SEO tiene datos para sustentarse.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">Base para todas las decisiones posteriores</div>
+          <div class="qw-measure">GA4 → Monetización → Eventos clave. Datos visibles en 48h tras implementación.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-2</span>
+          <span class="qw-effort">Hoy · 30 minutos</span>
+        </div>
+        <h3>Auditar robots.txt y desbloquear páginas de producto</h3>
+        <p>
+          Navegar a <strong>nibec.cl/robots.txt</strong>. Si hay reglas <code>Disallow:</code> que bloqueen
+          <code>/producto/</code> o <code>/categoria-producto/</code>, corregirlas de inmediato.
+          1.341 URLs bloqueadas representan potencialmente cientos de páginas de catálogo invisibles.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">+Cientos de páginas elegibles para ranking</div>
+          <div class="qw-measure">GSC → Indexación → "Bloqueada por robots.txt" para verificar tipo de URLs afectadas.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-3</span>
+          <span class="qw-effort">2–3 horas · Redacción</span>
+        </div>
+        <h3>Reescribir titles y metas de las 5 páginas con más impresiones</h3>
+        <p>
+          Estas 5 URLs concentran el <strong>68% de todas las impresiones del sitio</strong> con CTR &lt; 1%.
+          Pasar al 2,5% en todas ellas triplicaría el tráfico orgánico mensual sin mover ninguna posición.
+          Title propuesto para /estantes/: <em>"Estantes Metálicos | Envío a Todo Chile · nibec.cl"</em>.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">+2.000–3.000 clics/mes adicionales estimados</div>
+          <div class="qw-measure">GSC → Rendimiento → filtrar por URL → CTR semana a semana. Resultado en 14–21 días.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-4</span>
+          <span class="qw-effort">1–2 horas · Contenido</span>
+        </div>
+        <h3>Recapturar el featured snippet de /que-es-una-estanteria/</h3>
+        <p>
+          Esta URL tiene 9.300–29.254 impresiones en posición 2,3 pero <strong>solo 0,3% CTR</strong>.
+          Un competidor tiene el Position 0 y absorbe los clics. Añadir párrafo de definición
+          de 40–60 palabras inmediatamente después del H1, sin elementos intermedios, más FAQ schema.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">CTR puede pasar de 0,3% a 5–8% con featured snippet</div>
+          <div class="qw-measure">GSC → Aparición en búsquedas → filtra URL → busca "Fragmento destacado".</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-5</span>
+          <span class="qw-effort">1 semana · Desarrollo</span>
+        </div>
+        <h3>Corregir CLS en desktop y velocidad mobile Android</h3>
+        <p>
+          63 URLs con CLS "Malo" son factor de penalización de ranking. La caída desproporcionada
+          de Android (-24,3%) vs iOS (-5,2%) apunta a un problema de rendimiento específico de dispositivo.
+          Fix principal: añadir <code>width</code> y <code>height</code> a imágenes de producto, deshabilitar
+          carga dinámica de banners sin reserva de espacio.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">Recuperar -18% de tráfico mobile perdido + mejora de ranking</div>
+          <div class="qw-measure">GSC → CWV → Desktop → ver problema CLS. Validar con PageSpeed Insights.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-6</span>
+          <span class="qw-effort">30 min · Configuración</span>
+        </div>
+        <h3>Vincular GA4 con Google Search Console</h3>
+        <p>
+          Con solo 1.132 sesiones orgánicas (4,41%), el sitio es 100% dependiente de paid.
+          Vincular GSC desde <strong>GA4 → Administrar → Vinculaciones → Search Console</strong>
+          permitirá ver queries con posición directamente en GA4 y detectar las keywords
+          de posición 4–20 más fáciles de escalar.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">Visibilidad completa del embudo orgánico en un solo lugar</div>
+          <div class="qw-measure">GA4 → Informes → Adquisición → Google Organic Search. Disponible en 24h.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-7</span>
+          <span class="qw-effort">2–3 horas · Surfer</span>
+        </div>
+        <h3>Optimizar con Surfer las 3 páginas marcadas como urgentes</h3>
+        <p>
+          <strong>"La estantería metálica"</strong> (SEO Score 11/100, posición 9,5) está en fruta madura.
+          Abrir en Surfer Content Editor y aplicar sugerencias de términos faltantes,
+          estructura H2/H3 hasta Score ≥ 70. Paralelamente, optimizar homepage
+          (Score 19/100) para queries genéricas como "estanterías metálicas Chile".
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">Posición 9,5 → 4–5 para "estantería metálica" en 3–6 semanas</div>
+          <div class="qw-measure">Surfer → Content Audit → monitorear posición semana a semana.</div>
+        </div>
+      </div>
+
+      <div class="qw-card">
+        <div class="qw-header">
+          <span class="qw-num">QW-8</span>
+          <span class="qw-effort">2–3 horas · Contenido</span>
+        </div>
+        <h3>Capitalizar el momentum de /lockers/ y /gabinete-archivos/</h3>
+        <p>
+          <strong>/lockers/ creció +228%</strong> y <strong>/gabinete-de-archivos-metalico/ +886%</strong>.
+          Reforzar estas páginas con tabla comparativa de modelos, ficha técnica completa,
+          FAQ y schema Product. Si el crecimiento tiene componente orgánico, este es el
+          momento de solidificarlo antes de que la posición se estabilice.
+        </p>
+        <div class="qw-impact">
+          <div class="qw-impact-label">Impacto esperado</div>
+          <div class="qw-impact-value">Convertir momentum de tráfico en ranking orgánico sostenible</div>
+          <div class="qw-measure">GA4 → crear segmento de usuarios de esas URLs → verificar engagement y conversiones.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 4. KEYWORDS ────────────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Oportunidades de Keywords — Fruta Madura</h2>
+    </div>
+
+    <div class="callout" style="margin-bottom:20px;">
+      <strong>Metodología:</strong> Se priorizan keywords en posición 4–10 con alto volumen de impresiones y CTR por debajo del benchmark esperado para esa posición. Una keyword en posición 5 debería tener CTR de 3–5%. Cuando el CTR real es ≤ 1%, el problema casi siempre es el snippet, no la posición.
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Posición</th>
+            <th>Impr. 90d</th>
+            <th>CTR actual</th>
+            <th>CTR objetivo</th>
+            <th>Clics extra est.</th>
+            <th>Página objetivo</th>
+            <th>Prioridad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>estante metalico</strong></td>
+            <td class="td-num">5,0</td>
+            <td class="td-num">15.046</td>
+            <td class="td-down">0,6%</td>
+            <td class="td-up">3,5%</td>
+            <td class="td-up td-num">+434/mes</td>
+            <td class="td-url">/categoria-producto/estantes/</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>que es una estanteria</strong></td>
+            <td class="td-num">2,3 <span class="anomaly-flag">Anomalía</span></td>
+            <td class="td-num">9.300+</td>
+            <td class="td-down">0,3%</td>
+            <td class="td-up">8,0%</td>
+            <td class="td-up td-num">+718/mes</td>
+            <td class="td-url">/que-es-una-estanteria/</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>repisa metalica</strong></td>
+            <td class="td-num">3,9</td>
+            <td class="td-num">10.463</td>
+            <td class="td-down">0,4%</td>
+            <td class="td-up">5,0%</td>
+            <td class="td-up td-num">+377/mes</td>
+            <td class="td-url">/producto/estante-repisa-metalico-200x150x50cm-400kg/</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>repisas metalicas</strong></td>
+            <td class="td-num">3,8</td>
+            <td class="td-num">7.128</td>
+            <td class="td-down">0,7%</td>
+            <td class="td-up">5,5%</td>
+            <td class="td-up td-num">+230/mes</td>
+            <td class="td-url">/producto/estante-repisa-metalico-200x150x50cm-400kg/</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>estantes metalicos</strong></td>
+            <td class="td-num">4,6</td>
+            <td class="td-num">5.621</td>
+            <td class="td-flat">1,2%</td>
+            <td class="td-up">4,5%</td>
+            <td class="td-up td-num">+174/mes</td>
+            <td class="td-url">/categoria-producto/estantes/</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>estante plegable</strong></td>
+            <td class="td-num">2,4 <span class="anomaly-flag">Anomalía</span></td>
+            <td class="td-num">3.064</td>
+            <td class="td-down">0,6%</td>
+            <td class="td-up">8,0%</td>
+            <td class="td-up td-num">+221/mes</td>
+            <td class="td-url">/producto/estante-plegable-5-niveles-163x37x72-cm/</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>estantes faciles de armar</strong></td>
+            <td class="td-num">2,9</td>
+            <td class="td-num">7.400</td>
+            <td class="td-flat">0,9%</td>
+            <td class="td-up">6,0%</td>
+            <td class="td-up td-num">+379/mes</td>
+            <td class="td-url">/estantes-faciles-de-armar/</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>rack metalico</strong></td>
+            <td class="td-num">8,9</td>
+            <td class="td-num">4.732</td>
+            <td class="td-down">0,5%</td>
+            <td class="td-up">2,5%</td>
+            <td class="td-up td-num">+79/mes</td>
+            <td class="td-url">/categoria-producto/rack-industriales/</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>estanteria metalica</strong></td>
+            <td class="td-num">5,6</td>
+            <td class="td-num">2.875</td>
+            <td class="td-flat">1,0%</td>
+            <td class="td-up">3,5%</td>
+            <td class="td-up td-num">+71/mes</td>
+            <td class="td-url">Landing dedicada (no existe)</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>kardex</strong></td>
+            <td class="td-num">6,9</td>
+            <td class="td-num">1.791</td>
+            <td class="td-down">0,2%</td>
+            <td class="td-up">2,0%</td>
+            <td class="td-up td-num">+30/mes</td>
+            <td class="td-url">Página dedicada (a crear si venden)</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>ventilador industrial</strong></td>
+            <td class="td-num">7,3</td>
+            <td class="td-num">1.300</td>
+            <td class="td-down">0,3%</td>
+            <td class="td-up">2,0%</td>
+            <td class="td-up td-num">+22/mes</td>
+            <td class="td-url">Revisar página dedicada</td>
+            <td><span class="pill low">Baja</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px;">
+      <strong>Anomalías de CTR que requieren análisis urgente:</strong> "que es una estanteria" (pos. 2,3, CTR 0,3%) y "estante plegable" (pos. 2,4, CTR 0,6%) tienen CTR 10–15 veces inferior al esperado para esas posiciones. Esto indica que un competidor tiene el featured snippet o que los resultados aparecen en un carousel/imagen que desplaza los clics orgánicos. Verificar en GSC → Aparición en búsquedas → si Nibec aparece como fragmento destacado en esas queries.
+    </div>
+  </section>
+
+  <!-- ── 5. ERRORES TÉCNICOS ─────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Errores Técnicos e Indexación — Tabla Consolidada</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Problema</th>
+            <th>URLs / Alcance</th>
+            <th>Fuente</th>
+            <th>Acción correctiva</th>
+            <th>Prioridad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>0 conversiones — ecommerce tracking no configurado</strong></td>
+            <td>Todo el sitio</td>
+            <td>GA4</td>
+            <td class="td-action">Implementar add_to_cart, begin_checkout, purchase vía GTM o integración nativa WooCommerce + GA4</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>1.341 URLs bloqueadas por robots.txt</strong></td>
+            <td>~60% del sitio</td>
+            <td>GSC</td>
+            <td class="td-action">Auditar nibec.cl/robots.txt. Eliminar Disallow incorrectos sobre /producto/ o /categoria-producto/</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>CLS &gt; 0,25 desktop — clasificación "Mala"</strong></td>
+            <td>63 URLs</td>
+            <td>GSC</td>
+            <td class="td-action">Añadir width/height a imágenes. Reservar espacio para banners dinámicos. Deshabilitar font-swaps sin display:swap.</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>LCP &gt; 2,5s — desktop</strong></td>
+            <td>63 URLs</td>
+            <td>GSC</td>
+            <td class="td-action">Optimizar imagen hero: convertir a WebP, fetchpriority="high" en imagen principal, lazy load en secundarias.</td>
+            <td><span class="pill crit">Crítica</span></td>
+          </tr>
+          <tr>
+            <td><strong>570 URLs rastreadas sin indexar</strong></td>
+            <td>570 páginas</td>
+            <td>GSC</td>
+            <td class="td-action">Clasificar: canonical a versión principal para duplicados, noindex para paginación y páginas sin valor, mejorar contenido para las relevantes.</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>119 URLs — canonical mal configurado</strong></td>
+            <td>119 páginas</td>
+            <td>GSC</td>
+            <td class="td-action">Verificar que el canonical de cada URL apunta a la versión efectivamente indexada. GSC → "Página alternativa con etiqueta canónica adecuada".</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>Homepage SEO Score 19/100 en Surfer</strong></td>
+            <td>nibec.cl/</td>
+            <td>Surfer</td>
+            <td class="td-action">Abrir en Surfer Content Editor. Optimizar para "estanterías metálicas Chile", "racks industriales Chile". Target Score ≥ 60.</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>11 Soft 404s</strong></td>
+            <td>11 URLs</td>
+            <td>GSC</td>
+            <td class="td-action">Páginas que devuelven 200 pero Google detecta como vacías. Añadir contenido real o redirigir a la categoría padre.</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>Imágenes /wp-content/uploads/ indexadas como páginas</strong></td>
+            <td>4+ URLs</td>
+            <td>Surfer/GSC</td>
+            <td class="td-action">Agregar Disallow: /wp-content/uploads/ en robots.txt + URL Removal Tool en GSC para las ya indexadas.</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>Caída móvil Android -24,3% vs iOS -5,2%</strong></td>
+            <td>8.900+ usuarios Android</td>
+            <td>GA4</td>
+            <td class="td-action">Prueba manual en resolución 384×832 (la más frecuente). Revisar CWV mobile en GSC. Verificar JS que bloquee render en Android.</td>
+            <td><span class="pill warn">Alta</span></td>
+          </tr>
+          <tr>
+            <td><strong>20 URLs con redirección</strong></td>
+            <td>20 páginas</td>
+            <td>GSC</td>
+            <td class="td-action">Verificar que son 301 hacia páginas indexadas. Corregir loops o redirecciones a páginas noindex.</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>Páginas "Sin título" en Surfer</strong></td>
+            <td>2 URLs</td>
+            <td>Surfer</td>
+            <td class="td-action">Identificar URLs reales (activar "Show URLs"). Si son archive pages vacías, añadir noindex.</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>5 URLs excluidas por etiqueta noindex</strong></td>
+            <td>5 páginas</td>
+            <td>GSC</td>
+            <td class="td-action">Verificar que son exclusiones intencionales. Si alguna es página de producto o categoría, eliminar la etiqueta.</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>URL con carácter %CC%81 — error de importación Surfer</strong></td>
+            <td>1 URL de estante de metal</td>
+            <td>Surfer</td>
+            <td class="td-action">Verificar si la URL existe y devuelve 200. Si es 404, remover del sitemap y añadir noindex. Si existe, corregir la codificación del slug.</td>
+            <td><span class="pill info">Media</span></td>
+          </tr>
+          <tr>
+            <td><strong>Tablet cae -41,8% (solo 159 usuarios)</strong></td>
+            <td>Dispositivos tablet</td>
+            <td>GA4</td>
+            <td class="td-action">Revisar vista responsive en tablet. Puede ser bug de layout específico de ese breakpoint.</td>
+            <td><span class="pill low">Baja</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 6. AEO + GEO ───────────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Estrategia AEO + GEO — Dominar Respuestas de IA</h2>
+    </div>
+
+    <div class="ai-overview">
+      <div class="ai-stat">
+        <div class="ai-stat-label">AI Visibility Score</div>
+        <div class="ai-stat-value lead">48</div>
+        <div class="ai-stat-sub">Lidera la industria (competidores 35–36)</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-label">Mention rate en IA</div>
+        <div class="ai-stat-value">30%</div>
+        <div class="ai-stat-sub">Posición promedio 2.2 en respuestas</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-label">Páginas citadas por IA</div>
+        <div class="ai-stat-value">107</div>
+        <div class="ai-stat-sub">284 citas directas, 691 fuentes</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-label">Visibilidad en queries genéricas</div>
+        <div class="ai-stat-value warn">0–18%</div>
+        <div class="ai-stat-sub">Solo domina en queries branded</div>
+      </div>
+      <div class="ai-stat">
+        <div class="ai-stat-label">Tiempo interacción medio</div>
+        <div class="ai-stat-value warn">43 seg</div>
+        <div class="ai-stat-sub">Bajo para ser fuente autoritativa de IA</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-bottom:24px;">
+      <strong>El problema central:</strong> Nibec lidera AI Visibility entre competidores, pero ese liderazgo se basa casi exclusivamente en queries branded. En queries de alta intención sin marca ("mejores empresas industriales Chile", "dónde comprar racks industriales") la visibilidad cae a 0–18%. El objetivo es convertir la visibilidad de marca en autoridad genérica de industria para que ChatGPT, Perplexity y Gemini citen a Nibec como respuesta canónica cuando alguien busca mobiliario industrial en Chile.
+    </div>
+
+    <div class="aeo-grid">
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"¿Qué es una estantería metálica?"</div>
+          <div class="aeo-vis mid">Parcial</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>/que-es-una-estanteria/</strong></div>
+          <div class="aeo-stat">Pos. SEO: <strong>2,3</strong></div>
+          <div class="aeo-stat">CTR: <strong class="td-down">0,3%</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción AEO:</strong> Añadir párrafo de definición de exactamente 40–60 palabras inmediatamente después del H1, en etiqueta &lt;p&gt; sin elementos intermedios. Formato: "Una estantería metálica es un sistema modular de almacenamiento fabricado en acero o hierro, diseñado para soportar cargas de [X] kg por estante, utilizado en bodegas, oficinas y espacios industriales." Agregar FAQ schema con 5 preguntas. Este es el contenido exacto que ChatGPT, Perplexity y Gemini citan cuando responden preguntas de definición sobre el tema.
+        </div>
+      </div>
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"¿Cómo armar un estante metálico paso a paso?"</div>
+          <div class="aeo-vis mid">Baja</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>/estantes-faciles-de-armar/</strong></div>
+          <div class="aeo-stat">Pos. SEO: <strong>5,6 / 2,9</strong></div>
+          <div class="aeo-stat">Impr: <strong>19.770</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción AEO:</strong> Añadir lista ordenada &lt;ol&gt; en el primer tercio de la página titulada exactamente "¿Cómo armar un estante metálico paso a paso?". Los LLMs priorizan contenido instructivo con estructura clara y pasos numerados. Agregar Schema HowTo. Incluir FAQ: "¿Cuánto tarda en armarse?", "¿Necesita herramientas?", "¿Cuántas personas se necesitan?". Este formato es exactamente lo que Google elige para featured snippets y los modelos de IA para respuestas instructivas.
+        </div>
+      </div>
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"¿Cuánto peso aguanta un estante metálico?"</div>
+          <div class="aeo-vis high">Alta</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>/producto/estante-metalico-negro-180x90x40cm-400-kg/</strong></div>
+          <div class="aeo-stat">Vistas: <strong>6.119</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción AEO:</strong> El nombre del producto ya indica "400 kg". Crear un bloque FAQ con Schema FAQPage con la respuesta exacta: "Este estante metálico soporta hasta 400 kg distribuidos en 5 estantes, con carga máxima de 80 kg por repisa." Es un featured snippet directo y una respuesta que los LLMs citan de forma literal cuando preguntan por capacidad de carga de estantes metálicos.
+        </div>
+      </div>
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"¿Dónde comprar estantes metálicos en Chile?"</div>
+          <div class="aeo-vis none">Sin datos</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>No existe landing local</strong></div>
+          <div class="aeo-stat">GA4: <strong>11/12 usuarios en tiempo real desde Chile</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción GEO Local:</strong> Crear página de SEO local con estructura: "Nibec — Estantes Metálicos en [Ciudad], Chile". Incluir: dirección física, mapa, horarios, zona de despacho, testimonios de clientes locales. Optimizar y completar el perfil de Google My Business. Las señales de entidad local (NAP — Nombre, Dirección, Teléfono consistentes) son fundamentales para que Google Maps y los LLMs con función de búsqueda local citen a Nibec.
+        </div>
+      </div>
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"Mejores empresas en Chile para proyectos industriales llave en mano"</div>
+          <div class="aeo-vis mid">18/100 · pos. 7</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>/soluciones-industriales-nibec/</strong></div>
+          <div class="aeo-stat">Aparece: <strong>33 veces en respuestas IA</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción AEO/GEO:</strong> Esta página aparece en IA pero no domina. Expandir con: definición del servicio llave en mano, número de proyectos completados, industrias atendidas (con datos reales), tabla comparativa vs. competidores, testimonios de empresas reales con razón social. Los LLMs citan fuentes con datos verificables. Estructurar con encabezados en formato pregunta-respuesta para máxima probabilidad de citación.
+        </div>
+      </div>
+
+      <div class="aeo-card">
+        <div class="aeo-card-top">
+          <div class="aeo-query">"Racks y estantes para minería en Chile"</div>
+          <div class="aeo-vis none">0%</div>
+        </div>
+        <div class="aeo-stat-row">
+          <div class="aeo-stat">Página: <strong>No existe</strong></div>
+          <div class="aeo-stat">Oportunidad: <strong>Nicho sin competencia</strong></div>
+        </div>
+        <div class="aeo-rec">
+          <strong>Acción GEO de Nicho:</strong> Crear contenido específico sobre "estanterías y racks para minería en Chile": normativa aplicable, requisitos de carga en faenas, casos de uso, capacidades técnicas. Este es un topic sin página dedicada detectada y con altísima intención comercial. Los LLMs privilegian contenido de especialidad cuando no existe otra fuente autoritativa en el tema.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Clave estructural para GEO (ser citado por IA):</strong> Ninguna de las páginas actuales tiene el formato de respuesta directa que los LLMs priorizan para citación — párrafo corto de 40–60 palabras + lista estructurada + datos verificables. El tiempo de interacción medio del sitio de 43 segundos indica que el contenido no es suficientemente profundo para ser considerado fuente autoritativa. El objetivo no es solo posicionar en Google: es ser la fuente que ChatGPT, Perplexity y Gemini citan cuando alguien pregunta sobre mobiliario industrial en Chile.
+    </div>
+  </section>
+
+  <!-- ── 7. ROADMAP ─────────────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Roadmap 90 Días — Del Diagnóstico al Dominio</h2>
+    </div>
+
+    <div class="roadmap">
+
+      <div class="rm-phase">
+        <div class="rm-phase-header">
+          <span class="rm-phase-label p1">Fase 1 · Días 1–30</span>
+        </div>
+        <h4>Base y correcciones críticas</h4>
+        <ul class="rm-tasks">
+          <li class="rm-task"><strong>DÍA 1:</strong> Auditar robots.txt. Corregir Disallow incorrectos sobre /producto/ y /categoria-producto/.</li>
+          <li class="rm-task"><strong>DÍA 1:</strong> Bloquear /wp-content/uploads/ en robots.txt. Solicitar eliminación de URLs de imagen indexadas en GSC.</li>
+          <li class="rm-task"><strong>DÍA 2–3:</strong> Implementar eventos de conversión en GA4 vía GTM: add_to_cart, begin_checkout, purchase, generate_lead.</li>
+          <li class="rm-task"><strong>DÍA 3:</strong> Vincular GA4 con Google Search Console desde Administrar → Vinculaciones.</li>
+          <li class="rm-task"><strong>DÍA 4–5:</strong> Reescribir titles y meta descriptions de las 5 páginas con más impresiones (estantes, repisa 200x150, repisa 200x200, que-es, estantes-faciles).</li>
+          <li class="rm-task"><strong>DÍA 5–7:</strong> Reestructurar /que-es-una-estanteria/ para capturar featured snippet: párrafo 40–60 palabras + FAQ schema.</li>
+          <li class="rm-task"><strong>DÍA 7–14:</strong> Corregir CLS en las 63 URLs desktop: añadir width/height a imágenes de producto, reservar espacio para banners.</li>
+          <li class="rm-task"><strong>DÍA 14–20:</strong> Optimizar homepage con Surfer Content Editor. Target SEO Score ≥ 60 (actualmente 19/100).</li>
+          <li class="rm-task"><strong>DÍA 20–30:</strong> Optimizar "La estantería metálica" (Score 11/100) y las otras 2 páginas urgentes de Surfer.</li>
+        </ul>
+      </div>
+
+      <div class="rm-phase">
+        <div class="rm-phase-header">
+          <span class="rm-phase-label p2">Fase 2 · Días 31–60</span>
+        </div>
+        <h4>Expansión de contenido y autoridad</h4>
+        <ul class="rm-tasks">
+          <li class="rm-task"><strong>Semana 5:</strong> Crear landing de SEO local con ciudad + producto + NAP consistente. Optimizar Google My Business.</li>
+          <li class="rm-task"><strong>Semana 5:</strong> Añadir HowTo schema y pasos numerados en /estantes-faciles-de-armar/.</li>
+          <li class="rm-task"><strong>Semana 5–6:</strong> Crear página dedicada "Racks y estantes para minería en Chile" — nicho sin competencia con alta intención comercial.</li>
+          <li class="rm-task"><strong>Semana 6:</strong> Auditar y limpiar las 570 URLs "rastreadas sin indexar": canonical, noindex o mejora de contenido.</li>
+          <li class="rm-task"><strong>Semana 6–7:</strong> Reforzar /categoria-producto/lockers/ (+228%) con tabla comparativa, ficha técnica y FAQ para consolidar el momentum.</li>
+          <li class="rm-task"><strong>Semana 7:</strong> Resolver los 11 Soft 404 y las 119 URLs con canonical incorrecto.</li>
+          <li class="rm-task"><strong>Semana 7–8:</strong> Crear tabla comparativa de productos con dimensiones, capacidad de carga y precio en /categoria-producto/estantes/ para citación por IA.</li>
+          <li class="rm-task"><strong>Semana 8:</strong> Corregir LCP en las páginas de producto con más tráfico. Optimizar imágenes hero a WebP.</li>
+        </ul>
+      </div>
+
+      <div class="rm-phase">
+        <div class="rm-phase-header">
+          <span class="rm-phase-label p3">Fase 3 · Días 61–90</span>
+        </div>
+        <h4>Dominio de mercado y AEO avanzado</h4>
+        <ul class="rm-tasks">
+          <li class="rm-task"><strong>Semana 9:</strong> Publicar guía "Cómo elegir el rack industrial correcto" — formato checklist y tabla comparativa que los LLMs citan como referencia.</li>
+          <li class="rm-task"><strong>Semana 9–10:</strong> Expandir /soluciones-industriales-nibec/ con datos de proyectos, industrias, testimonios con razón social. Objetivo: aumentar visibilidad en IA de 18% a 50%+ en queries de proyectos industriales.</li>
+          <li class="rm-task"><strong>Semana 10:</strong> Revisar datos de conversión acumulados (ya disponibles tras Fase 1). Optimizar páginas de mayor conversión y reasignar presupuesto paid hacia las que demuestren ROI.</li>
+          <li class="rm-task"><strong>Semana 10–11:</strong> Crear página dedicada a kardex si el producto forma parte del catálogo — 1.791 impresiones en posición 6,9 con 0,2% CTR.</li>
+          <li class="rm-task"><strong>Semana 11–12:</strong> Monitorear y ajustar: comparar CTR pre/post en las 5 páginas principales, revisar posiciones de keywords optimizadas, verificar si robots.txt permitió indexar nuevas páginas de producto.</li>
+          <li class="rm-task"><strong>Semana 12:</strong> Medir AI Visibility en Surfer: target aumentar de 48 a 65+ con contenido AEO y dominar queries genéricas de industria en Chile.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="inline-metrics" style="margin-top:24px;">
+      <div class="im-item">
+        <div class="im-label">Objetivo CTR orgánico (mes 3)</div>
+        <div class="im-val">≥ 2,5%</div>
+      </div>
+      <div class="im-item">
+        <div class="im-label">Páginas indexadas objetivo</div>
+        <div class="im-val">500+</div>
+      </div>
+      <div class="im-item">
+        <div class="im-label">Sesiones orgánicas objetivo (mes 3)</div>
+        <div class="im-val good">3.500+</div>
+      </div>
+      <div class="im-item">
+        <div class="im-label">AI Visibility objetivo</div>
+        <div class="im-val good">65+</div>
+      </div>
+      <div class="im-item">
+        <div class="im-label">CWV desktop URLs "Malas"</div>
+        <div class="im-val good">0</div>
+      </div>
+      <div class="im-item">
+        <div class="im-label">Conversiones rastreadas</div>
+        <div class="im-val good">Activas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NOTA METODOLÓGICA ──────────────────────────── -->
+  <section class="section" style="margin-top: -16px;">
+    <div class="callout">
+      <strong>Nota metodológica:</strong> Este informe consolida datos de tres fuentes complementarias. GA4 aporta comportamiento de usuarios, canales de tráfico y eventos. Google Search Console aporta impresiones, CTR, posiciones, indexación y Core Web Vitals. SurferSEO aporta análisis de contenido, AI Visibility y comparativa competitiva. Los datos de queries individuales y posiciones granulares por URL requieren exportar CSV desde GSC (botón Exportar → Google Sheets) o paginar los filtros en Surfer Performance. Las estimaciones de clics adicionales son proyecciones basadas en benchmarks de CTR por posición de la industria y deben validarse con datos reales a las 4–6 semanas de implementadas las mejoras.
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════ FOOTER ════ -->
+<footer class="report-footer">
+  <strong>Nibec · nibec.cl</strong> · Informe SEO Maestro · Período: 25 mar – 25 jun 2026 · Generado: 26 jun 2026<br>
+  Fuentes: Google Analytics 4 · Google Search Console · SurferSEO
+</footer>
