@@ -4,7 +4,6 @@ import { useState } from "react";
 import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
-import Top5 from "@/components/Top5";
 import { generarInformeMock } from "@/lib/datos-mock";
 import { DatosFormulario, InformeCompleto } from "@/lib/tipos";
 
@@ -58,8 +57,6 @@ export default function Home() {
             />
 
             <EspejoIA visibilidad={informe.visibilidadIA} />
-
-            <Top5 acciones={informe.prioridades} />
           </div>
         )}
       </div>

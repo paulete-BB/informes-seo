@@ -182,47 +182,5 @@ export function generarInformeMock(
         "No apareces en directorios ni menciones externas: la IA se apoya en fuentes de terceros, y hoy casi nadie te nombra fuera de tu propio sitio.",
       ],
     },
-    prioridades: [
-      {
-        id: "1",
-        titulo: "Agregar tu dirección, horario y rubro en un formato que Google y la IA entiendan",
-        porQueImporta:
-          "Hoy no puedes aparecer en el mapa de Google ni en las respuestas de ChatGPT si tu ficha no dice, de forma clara, qué eres y dónde estás. Estás perdiendo clientes que buscan justo lo que ofreces.",
-        urgencia: "critico",
-        esfuerzo: "Requiere ayuda técnica (15-30 min)",
-      },
-      {
-        id: "2",
-        titulo: "Escribir un titular claro que diga qué vendes y a quién le sirve",
-        porQueImporta:
-          "Las primeras personas que entran a tu web se van en 5 segundos si no entienden qué haces. Cada visita que se va sin entender es una venta perdida.",
-        urgencia: "critico",
-        esfuerzo: "Minutos",
-      },
-      {
-        id: "3",
-        titulo: "Mejorar la velocidad de carga en celular",
-        porQueImporta:
-          "Más de la mitad de las personas abandona un sitio que tarda más de 3 segundos en celular. Con 5,2 segundos, estás dejando ir clientes antes de que vean tu oferta.",
-        urgencia: "alerta",
-        esfuerzo: "Requiere ayuda técnica",
-      },
-      {
-        id: "4",
-        titulo: "Dejar un solo botón de acción claro, arriba de todo",
-        porQueImporta:
-          "Con 5 botones compitiendo, la persona no sabe qué hacer y no hace nada. Un solo botón (\"Escríbenos por WhatsApp\") multiplica las conversiones.",
-        urgencia: "alerta",
-        esfuerzo: "Horas",
-      },
-      {
-        id: "5",
-        titulo: "Sumar testimonios y fotos reales del negocio",
-        porQueImporta:
-          "La confianza es lo que falta para que alguien nuevo se decida. Sin caras ni opiniones reales, compite en desventaja frente a negocios que sí las muestran.",
-        urgencia: "alerta",
-        esfuerzo: "Horas",
-      },
-    ],
   };
 }

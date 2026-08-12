@@ -68,15 +68,6 @@ export interface AnalisisVisibilidadIA {
   porQueNoTeMencionan: string[];
 }
 
-export interface AccionPrioridad {
-  id: string;
-  titulo: string;
-  porQueImporta: string;
-  urgencia: EstadoSemaforo;
-  esfuerzo: string;
-  copyPaste?: string;
-}
-
 export interface DatosFormulario {
   url: string;
   rubro: string;
@@ -91,5 +82,4 @@ export interface InformeCompleto {
   pagespeed: AnalisisPageSpeed;
   cro: AnalisisCRO;
   visibilidadIA: AnalisisVisibilidadIA;
-  prioridades: AccionPrioridad[];
 }

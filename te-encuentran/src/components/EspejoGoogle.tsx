@@ -1,7 +1,13 @@
-import { AnalisisCRO, AnalisisPageSpeed, AnalisisTecnico } from "@/lib/tipos";
+import { AnalisisCRO, AnalisisPageSpeed, AnalisisTecnico, EstadoSemaforo } from "@/lib/tipos";
 import TarjetaAnalisis from "./TarjetaAnalisis";
 import Semaforo from "./Semaforo";
 import Puntaje from "./Puntaje";
+
+const ORDEN_URGENCIA: Record<EstadoSemaforo, number> = {
+  critico: 0,
+  alerta: 1,
+  ok: 2,
+};
 
 export default function EspejoGoogle({
   tecnico,
@@ -12,6 +18,10 @@ export default function EspejoGoogle({
   pagespeed: AnalisisPageSpeed;
   cro: AnalisisCRO;
 }) {
+  const hallazgosOrdenados = [...tecnico.hallazgos].sort(
+    (a, b) => ORDEN_URGENCIA[a.estado] - ORDEN_URGENCIA[b.estado]
+  );
+
   return (
     <section>
       <div className="mb-6">
@@ -27,23 +37,26 @@ export default function EspejoGoogle({
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <TarjetaAnalisis titulo="Estructura técnica" error={tecnico.error}>
-          <ul className="space-y-4">
-            {tecnico.hallazgos.map((h) => (
-              <li key={h.id} className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-base font-semibold text-zinc-800">
-                    {h.titulo}
-                  </span>
-                  <Semaforo estado={h.estado} />
-                </div>
-                <p className="text-base text-zinc-600">{h.explicacion}</p>
-              </li>
-            ))}
-          </ul>
-        </TarjetaAnalisis>
+      <TarjetaAnalisis titulo="Estructura técnica" error={tecnico.error}>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {hallazgosOrdenados.map((h) => (
+            <div
+              key={h.id}
+              className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-4"
+            >
+              <span className="text-sm font-bold text-zinc-800">
+                {h.titulo}
+              </span>
+              <Semaforo estado={h.estado} />
+              <p className="line-clamp-3 text-sm text-zinc-600">
+                {h.explicacion}
+              </p>
+            </div>
+          ))}
+        </div>
+      </TarjetaAnalisis>
 
+      <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <TarjetaAnalisis titulo="Velocidad (PageSpeed)" error={pagespeed.error}>
           <div className="mb-6 grid grid-cols-3 gap-4">
             <Puntaje etiqueta="Velocidad" valor={pagespeed.scorePerformance} />
