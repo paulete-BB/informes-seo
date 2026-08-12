@@ -89,7 +89,7 @@ export async function POST(request: Request) {
   try {
     respuesta = await client.messages.create({
       model: "claude-sonnet-5",
-      max_tokens: 1024,
+      max_tokens: 2048,
       output_config: { format: { type: "json_schema", schema: ESQUEMA_CRO } },
       messages: [
         {
@@ -127,6 +127,11 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
   if (respuesta.stop_reason === "refusal") {
     return Response.json(
       respuestaVacia("No pudimos completar este análisis visual. Intenta de nuevo.")
+    );
+  }
+  if (respuesta.stop_reason === "max_tokens") {
+    return Response.json(
+      respuestaVacia("El análisis visual quedó incompleto. Intenta de nuevo.")
     );
   }
 
