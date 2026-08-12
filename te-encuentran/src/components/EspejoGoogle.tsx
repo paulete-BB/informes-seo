@@ -15,12 +15,14 @@ export default function EspejoGoogle({
   pagespeed,
   cargandoPagespeed,
   cro,
+  cargandoCro,
 }: {
   tecnico: AnalisisTecnico | null;
   cargandoTecnico: boolean;
   pagespeed: AnalisisPageSpeed | null;
   cargandoPagespeed: boolean;
-  cro: AnalisisCRO;
+  cro: AnalisisCRO | null;
+  cargandoCro: boolean;
 }) {
   const hallazgosOrdenados = [...(tecnico?.hallazgos ?? [])].sort(
     (a, b) => ORDEN_URGENCIA[a.estado] - ORDEN_URGENCIA[b.estado]
@@ -99,28 +101,31 @@ export default function EspejoGoogle({
 
         <TarjetaAnalisis
           titulo="Primera impresión (visual)"
-          error={cro.error}
+          cargando={cargandoCro}
+          error={cro?.ok === false ? cro.error : undefined}
         >
-          <div className="space-y-5">
-            {cro.dimensiones.map((d) => (
-              <div key={d.nombre}>
-                <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-base font-semibold text-zinc-800">
-                    {d.nombre}
-                  </span>
-                  <span className="text-lg font-bold text-zinc-700">
-                    {d.score}/100
-                  </span>
+          {cro?.ok && (
+            <div className="space-y-5">
+              {cro.dimensiones.map((d) => (
+                <div key={d.nombre}>
+                  <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-base font-semibold text-zinc-800">
+                      {d.nombre}
+                    </span>
+                    <span className="text-lg font-bold text-zinc-700">
+                      {d.score}/100
+                    </span>
+                  </div>
+                  <p className="mb-2 text-base text-zinc-600">{d.veredicto}</p>
+                  <ul className="list-inside list-disc space-y-1 text-sm text-zinc-500">
+                    {d.hallazgos.map((h, i) => (
+                      <li key={i}>{h}</li>
+                    ))}
+                  </ul>
                 </div>
-                <p className="mb-2 text-base text-zinc-600">{d.veredicto}</p>
-                <ul className="list-inside list-disc space-y-1 text-sm text-zinc-500">
-                  {d.hallazgos.map((h, i) => (
-                    <li key={i}>{h}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </TarjetaAnalisis>
       </div>
     </section>

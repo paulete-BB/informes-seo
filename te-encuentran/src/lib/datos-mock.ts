@@ -11,40 +11,6 @@ export function generarInformeMock(
     url,
     rubro,
     ciudad,
-    cro: {
-      ok: true,
-      screenshotUrl: undefined,
-      dimensiones: [
-        {
-          nombre: "La prueba de los 5 segundos",
-          score: 45,
-          veredicto:
-            "No queda claro de inmediato qué vendes ni a quién le sirve.",
-          hallazgos: [
-            "El texto principal habla de la empresa, no del problema que resuelve.",
-            "No hay una frase corta que diga a quién le sirve el servicio.",
-          ],
-        },
-        {
-          nombre: "Confianza",
-          score: 60,
-          veredicto: "Se ve como un negocio real, pero le faltan respaldos.",
-          hallazgos: [
-            "No hay testimonios ni fotos del taller o del equipo.",
-            "No se ve la dirección física en la primera pantalla.",
-          ],
-        },
-        {
-          nombre: "Acción clara",
-          score: 30,
-          veredicto: "Hay demasiados botones compitiendo por la atención.",
-          hallazgos: [
-            "Se cuentan 5 botones distintos en la primera pantalla.",
-            "Ninguno destaca visualmente sobre el resto.",
-          ],
-        },
-      ],
-    },
     visibilidadIA: {
       ok: true,
       scoreVisibilidad: 1,

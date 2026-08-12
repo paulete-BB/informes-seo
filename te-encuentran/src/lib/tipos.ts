@@ -78,6 +78,5 @@ export interface InformeCompleto {
   url: string;
   rubro: string;
   ciudad: string;
-  cro: AnalisisCRO;
   visibilidadIA: AnalisisVisibilidadIA;
 }

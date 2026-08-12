@@ -6,6 +6,7 @@ import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
 import { generarInformeMock } from "@/lib/datos-mock";
 import {
+  AnalisisCRO,
   AnalisisPageSpeed,
   AnalisisTecnico,
   DatosFormulario,
@@ -20,6 +21,8 @@ export default function Home() {
   const [cargandoTecnico, setCargandoTecnico] = useState(false);
   const [pagespeed, setPagespeed] = useState<AnalisisPageSpeed | null>(null);
   const [cargandoPagespeed, setCargandoPagespeed] = useState(false);
+  const [cro, setCro] = useState<AnalisisCRO | null>(null);
+  const [cargandoCro, setCargandoCro] = useState(false);
 
   async function cargarTecnico(datos: DatosFormulario) {
     setCargandoTecnico(true);
@@ -60,21 +63,40 @@ export default function Home() {
     }
   }
 
+  async function cargarCro(datos: DatosFormulario) {
+    setCargandoCro(true);
+    try {
+      const res = await fetch("/api/analisis/cro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      setCro(await res.json());
+    } catch {
+      setCro({ ok: false, error: ERROR_CONEXION, dimensiones: [] });
+    } finally {
+      setCargandoCro(false);
+    }
+  }
+
   function manejarEnvio(datos: DatosFormulario) {
-    // CRO y visibilidad IA todavía usan datos de ejemplo hasta que se
-    // construyan sus endpoints en las próximas fases.
+    // Visibilidad IA todavía usa datos de ejemplo hasta que se construya su
+    // endpoint en la próxima fase.
     setInforme(generarInformeMock(datos.url, datos.rubro, datos.ciudad));
     setTecnico(null);
     setPagespeed(null);
+    setCro(null);
     // Se disparan en paralelo: cada tarjeta resuelve de forma independiente.
     cargarTecnico(datos);
     cargarPagespeed(datos);
+    cargarCro(datos);
   }
 
   function reiniciar() {
     setInforme(null);
     setTecnico(null);
     setPagespeed(null);
+    setCro(null);
   }
 
   return (
@@ -116,7 +138,8 @@ export default function Home() {
               cargandoTecnico={cargandoTecnico}
               pagespeed={pagespeed}
               cargandoPagespeed={cargandoPagespeed}
-              cro={informe.cro}
+              cro={cro}
+              cargandoCro={cargandoCro}
             />
 
             <EspejoIA visibilidad={informe.visibilidadIA} />
