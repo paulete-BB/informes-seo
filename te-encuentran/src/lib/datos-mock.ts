@@ -11,53 +11,6 @@ export function generarInformeMock(
     url,
     rubro,
     ciudad,
-    tecnico: {
-      ok: true,
-      hallazgos: [
-        {
-          id: "titulo",
-          titulo: "Título y descripción de la página",
-          estado: "alerta",
-          explicacion:
-            "Tu página tiene un título, pero es muy genérico (\"Inicio\"). Cuando alguien busca en Google, ese título es lo primero que lee: si no dice qué vendes ni dónde estás, pierdes el clic antes de que entre a tu web.",
-        },
-        {
-          id: "h1",
-          titulo: "Encabezado principal (H1)",
-          estado: "critico",
-          explicacion:
-            "No encontramos un encabezado principal claro en tu página. Es como un local sin letrero: Google no tiene forma fácil de saber de qué se trata tu negocio.",
-        },
-        {
-          id: "schema",
-          titulo: "Datos estructurados (Schema.org)",
-          estado: "critico",
-          explicacion:
-            "Tu sitio no le informa a Google, de forma explícita, cuál es tu dirección, tu horario o tu tipo de negocio. Es información que Google usa para mostrarte en el mapa y en las respuestas de la IA.",
-        },
-        {
-          id: "sitemap",
-          titulo: "Mapa del sitio (sitemap.xml)",
-          estado: "ok",
-          explicacion:
-            "Existe un mapa del sitio. Esto ayuda a que Google encuentre todas tus páginas más rápido.",
-        },
-        {
-          id: "llms",
-          titulo: "Archivo llms.txt",
-          estado: "critico",
-          explicacion:
-            "No existe un archivo llms.txt. Es un estándar nuevo (2024) que le explica a las IAs como ChatGPT de qué trata tu sitio. Casi nadie lo tiene todavía: tenerlo te puede dar ventaja.",
-        },
-        {
-          id: "contacto",
-          titulo: "Formas de contacto",
-          estado: "ok",
-          explicacion:
-            "Tu teléfono y un botón de WhatsApp están visibles. Eso genera confianza y facilita que te escriban.",
-        },
-      ],
-    },
     pagespeed: {
       ok: true,
       scorePerformance: 38,

@@ -11,14 +11,16 @@ const ORDEN_URGENCIA: Record<EstadoSemaforo, number> = {
 
 export default function EspejoGoogle({
   tecnico,
+  cargandoTecnico,
   pagespeed,
   cro,
 }: {
-  tecnico: AnalisisTecnico;
+  tecnico: AnalisisTecnico | null;
+  cargandoTecnico: boolean;
   pagespeed: AnalisisPageSpeed;
   cro: AnalisisCRO;
 }) {
-  const hallazgosOrdenados = [...tecnico.hallazgos].sort(
+  const hallazgosOrdenados = [...(tecnico?.hallazgos ?? [])].sort(
     (a, b) => ORDEN_URGENCIA[a.estado] - ORDEN_URGENCIA[b.estado]
   );
 
@@ -37,7 +39,11 @@ export default function EspejoGoogle({
         </p>
       </div>
 
-      <TarjetaAnalisis titulo="Estructura técnica" error={tecnico.error}>
+      <TarjetaAnalisis
+        titulo="Estructura técnica"
+        cargando={cargandoTecnico}
+        error={tecnico?.ok === false ? tecnico.error : undefined}
+      >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {hallazgosOrdenados.map((h) => (
             <div

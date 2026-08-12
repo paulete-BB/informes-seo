@@ -5,15 +5,41 @@ import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
 import { generarInformeMock } from "@/lib/datos-mock";
-import { DatosFormulario, InformeCompleto } from "@/lib/tipos";
+import { AnalisisTecnico, DatosFormulario, InformeCompleto } from "@/lib/tipos";
 
 export default function Home() {
   const [informe, setInforme] = useState<InformeCompleto | null>(null);
+  const [tecnico, setTecnico] = useState<AnalisisTecnico | null>(null);
+  const [cargandoTecnico, setCargandoTecnico] = useState(false);
 
-  function manejarEnvio(datos: DatosFormulario) {
-    // Fase 0: el informe se genera con datos de ejemplo. En las próximas
-    // fases esto se reemplaza por las llamadas reales a los endpoints.
+  async function manejarEnvio(datos: DatosFormulario) {
+    // Pagespeed, CRO y visibilidad IA todavía usan datos de ejemplo hasta
+    // que se construyan sus endpoints en las próximas fases.
     setInforme(generarInformeMock(datos.url, datos.rubro, datos.ciudad));
+    setTecnico(null);
+    setCargandoTecnico(true);
+
+    try {
+      const res = await fetch("/api/analisis/tecnico", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      setTecnico(await res.json());
+    } catch {
+      setTecnico({
+        ok: false,
+        error: "No pudimos conectar con el servidor. Intenta de nuevo.",
+        hallazgos: [],
+      });
+    } finally {
+      setCargandoTecnico(false);
+    }
+  }
+
+  function reiniciar() {
+    setInforme(null);
+    setTecnico(null);
   }
 
   return (
@@ -43,7 +69,7 @@ export default function Home() {
                 </p>
               </div>
               <button
-                onClick={() => setInforme(null)}
+                onClick={reiniciar}
                 className="rounded-xl border border-zinc-300 px-4 py-2 text-base font-semibold text-zinc-700 hover:bg-zinc-50"
               >
                 Analizar otro sitio
@@ -51,7 +77,8 @@ export default function Home() {
             </div>
 
             <EspejoGoogle
-              tecnico={informe.tecnico}
+              tecnico={tecnico}
+              cargandoTecnico={cargandoTecnico}
               pagespeed={informe.pagespeed}
               cro={informe.cro}
             />
