@@ -13,11 +13,13 @@ export default function EspejoGoogle({
   tecnico,
   cargandoTecnico,
   pagespeed,
+  cargandoPagespeed,
   cro,
 }: {
   tecnico: AnalisisTecnico | null;
   cargandoTecnico: boolean;
-  pagespeed: AnalisisPageSpeed;
+  pagespeed: AnalisisPageSpeed | null;
+  cargandoPagespeed: boolean;
   cro: AnalisisCRO;
 }) {
   const hallazgosOrdenados = [...(tecnico?.hallazgos ?? [])].sort(
@@ -63,28 +65,36 @@ export default function EspejoGoogle({
       </TarjetaAnalisis>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
-        <TarjetaAnalisis titulo="Velocidad (PageSpeed)" error={pagespeed.error}>
-          <div className="mb-6 grid grid-cols-3 gap-4">
-            <Puntaje etiqueta="Velocidad" valor={pagespeed.scorePerformance} />
-            <Puntaje etiqueta="SEO" valor={pagespeed.scoreSeo} />
-            <Puntaje etiqueta="Accesibilidad" valor={pagespeed.scoreAccesibilidad} />
-          </div>
-          <ul className="space-y-4">
-            {pagespeed.metricas.map((m) => (
-              <li key={m.id} className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-base font-semibold text-zinc-800">
-                    {m.nombre}{" "}
-                    <span className="font-normal text-zinc-500">
-                      ({m.valor})
-                    </span>
-                  </span>
-                  <Semaforo estado={m.estado} />
-                </div>
-                <p className="text-base text-zinc-600">{m.explicacion}</p>
-              </li>
-            ))}
-          </ul>
+        <TarjetaAnalisis
+          titulo="Velocidad (PageSpeed)"
+          cargando={cargandoPagespeed}
+          error={pagespeed?.ok === false ? pagespeed.error : undefined}
+        >
+          {pagespeed?.ok && (
+            <>
+              <div className="mb-6 grid grid-cols-3 gap-4">
+                <Puntaje etiqueta="Velocidad" valor={pagespeed.scorePerformance} />
+                <Puntaje etiqueta="SEO" valor={pagespeed.scoreSeo} />
+                <Puntaje etiqueta="Accesibilidad" valor={pagespeed.scoreAccesibilidad} />
+              </div>
+              <ul className="space-y-4">
+                {pagespeed.metricas.map((m) => (
+                  <li key={m.id} className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-base font-semibold text-zinc-800">
+                        {m.nombre}{" "}
+                        <span className="font-normal text-zinc-500">
+                          ({m.valor})
+                        </span>
+                      </span>
+                      <Semaforo estado={m.estado} />
+                    </div>
+                    <p className="text-base text-zinc-600">{m.explicacion}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </TarjetaAnalisis>
 
         <TarjetaAnalisis

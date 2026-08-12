@@ -5,20 +5,24 @@ import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
 import { generarInformeMock } from "@/lib/datos-mock";
-import { AnalisisTecnico, DatosFormulario, InformeCompleto } from "@/lib/tipos";
+import {
+  AnalisisPageSpeed,
+  AnalisisTecnico,
+  DatosFormulario,
+  InformeCompleto,
+} from "@/lib/tipos";
+
+const ERROR_CONEXION = "No pudimos conectar con el servidor. Intenta de nuevo.";
 
 export default function Home() {
   const [informe, setInforme] = useState<InformeCompleto | null>(null);
   const [tecnico, setTecnico] = useState<AnalisisTecnico | null>(null);
   const [cargandoTecnico, setCargandoTecnico] = useState(false);
+  const [pagespeed, setPagespeed] = useState<AnalisisPageSpeed | null>(null);
+  const [cargandoPagespeed, setCargandoPagespeed] = useState(false);
 
-  async function manejarEnvio(datos: DatosFormulario) {
-    // Pagespeed, CRO y visibilidad IA todavía usan datos de ejemplo hasta
-    // que se construyan sus endpoints en las próximas fases.
-    setInforme(generarInformeMock(datos.url, datos.rubro, datos.ciudad));
-    setTecnico(null);
+  async function cargarTecnico(datos: DatosFormulario) {
     setCargandoTecnico(true);
-
     try {
       const res = await fetch("/api/analisis/tecnico", {
         method: "POST",
@@ -27,19 +31,50 @@ export default function Home() {
       });
       setTecnico(await res.json());
     } catch {
-      setTecnico({
-        ok: false,
-        error: "No pudimos conectar con el servidor. Intenta de nuevo.",
-        hallazgos: [],
-      });
+      setTecnico({ ok: false, error: ERROR_CONEXION, hallazgos: [] });
     } finally {
       setCargandoTecnico(false);
     }
   }
 
+  async function cargarPagespeed(datos: DatosFormulario) {
+    setCargandoPagespeed(true);
+    try {
+      const res = await fetch("/api/analisis/pagespeed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      setPagespeed(await res.json());
+    } catch {
+      setPagespeed({
+        ok: false,
+        error: ERROR_CONEXION,
+        scorePerformance: 0,
+        scoreSeo: 0,
+        scoreAccesibilidad: 0,
+        metricas: [],
+      });
+    } finally {
+      setCargandoPagespeed(false);
+    }
+  }
+
+  function manejarEnvio(datos: DatosFormulario) {
+    // CRO y visibilidad IA todavía usan datos de ejemplo hasta que se
+    // construyan sus endpoints en las próximas fases.
+    setInforme(generarInformeMock(datos.url, datos.rubro, datos.ciudad));
+    setTecnico(null);
+    setPagespeed(null);
+    // Se disparan en paralelo: cada tarjeta resuelve de forma independiente.
+    cargarTecnico(datos);
+    cargarPagespeed(datos);
+  }
+
   function reiniciar() {
     setInforme(null);
     setTecnico(null);
+    setPagespeed(null);
   }
 
   return (
@@ -79,7 +114,8 @@ export default function Home() {
             <EspejoGoogle
               tecnico={tecnico}
               cargandoTecnico={cargandoTecnico}
-              pagespeed={informe.pagespeed}
+              pagespeed={pagespeed}
+              cargandoPagespeed={cargandoPagespeed}
               cro={informe.cro}
             />
 

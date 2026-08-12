@@ -11,38 +11,6 @@ export function generarInformeMock(
     url,
     rubro,
     ciudad,
-    pagespeed: {
-      ok: true,
-      scorePerformance: 38,
-      scoreSeo: 71,
-      scoreAccesibilidad: 64,
-      metricas: [
-        {
-          id: "lcp",
-          nombre: "Velocidad de carga",
-          valor: "5,2 s",
-          estado: "critico",
-          explicacion:
-            "Tu sitio tarda 5,2 segundos en mostrar lo primero que la persona ve, desde el celular. Más de la mitad de las personas se va antes de que aparezca.",
-        },
-        {
-          id: "cls",
-          nombre: "Estabilidad visual",
-          valor: "0,28",
-          estado: "alerta",
-          explicacion:
-            "Los elementos de tu página se mueven mientras carga. Puede pasar que alguien toque un botón equivocado sin querer y se frustre.",
-        },
-        {
-          id: "tbt",
-          nombre: "Tiempo de respuesta",
-          valor: "620 ms",
-          estado: "alerta",
-          explicacion:
-            "Cuando alguien toca un botón, tu sitio tarda en reaccionar. Se siente pegado o lento, aunque ya haya cargado.",
-        },
-      ],
-    },
     cro: {
       ok: true,
       screenshotUrl: undefined,
