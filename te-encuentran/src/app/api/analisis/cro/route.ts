@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     return Response.json(respuestaVacia("Falta la URL a analizar."));
   }
 
-  const screenshotUrl = `https://image.thum.io/get/width/900/crop/1200/${url}`;
+  const screenshotUrl = `https://image.thum.io/get/width/900/crop/1200/wait/4/${url}`;
 
   let imagenBase64: string;
   let mediaType: string;
@@ -118,10 +118,9 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
       ],
     });
   } catch (error) {
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
-    const detalle = error instanceof Error ? error.message : String(error);
+    console.error("Error en análisis CRO:", error);
     return Response.json(
-      respuestaVacia(`No pudimos analizar visualmente tu sitio. Detalle: ${detalle}`)
+      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
     );
   }
 
