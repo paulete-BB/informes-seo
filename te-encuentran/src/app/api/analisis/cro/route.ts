@@ -117,9 +117,11 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
         },
       ],
     });
-  } catch {
+  } catch (error) {
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
+    const detalle = error instanceof Error ? error.message : String(error);
     return Response.json(
-      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
+      respuestaVacia(`No pudimos analizar visualmente tu sitio. Detalle: ${detalle}`)
     );
   }
 
