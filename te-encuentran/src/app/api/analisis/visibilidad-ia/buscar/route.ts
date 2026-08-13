@@ -29,9 +29,10 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, pregunta, respuesta: texto });
   } catch (error) {
     console.error("Error buscando respuesta de visibilidad IA:", error);
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json({
       ok: false,
-      error: "No pudimos obtener una respuesta para esta pregunta.",
+      error: error instanceof Error ? error.message : String(error),
       pregunta,
       respuesta: "",
     });
