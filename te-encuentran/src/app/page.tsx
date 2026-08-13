@@ -4,25 +4,26 @@ import { useState } from "react";
 import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
-import { generarInformeMock } from "@/lib/datos-mock";
 import {
   AnalisisCRO,
   AnalisisPageSpeed,
   AnalisisTecnico,
+  AnalisisVisibilidadIA,
   DatosFormulario,
-  InformeCompleto,
 } from "@/lib/tipos";
 
 const ERROR_CONEXION = "No pudimos conectar con el servidor. Intenta de nuevo.";
 
 export default function Home() {
-  const [informe, setInforme] = useState<InformeCompleto | null>(null);
+  const [datosEnviados, setDatosEnviados] = useState<DatosFormulario | null>(null);
   const [tecnico, setTecnico] = useState<AnalisisTecnico | null>(null);
   const [cargandoTecnico, setCargandoTecnico] = useState(false);
   const [pagespeed, setPagespeed] = useState<AnalisisPageSpeed | null>(null);
   const [cargandoPagespeed, setCargandoPagespeed] = useState(false);
   const [cro, setCro] = useState<AnalisisCRO | null>(null);
   const [cargandoCro, setCargandoCro] = useState(false);
+  const [visibilidadIA, setVisibilidadIA] = useState<AnalisisVisibilidadIA | null>(null);
+  const [cargandoVisibilidadIA, setCargandoVisibilidadIA] = useState(false);
 
   async function cargarTecnico(datos: DatosFormulario) {
     setCargandoTecnico(true);
@@ -79,24 +80,49 @@ export default function Home() {
     }
   }
 
+  async function cargarVisibilidadIA(datos: DatosFormulario) {
+    setCargandoVisibilidadIA(true);
+    try {
+      const res = await fetch("/api/analisis/visibilidad-ia", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      setVisibilidadIA(await res.json());
+    } catch {
+      setVisibilidadIA({
+        ok: false,
+        error: ERROR_CONEXION,
+        scoreVisibilidad: 0,
+        totalPreguntas: 0,
+        preguntas: [],
+        competidores: [],
+        porQueNoTeMencionan: [],
+      });
+    } finally {
+      setCargandoVisibilidadIA(false);
+    }
+  }
+
   function manejarEnvio(datos: DatosFormulario) {
-    // Visibilidad IA todavía usa datos de ejemplo hasta que se construya su
-    // endpoint en la próxima fase.
-    setInforme(generarInformeMock(datos.url, datos.rubro, datos.ciudad));
+    setDatosEnviados(datos);
     setTecnico(null);
     setPagespeed(null);
     setCro(null);
+    setVisibilidadIA(null);
     // Se disparan en paralelo: cada tarjeta resuelve de forma independiente.
     cargarTecnico(datos);
     cargarPagespeed(datos);
     cargarCro(datos);
+    cargarVisibilidadIA(datos);
   }
 
   function reiniciar() {
-    setInforme(null);
+    setDatosEnviados(null);
     setTecnico(null);
     setPagespeed(null);
     setCro(null);
+    setVisibilidadIA(null);
   }
 
   return (
@@ -112,9 +138,9 @@ export default function Home() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-        {!informe && <Formulario onEnviar={manejarEnvio} cargando={false} />}
+        {!datosEnviados && <Formulario onEnviar={manejarEnvio} cargando={false} />}
 
-        {informe && (
+        {datosEnviados && (
           <div className="space-y-16">
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-6">
               <div>
@@ -122,7 +148,7 @@ export default function Home() {
                   Informe para
                 </p>
                 <p className="text-xl font-bold text-zinc-900">
-                  {informe.url} · {informe.rubro} · {informe.ciudad}
+                  {datosEnviados.url} · {datosEnviados.rubro} · {datosEnviados.ciudad}
                 </p>
               </div>
               <button
@@ -142,7 +168,10 @@ export default function Home() {
               cargandoCro={cargandoCro}
             />
 
-            <EspejoIA visibilidad={informe.visibilidadIA} />
+            <EspejoIA
+              visibilidad={visibilidadIA}
+              cargando={cargandoVisibilidadIA}
+            />
           </div>
         )}
       </div>

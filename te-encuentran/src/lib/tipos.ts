@@ -73,10 +73,3 @@ export interface DatosFormulario {
   rubro: string;
   ciudad: string;
 }
-
-export interface InformeCompleto {
-  url: string;
-  rubro: string;
-  ciudad: string;
-  visibilidadIA: AnalisisVisibilidadIA;
-}

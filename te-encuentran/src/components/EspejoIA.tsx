@@ -3,13 +3,16 @@ import TarjetaAnalisis from "./TarjetaAnalisis";
 
 export default function EspejoIA({
   visibilidad,
+  cargando,
 }: {
-  visibilidad: AnalisisVisibilidadIA;
+  visibilidad: AnalisisVisibilidadIA | null;
+  cargando: boolean;
 }) {
   const maxMenciones = Math.max(
     1,
-    ...visibilidad.competidores.map((c) => c.vecesMencionado)
+    ...(visibilidad?.competidores.map((c) => c.vecesMencionado) ?? [])
   );
+  const error = visibilidad?.ok === false ? visibilidad.error : undefined;
 
   return (
     <section>
@@ -27,78 +30,103 @@ export default function EspejoIA({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-        <TarjetaAnalisis titulo="10 preguntas reales, probadas en vivo" error={visibilidad.error}>
-          <div className="mb-6 flex items-baseline gap-3">
-            <span className="text-4xl font-extrabold text-red-600">
-              {visibilidad.scoreVisibilidad}/{visibilidad.totalPreguntas}
-            </span>
-            <span className="text-base text-zinc-600">
-              veces que la IA te mencionó al responder
-            </span>
-          </div>
-          <ol className="space-y-3">
-            {visibilidad.preguntas.map((p, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-3"
-              >
-                <span
-                  className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                    p.apareceNegocio
-                      ? "bg-emerald-500 text-white"
-                      : "bg-red-500 text-white"
-                  }`}
-                >
-                  {p.apareceNegocio ? "✓" : "✕"}
+        <TarjetaAnalisis
+          titulo="Preguntas reales, probadas en vivo"
+          cargando={cargando}
+          error={error}
+        >
+          {visibilidad?.ok && (
+            <>
+              <div className="mb-6 flex items-baseline gap-3">
+                <span className="text-4xl font-extrabold text-red-600">
+                  {visibilidad.scoreVisibilidad}/{visibilidad.totalPreguntas}
                 </span>
-                <span className="text-base text-zinc-700">
-                  &ldquo;{p.pregunta}&rdquo;
-                  {p.apareceNegocio && p.posicion && (
-                    <span className="ml-2 text-sm font-semibold text-emerald-700">
-                      (apareciste en el puesto {p.posicion})
+                <span className="text-base text-zinc-600">
+                  veces que la IA te mencionó al responder
+                </span>
+              </div>
+              <ol className="space-y-3">
+                {visibilidad.preguntas.map((p, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-3"
+                  >
+                    <span
+                      className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold ${
+                        p.apareceNegocio
+                          ? "bg-emerald-500 text-white"
+                          : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {p.apareceNegocio ? "✓" : "✕"}
                     </span>
-                  )}
-                </span>
-              </li>
-            ))}
-          </ol>
+                    <span className="text-base text-zinc-700">
+                      &ldquo;{p.pregunta}&rdquo;
+                      {p.apareceNegocio && p.posicion && (
+                        <span className="ml-2 text-sm font-semibold text-emerald-700">
+                          (apareciste en el puesto {p.posicion})
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </>
+          )}
         </TarjetaAnalisis>
 
         <div className="flex flex-col gap-6">
-          <TarjetaAnalisis titulo="Quién aparece en tu lugar">
-            <ul className="space-y-4">
-              {visibilidad.competidores.map((c) => (
-                <li key={c.nombre}>
-                  <div className="mb-1 flex items-center justify-between">
-                    <span className="text-base font-semibold text-zinc-800">
-                      {c.nombre}
-                    </span>
-                    <span className="text-base font-bold text-zinc-700">
-                      {c.vecesMencionado}/{visibilidad.totalPreguntas}
-                    </span>
-                  </div>
-                  <div className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-100">
-                    <div
-                      className="h-full rounded-full bg-purple-500"
-                      style={{
-                        width: `${(c.vecesMencionado / maxMenciones) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <TarjetaAnalisis
+            titulo="Quién aparece en tu lugar"
+            cargando={cargando}
+            error={error}
+          >
+            {visibilidad?.ok && (
+              <ul className="space-y-4">
+                {visibilidad.competidores.map((c) => (
+                  <li key={c.nombre}>
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-base font-semibold text-zinc-800">
+                        {c.nombre}
+                      </span>
+                      <span className="text-base font-bold text-zinc-700">
+                        {c.vecesMencionado}/{visibilidad.totalPreguntas}
+                      </span>
+                    </div>
+                    <div className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-100">
+                      <div
+                        className="h-full rounded-full bg-purple-500"
+                        style={{
+                          width: `${(c.vecesMencionado / maxMenciones) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </li>
+                ))}
+                {visibilidad.competidores.length === 0 && (
+                  <li className="text-base text-zinc-500">
+                    No detectamos competidores mencionados en estas preguntas.
+                  </li>
+                )}
+              </ul>
+            )}
           </TarjetaAnalisis>
 
-          <TarjetaAnalisis titulo="Por qué no te menciona">
-            <ul className="space-y-3">
-              {visibilidad.porQueNoTeMencionan.map((razon, i) => (
-                <li key={i} className="text-base text-zinc-600">
-                  <span className="font-bold text-zinc-800">{i + 1}. </span>
-                  {razon}
-                </li>
-              ))}
-            </ul>
+          <TarjetaAnalisis
+            titulo="Por qué no te menciona"
+            cargando={cargando}
+            error={error}
+          >
+            {visibilidad?.ok && (
+              <ul className="space-y-3">
+                {visibilidad.porQueNoTeMencionan.map((razon, i) => (
+                  <li key={i} className="text-base text-zinc-600">
+                    <span className="font-bold text-zinc-800">{i + 1}. </span>
+                    {razon}
+                  </li>
+                ))}
+              </ul>
+            )}
           </TarjetaAnalisis>
         </div>
       </div>
