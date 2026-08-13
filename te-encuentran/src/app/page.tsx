@@ -83,12 +83,48 @@ export default function Home() {
   async function cargarVisibilidadIA(datos: DatosFormulario) {
     setCargandoVisibilidadIA(true);
     try {
-      const res = await fetch("/api/analisis/visibilidad-ia", {
+      // Paso 1: generar las preguntas de prueba.
+      const resPreguntas = await fetch("/api/analisis/visibilidad-ia/preguntas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos),
+        body: JSON.stringify({ rubro: datos.rubro, ciudad: datos.ciudad }),
       });
-      setVisibilidadIA(await res.json());
+      const datosPreguntas = await resPreguntas.json();
+      const preguntas: string[] = datosPreguntas.preguntas ?? [];
+      if (preguntas.length === 0) {
+        throw new Error(datosPreguntas.error ?? "No se generaron preguntas.");
+      }
+
+      // Paso 2: cada pregunta se busca en su propia llamada, todas en
+      // paralelo desde el navegador (cada una con su propio límite de tiempo).
+      const resultadosBusqueda = await Promise.all(
+        preguntas.map(async (pregunta) => {
+          try {
+            const res = await fetch("/api/analisis/visibilidad-ia/buscar", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ pregunta }),
+            });
+            const datos = await res.json();
+            return { pregunta, respuesta: datos.ok ? datos.respuesta : "" };
+          } catch {
+            return { pregunta, respuesta: "" };
+          }
+        })
+      );
+
+      // Paso 3: evaluar todas las respuestas juntas.
+      const resEvaluar = await fetch("/api/analisis/visibilidad-ia/evaluar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: datos.url,
+          rubro: datos.rubro,
+          ciudad: datos.ciudad,
+          resultados: resultadosBusqueda,
+        }),
+      });
+      setVisibilidadIA(await resEvaluar.json());
     } catch {
       setVisibilidadIA({
         ok: false,
