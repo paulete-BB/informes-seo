@@ -55,7 +55,7 @@ export async function POST(request: Request) {
   let imagenBase64: string;
   let mediaType: string;
   try {
-    const res = await fetchConTimeout(screenshotUrl, 40000);
+    const res = await fetchConTimeout(screenshotUrl, 20000);
     if (!res.ok) {
       return Response.json(
         respuestaVacia("No pudimos obtener una captura de tu sitio. Intenta de nuevo en unos minutos.")
@@ -93,13 +93,15 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
           ],
         },
       ],
-      config: { maxOutputTokens: 2048 },
+      config: {
+        maxOutputTokens: 2048,
+        httpOptions: { timeout: 35000, retryOptions: { attempts: 2 } },
+      },
     });
   } catch (error) {
     console.error("Error en análisis CRO:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia(error instanceof Error ? error.message : String(error))
+      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
     );
   }
 

@@ -36,7 +36,7 @@ async function evaluarMenciones(
   const bloquesQyA = preguntas
     .map(
       (p, i) =>
-        `Pregunta ${i + 1}: ${p}\nRespuesta obtenida (con búsqueda web real): ${
+        `Pregunta ${i + 1}: ${p}\nRespuesta que dio la IA: ${
           respuestas[i] || "(sin respuesta disponible)"
         }`
     )
@@ -46,7 +46,7 @@ async function evaluarMenciones(
     model: MODELO_TEXTO,
     contents: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
 
-Abajo hay ${preguntas.length} preguntas que una persona real le haría a ChatGPT, junto con la respuesta real que se obtuvo (con búsqueda web activada):
+Abajo hay ${preguntas.length} preguntas que una persona real le haría a un asistente de IA, junto con la respuesta que dio ese asistente (usando solo su conocimiento entrenado, sin búsqueda web en tiempo real):
 
 ${bloquesQyA}
 

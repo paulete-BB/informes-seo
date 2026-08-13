@@ -19,9 +19,6 @@ export async function POST(request: Request) {
     const respuesta = await ia.models.generateContent({
       model: MODELO_TEXTO,
       contents: pregunta,
-      config: {
-        tools: [{ googleSearch: {} }],
-      },
     });
 
     const texto = respuesta.text ?? "";
@@ -29,10 +26,9 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, pregunta, respuesta: texto });
   } catch (error) {
     console.error("Error buscando respuesta de visibilidad IA:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json({
       ok: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: "No pudimos obtener una respuesta para esta pregunta.",
       pregunta,
       respuesta: "",
     });
