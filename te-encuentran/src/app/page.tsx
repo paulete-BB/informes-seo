@@ -14,6 +14,20 @@ import {
 
 const ERROR_CONEXION = "No pudimos conectar con el servidor. Intenta de nuevo.";
 
+// El plan gratuito de Gemini tiene un límite bajo de solicitudes por
+// minuto (compartido entre todos los endpoints que usan IA). Este
+// espaciador global asegura que nunca se disparen dos llamadas a la IA
+// al mismo tiempo, sin importar de qué tarjeta vengan.
+const ESPACIADO_IA_MS = 4000;
+let proximoTurnoIA = 0;
+
+function esperarTurnoIA(): Promise<void> {
+  const ahora = Date.now();
+  const espera = Math.max(0, proximoTurnoIA - ahora);
+  proximoTurnoIA = Math.max(proximoTurnoIA, ahora) + ESPACIADO_IA_MS;
+  return new Promise((resolve) => setTimeout(resolve, espera));
+}
+
 export default function Home() {
   const [datosEnviados, setDatosEnviados] = useState<DatosFormulario | null>(null);
   const [tecnico, setTecnico] = useState<AnalisisTecnico | null>(null);
@@ -67,6 +81,7 @@ export default function Home() {
   async function cargarCro(datos: DatosFormulario) {
     setCargandoCro(true);
     try {
+      await esperarTurnoIA();
       const res = await fetch("/api/analisis/cro", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,6 +99,7 @@ export default function Home() {
     setCargandoVisibilidadIA(true);
     try {
       // Paso 1: generar las preguntas de prueba.
+      await esperarTurnoIA();
       const resPreguntas = await fetch("/api/analisis/visibilidad-ia/preguntas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -95,12 +111,12 @@ export default function Home() {
         throw new Error(datosPreguntas.error ?? "No se generaron preguntas.");
       }
 
-      // Paso 2: cada pregunta se busca en su propia llamada. Se escalonan
-      // (no todas al mismo instante) para no chocar con el límite de
+      // Paso 2: cada pregunta se busca en su propia llamada, usando el
+      // mismo espaciador global para no chocar con el límite de
       // solicitudes por minuto del plan gratuito de Gemini.
       const resultadosBusqueda = await Promise.all(
-        preguntas.map(async (pregunta, i) => {
-          await new Promise((resolve) => setTimeout(resolve, i * 700));
+        preguntas.map(async (pregunta) => {
+          await esperarTurnoIA();
           try {
             const res = await fetch("/api/analisis/visibilidad-ia/buscar", {
               method: "POST",
@@ -116,6 +132,7 @@ export default function Home() {
       );
 
       // Paso 3: evaluar todas las respuestas juntas.
+      await esperarTurnoIA();
       const resEvaluar = await fetch("/api/analisis/visibilidad-ia/evaluar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
