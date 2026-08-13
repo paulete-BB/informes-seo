@@ -6,7 +6,7 @@ export const maxDuration = 60;
 
 const client = new Anthropic();
 
-const CONCURRENCIA_BUSQUEDAS = 3;
+const CONCURRENCIA_BUSQUEDAS = 5;
 
 function respuestaVacia(error: string): AnalisisVisibilidadIA {
   return {
@@ -135,9 +135,9 @@ async function generarPreguntas(rubro: string, ciudad: string): Promise<string[]
     messages: [
       {
         role: "user",
-        content: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
+        content: `Genera exactamente 7 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
 
-Mezcla estos tipos de intención (al menos 2 de cada uno):
+Mezcla estos tipos de intención (al menos una de cada uno):
 - Descubrimiento: "¿dónde puedo encontrar...?"
 - Comparación: "¿cuál es mejor...?"
 - Recomendación directa: "recomiéndame..."
@@ -252,15 +252,15 @@ async function evaluarRespuestas(
         role: "user",
         content: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
 
-Abajo hay 10 preguntas que una persona real le haría a ChatGPT, junto con la respuesta real que se obtuvo (con búsqueda web activada):
+Abajo hay ${preguntas.length} preguntas que una persona real le haría a ChatGPT, junto con la respuesta real que se obtuvo (con búsqueda web activada):
 
 ${bloquesQyA}
 
-Para cada una de las 10 preguntas, en el mismo orden:
+Para cada una de las ${preguntas.length} preguntas, en el mismo orden:
 1. ¿Apareció mencionado este negocio (por dominio o nombre de marca, con esas variantes)? true/false.
 2. Si apareció, ¿en qué posición aproximada quedó entre los negocios mencionados en esa respuesta (1 = el primero o más destacado)? Si no apareció, usa null.
 
-Luego, mirando las 10 respuestas en conjunto: ¿qué otros negocios (competidores, no el que estamos evaluando) aparecieron mencionados? Lista hasta 5, con el nombre y en cuántas de las 10 respuestas aparece cada uno, ordenados de mayor a menor.
+Luego, mirando las ${preguntas.length} respuestas en conjunto: ¿qué otros negocios (competidores, no el que estamos evaluando) aparecieron mencionados? Lista hasta 5, con el nombre y en cuántas de las ${preguntas.length} respuestas aparece cada uno, ordenados de mayor a menor.
 
 Finalmente, estas son las señales técnicas reales detectadas en el sitio del negocio:
 ${senalesTexto}
