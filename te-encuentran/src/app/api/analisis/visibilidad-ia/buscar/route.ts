@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const respuesta = await client.messages.create({
       model: "claude-sonnet-5",
       max_tokens: 1024,
-      tools: [{ type: "web_search_20260209", name: "web_search" }],
+      tools: [{ type: "web_search_20260209", name: "web_search", max_uses: 1 }],
       messages: [{ role: "user", content: pregunta }],
     });
 
