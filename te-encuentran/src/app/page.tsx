@@ -5,6 +5,7 @@ import Image from "next/image";
 import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
+import PlanAccion from "@/components/PlanAccion";
 import {
   AnalisisCRO,
   AnalisisPageSpeed,
@@ -244,6 +245,8 @@ export default function Home() {
               cargando={cargandoVisibilidadIA}
               onReintentar={() => cargarVisibilidadIA(datosEnviados)}
             />
+
+            <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} />
           </div>
         )}
       </div>

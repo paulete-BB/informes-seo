@@ -2,7 +2,6 @@ import { AnalisisCRO, AnalisisPageSpeed, AnalisisTecnico, EstadoSemaforo } from 
 import TarjetaAnalisis from "./TarjetaAnalisis";
 import Semaforo from "./Semaforo";
 import Puntaje from "./Puntaje";
-import PlanAccion from "./PlanAccion";
 
 const ORDEN_URGENCIA: Record<EstadoSemaforo, number> = {
   critico: 0,
@@ -138,8 +137,6 @@ export default function EspejoGoogle({
           )}
         </TarjetaAnalisis>
       </div>
-
-      <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} />
     </section>
   );
 }
