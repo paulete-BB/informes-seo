@@ -6,8 +6,18 @@ export const MODELO_VISION = "gemini-flash-latest";
 
 export const ia = new GoogleGenAI({});
 
-export const CONFIG_REINTENTOS = {
-  httpOptions: { retryOptions: { attempts: 5, initialDelay: 2, maxDelay: 15 } },
+// Reintentos acotados para no superar el límite de duración de la función
+// (Vercel Hobby: 60s por invocación). Cada preset fija un timeout por
+// intento para que el peor caso (todos los intentos agotando su timeout)
+// quepa con margen dentro del maxDuration del endpoint que lo usa.
+export const CONFIG_RAPIDA = {
+  httpOptions: { timeout: 10000, retryOptions: { attempts: 2, initialDelay: 1, maxDelay: 4 } },
+};
+
+// Solo para el endpoint que no comparte su presupuesto de tiempo con otra
+// llamada a la IA (buscar): más intentos y más margen por intento.
+export const CONFIG_ESTANDAR = {
+  httpOptions: { timeout: 15000, retryOptions: { attempts: 3, initialDelay: 1, maxDelay: 6 } },
 };
 
 export function extraerJson(texto: string): unknown {

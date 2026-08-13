@@ -1,4 +1,4 @@
-import { CONFIG_REINTENTOS, extraerJson, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
+import { CONFIG_RAPIDA, extraerJson, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 30;
 
@@ -29,7 +29,7 @@ Mezcla estos tipos de intención (al menos 2 de cada uno):
 Las preguntas deben sonar naturales, como las escribiría una persona real, no un buscador.
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código: {"preguntas": ["...", "..."]}`,
-      config: CONFIG_REINTENTOS,
+      config: CONFIG_RAPIDA,
     });
 
     const texto = respuesta.text;

@@ -1,4 +1,4 @@
-import { extraerJson, fetchConTimeout, ia, MODELO_VISION } from "@/lib/visibilidad-ia";
+import { CONFIG_RAPIDA, extraerJson, fetchConTimeout, ia, MODELO_VISION } from "@/lib/visibilidad-ia";
 import { AnalisisCRO, DimensionCRO } from "@/lib/tipos";
 
 export const maxDuration = 60;
@@ -76,8 +76,8 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
         },
       ],
       config: {
-        maxOutputTokens: 2048,
-        httpOptions: { timeout: 35000, retryOptions: { attempts: 2, initialDelay: 2, maxDelay: 15 } },
+        maxOutputTokens: 3072,
+        ...CONFIG_RAPIDA,
       },
     });
   } catch (error) {

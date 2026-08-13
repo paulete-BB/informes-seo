@@ -1,4 +1,4 @@
-import { CONFIG_REINTENTOS, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
+import { CONFIG_ESTANDAR, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 60;
 
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
     const respuesta = await ia.models.generateContent({
       model: MODELO_TEXTO,
       contents: pregunta,
-      config: CONFIG_REINTENTOS,
+      config: CONFIG_ESTANDAR,
     });
 
     const texto = respuesta.text ?? "";
