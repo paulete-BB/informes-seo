@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
@@ -183,6 +184,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-marca-blanco pb-24">
       <header className="border-b border-zinc-200 bg-white px-6 py-10 text-center sm:py-14">
+        <Image
+          src="/logo-polilla-digital.png"
+          alt="Polilla Digital"
+          width={651}
+          height={100}
+          className="mx-auto mb-6 h-8 w-auto sm:h-9"
+          priority
+        />
         <h1 className="bg-gradient-to-r from-marca-purpura via-marca-magenta to-marca-coral bg-clip-text font-display text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl">
           ¿Te encuentran?
         </h1>
