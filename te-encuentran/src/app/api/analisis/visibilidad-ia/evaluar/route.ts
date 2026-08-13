@@ -1,4 +1,4 @@
-import { CONFIG_RAPIDA, detectarSenalesTecnicas, dominioRaiz, extraerJson, ia, MODELO_TEXTO, SenalesTecnicas } from "@/lib/visibilidad-ia";
+import { CONFIG_RAPIDA, detectarSenalesTecnicas, dominioRaiz, extraerJson, generarConFallback, SenalesTecnicas } from "@/lib/visibilidad-ia";
 import { AnalisisVisibilidadIA, Competidor, PreguntaVisibilidad } from "@/lib/tipos";
 
 export const maxDuration = 60;
@@ -42,8 +42,7 @@ async function evaluarMenciones(
     )
     .join("\n\n---\n\n");
 
-  const respuesta = await ia.models.generateContent({
-    model: MODELO_TEXTO,
+  const respuesta = await generarConFallback({
     contents: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
 
 Abajo hay ${preguntas.length} preguntas que una persona real le haría a un asistente de IA, junto con la respuesta que dio ese asistente (usando solo su conocimiento entrenado, sin búsqueda web en tiempo real):
@@ -80,8 +79,7 @@ async function generarRazones(
     `Contenido de texto en su sitio: ${senales.contenidoEscaso ? "escaso" : "razonable"}`,
   ].join("\n");
 
-  const respuesta = await ia.models.generateContent({
-    model: MODELO_TEXTO,
+  const respuesta = await generarConFallback({
     contents: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estas son las señales técnicas reales detectadas en su sitio:
 ${senalesTexto}
 

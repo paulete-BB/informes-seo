@@ -1,4 +1,4 @@
-import { extraerJson, fetchConTimeout, ia, MODELO_VISION } from "@/lib/visibilidad-ia";
+import { extraerJson, fetchConTimeout, ia, MODELOS_FALLBACK } from "@/lib/visibilidad-ia";
 import { AnalisisCRO, DimensionCRO } from "@/lib/tipos";
 
 export const maxDuration = 60;
@@ -33,19 +33,20 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
 class ErrorAnalisisVisual extends Error {}
 
 // El modelo de visión a veces tarda más de lo esperado (sobre todo con
-// capturas más pesadas) o devuelve un JSON mal formado; se reintenta la
-// generación completa (no solo la conexión) una vez más antes de rendirse.
-// Cada intento tiene su propio timeout, y el peor caso (2 intentos agotando
-// su timeout) todavía cabe con margen dentro del maxDuration del endpoint,
-// incluso sumando el tiempo de la captura.
+// capturas más pesadas), devuelve un JSON mal formado, o tiene la cuota
+// diaria agotada; se reintenta la generación completa (no solo la
+// conexión) probando el siguiente modelo de la lista de respaldo antes de
+// rendirse. Cada intento tiene su propio timeout, y el peor caso (2
+// intentos agotando su timeout) todavía cabe con margen dentro del
+// maxDuration del endpoint, incluso sumando el tiempo de la captura.
 async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Promise<RespuestaCRO> {
   let ultimoError = "No pudimos analizar visualmente tu sitio. Intenta de nuevo.";
 
-  for (let intento = 1; intento <= 2; intento++) {
+  for (const modelo of MODELOS_FALLBACK.slice(0, 2)) {
     let respuesta;
     try {
       respuesta = await ia.models.generateContent({
-        model: MODELO_VISION,
+        model: modelo,
         contents: [
           {
             role: "user",
@@ -61,7 +62,7 @@ async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Prom
         },
       });
     } catch (error) {
-      console.error(`Error en análisis CRO (intento ${intento}):`, error);
+      console.error(`Error en análisis CRO (modelo ${modelo}):`, error);
       continue;
     }
 

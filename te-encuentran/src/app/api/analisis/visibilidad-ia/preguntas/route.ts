@@ -1,4 +1,4 @@
-import { CONFIG_RAPIDA, extraerJson, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
+import { CONFIG_RAPIDA, extraerJson, generarConFallback } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 30;
 
@@ -16,8 +16,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const respuesta = await ia.models.generateContent({
-      model: MODELO_TEXTO,
+    const respuesta = await generarConFallback({
       contents: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
 
 Mezcla estos tipos de intención (al menos 2 de cada uno):

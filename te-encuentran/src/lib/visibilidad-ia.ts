@@ -1,15 +1,36 @@
-import { GoogleGenAI } from "@google/genai";
+import { GenerateContentParameters, GenerateContentResponse, GoogleGenAI } from "@google/genai";
 import * as cheerio from "cheerio";
 
-// Toda la generación 2.5 (flash y flash-lite) está bloqueada para API
-// keys nuevas ("no longer available to new users"). Los alias "-latest"
-// apuntan a gemini-3.6-flash, cuya cuota gratis (20/día) ya se agotó.
-// Se usa una variante "lite" dentro de la generación 3.x disponible, que
-// tiene su propia cuota separada de la del modelo flash principal.
-export const MODELO_TEXTO = "gemini-3.1-flash-lite";
-export const MODELO_VISION = "gemini-3.1-flash-lite";
-
 export const ia = new GoogleGenAI({});
+
+// Toda la generación 2.5 (flash y flash-lite) está bloqueada para API keys
+// nuevas ("no longer available to new users"), y los alias "-latest"
+// apuntan a gemini-3.6-flash, cuya cuota gratis (20/día) se agota rápido.
+// Cada modelo tiene su propia cuota diaria separada en el plan gratuito, así
+// que si el primero se agota se prueba el siguiente antes de fallar del
+// todo (ver generarConFallback).
+export const MODELOS_FALLBACK = ["gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-pro-latest"];
+
+function esModeloNoDisponible(error: unknown): boolean {
+  const mensaje = error instanceof Error ? error.message : String(error);
+  return /RESOURCE_EXHAUSTED|"code"\s*:\s*429|"code"\s*:\s*404/.test(mensaje);
+}
+
+export async function generarConFallback(
+  params: Omit<GenerateContentParameters, "model">
+): Promise<GenerateContentResponse> {
+  let ultimoError: unknown;
+  for (const modelo of MODELOS_FALLBACK) {
+    try {
+      return await ia.models.generateContent({ ...params, model: modelo });
+    } catch (error) {
+      ultimoError = error;
+      if (!esModeloNoDisponible(error)) throw error;
+      console.warn(`${modelo} no disponible (cuota agotada o modelo inválido), probando el siguiente...`);
+    }
+  }
+  throw ultimoError;
+}
 
 // Reintentos acotados para no superar el límite de duración de la función
 // (Vercel Hobby: 60s por invocación). Cada preset fija un timeout por

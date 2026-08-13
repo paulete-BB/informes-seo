@@ -1,4 +1,4 @@
-import { CONFIG_ESTANDAR, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
+import { CONFIG_ESTANDAR, generarConFallback } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 60;
 
@@ -16,8 +16,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const respuesta = await ia.models.generateContent({
-      model: MODELO_TEXTO,
+    const respuesta = await generarConFallback({
       contents: pregunta,
       config: CONFIG_ESTANDAR,
     });
