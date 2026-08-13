@@ -1,31 +1,10 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import { AnalisisCRO, DimensionCRO } from "@/lib/tipos";
 
 export const maxDuration = 60;
 
-const client = new Anthropic();
-
-const ESQUEMA_DIMENSION = {
-  type: "object",
-  properties: {
-    score: { type: "integer" },
-    veredicto: { type: "string" },
-    hallazgos: { type: "array", items: { type: "string" } },
-  },
-  required: ["score", "veredicto", "hallazgos"],
-  additionalProperties: false,
-} as const;
-
-const ESQUEMA_CRO = {
-  type: "object",
-  properties: {
-    pruebaCincoSegundos: ESQUEMA_DIMENSION,
-    confianza: ESQUEMA_DIMENSION,
-    accionClara: ESQUEMA_DIMENSION,
-  },
-  required: ["pruebaCincoSegundos", "confianza", "accionClara"],
-  additionalProperties: false,
-};
+const ia = new GoogleGenAI({});
+const MODELO = "gemini-2.5-flash";
 
 interface DimensionRespuesta {
   score: number;
@@ -41,6 +20,11 @@ interface RespuestaCRO {
 
 function respuestaVacia(error: string): AnalisisCRO {
   return { ok: false, error, dimensiones: [] };
+}
+
+function extraerJson(texto: string): unknown {
+  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  return JSON.parse(limpio);
 }
 
 async function fetchConTimeout(url: string, timeoutMs: number): Promise<Response> {
@@ -87,35 +71,29 @@ export async function POST(request: Request) {
 
   let respuesta;
   try {
-    respuesta = await client.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 2048,
-      output_config: { format: { type: "json_schema", schema: ESQUEMA_CRO } },
-      messages: [
+    respuesta = await ia.models.generateContent({
+      model: MODELO,
+      contents: [
         {
           role: "user",
-          content: [
+          parts: [
+            { inlineData: { data: imagenBase64, mimeType: mediaType } },
             {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: mediaType as "image/jpeg" | "image/png" | "image/gif" | "image/webp",
-                data: imagenBase64,
-              },
-            },
-            {
-              type: "text",
               text: `Ponte en el lugar de una persona que llega por primera vez a este sitio desde su celular, sin conocer el negocio. Mirando solo esta imagen (lo primero que ve, above the fold, en mobile), evalúa tres dimensiones:
 
 1. pruebaCincoSegundos: en 5 segundos, ¿queda claro qué vende este negocio y a quién le sirve?
 2. confianza: ¿esto se ve como un negocio real y confiable, o genera desconfianza? ¿por qué?
 3. accionClara: ¿hay un botón o paso siguiente obvio, o hay demasiadas opciones compitiendo por la atención?
 
-Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallazgos concretos citando específicamente lo que ves en la imagen (colores, textos, botones, ubicación).`,
+Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallazgos concretos citando específicamente lo que ves en la imagen (colores, textos, botones, ubicación).
+
+Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
+{"pruebaCincoSegundos": {"score": 0, "veredicto": "...", "hallazgos": ["...", "..."]}, "confianza": {"score": 0, "veredicto": "...", "hallazgos": ["...", "..."]}, "accionClara": {"score": 0, "veredicto": "...", "hallazgos": ["...", "..."]}}`,
             },
           ],
         },
       ],
+      config: { maxOutputTokens: 2048 },
     });
   } catch (error) {
     console.error("Error en análisis CRO:", error);
@@ -124,19 +102,20 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
     );
   }
 
-  if (respuesta.stop_reason === "refusal") {
+  const finishReason = respuesta.candidates?.[0]?.finishReason;
+  if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT") {
     return Response.json(
       respuestaVacia("No pudimos completar este análisis visual. Intenta de nuevo.")
     );
   }
-  if (respuesta.stop_reason === "max_tokens") {
+  if (finishReason === "MAX_TOKENS") {
     return Response.json(
       respuestaVacia("El análisis visual quedó incompleto. Intenta de nuevo.")
     );
   }
 
-  const bloqueTexto = respuesta.content.find((b) => b.type === "text");
-  if (!bloqueTexto || bloqueTexto.type !== "text") {
+  const texto = respuesta.text;
+  if (!texto) {
     return Response.json(
       respuestaVacia("No obtuvimos un resultado válido del análisis visual.")
     );
@@ -144,7 +123,7 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
 
   let datos: RespuestaCRO;
   try {
-    datos = JSON.parse(bloqueTexto.text);
+    datos = extraerJson(texto) as RespuestaCRO;
   } catch {
     return Response.json(
       respuestaVacia("No pudimos interpretar el resultado del análisis visual.")

@@ -1,11 +1,6 @@
-import { client } from "@/lib/visibilidad-ia";
+import { extraerJson, ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 30;
-
-function extraerJson(texto: string): unknown {
-  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
-  return JSON.parse(limpio);
-}
 
 export async function POST(request: Request) {
   let body: { rubro?: string; ciudad?: string };
@@ -21,14 +16,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const respuesta = await client.messages.create(
-      {
-        model: "claude-sonnet-5",
-        max_tokens: 1024,
-        messages: [
-          {
-            role: "user",
-            content: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
+    const respuesta = await ia.models.generateContent({
+      model: MODELO_TEXTO,
+      contents: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
 
 Mezcla estos tipos de intención (al menos 2 de cada uno):
 - Descubrimiento: "¿dónde puedo encontrar...?"
@@ -39,17 +29,13 @@ Mezcla estos tipos de intención (al menos 2 de cada uno):
 Las preguntas deben sonar naturales, como las escribiría una persona real, no un buscador.
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código: {"preguntas": ["...", "..."]}`,
-          },
-        ],
-      },
-      { maxRetries: 5 }
-    );
+    });
 
-    const bloque = respuesta.content.find((b) => b.type === "text");
-    if (!bloque || bloque.type !== "text") {
+    const texto = respuesta.text;
+    if (!texto) {
       return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });
     }
-    const datos = extraerJson(bloque.text) as { preguntas?: unknown };
+    const datos = extraerJson(texto) as { preguntas?: unknown };
     const preguntas = Array.isArray(datos.preguntas) ? datos.preguntas : [];
     if (preguntas.length === 0) {
       return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });

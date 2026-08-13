@@ -1,4 +1,4 @@
-import { client } from "@/lib/visibilidad-ia";
+import { ia, MODELO_TEXTO } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 60;
 
@@ -16,17 +16,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const respuesta = await client.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 1024,
-      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 1 }],
-      messages: [{ role: "user", content: pregunta }],
-    }, { maxRetries: 3 });
+    const respuesta = await ia.models.generateContent({
+      model: MODELO_TEXTO,
+      contents: pregunta,
+      config: {
+        tools: [{ googleSearch: {} }],
+      },
+    });
 
-    const texto = respuesta.content
-      .filter((b) => b.type === "text")
-      .map((b) => (b.type === "text" ? b.text : ""))
-      .join("\n\n");
+    const texto = respuesta.text ?? "";
 
     return Response.json({ ok: true, pregunta, respuesta: texto });
   } catch (error) {

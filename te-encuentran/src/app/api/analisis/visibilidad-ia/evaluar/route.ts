@@ -1,4 +1,4 @@
-import { client, detectarSenalesTecnicas, dominioRaiz, SenalesTecnicas } from "@/lib/visibilidad-ia";
+import { detectarSenalesTecnicas, dominioRaiz, extraerJson, ia, MODELO_TEXTO, SenalesTecnicas } from "@/lib/visibilidad-ia";
 import { AnalisisVisibilidadIA, Competidor, PreguntaVisibilidad } from "@/lib/tipos";
 
 export const maxDuration = 60;
@@ -13,11 +13,6 @@ function respuestaVacia(error: string): AnalisisVisibilidadIA {
     competidores: [],
     porQueNoTeMencionan: [],
   };
-}
-
-function extraerJson(texto: string): unknown {
-  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
-  return JSON.parse(limpio);
 }
 
 interface ResultadoEvaluacion {
@@ -47,14 +42,9 @@ async function evaluarMenciones(
     )
     .join("\n\n---\n\n");
 
-  const respuesta = await client.messages.create(
-    {
-      model: "claude-sonnet-5",
-      max_tokens: 1024,
-      messages: [
-        {
-          role: "user",
-          content: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
+  const respuesta = await ia.models.generateContent({
+    model: MODELO_TEXTO,
+    contents: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
 
 Abajo hay ${preguntas.length} preguntas que una persona real le haría a ChatGPT, junto con la respuesta real que se obtuvo (con búsqueda web activada):
 
@@ -68,17 +58,13 @@ Luego, mirando las ${preguntas.length} respuestas en conjunto: ¿qué otros nego
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
 {"resultados": [{"apareceNegocio": true, "posicion": 1}, ...], "competidores": [{"nombre": "...", "vecesMencionado": 2}]}`,
-        },
-      ],
-    },
-    { maxRetries: 5 }
-  );
+  });
 
-  const bloque = respuesta.content.find((b) => b.type === "text");
-  if (!bloque || bloque.type !== "text") {
+  const texto = respuesta.text;
+  if (!texto) {
     throw new Error("Sin resultado de menciones");
   }
-  return extraerJson(bloque.text) as Menciones;
+  return extraerJson(texto) as Menciones;
 }
 
 async function generarRazones(
@@ -93,31 +79,22 @@ async function generarRazones(
     `Contenido de texto en su sitio: ${senales.contenidoEscaso ? "escaso" : "razonable"}`,
   ].join("\n");
 
-  const respuesta = await client.messages.create(
-    {
-      model: "claude-sonnet-5",
-      max_tokens: 512,
-      messages: [
-        {
-          role: "user",
-          content: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estas son las señales técnicas reales detectadas en su sitio:
+  const respuesta = await ia.models.generateContent({
+    model: MODELO_TEXTO,
+    contents: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estas son las señales técnicas reales detectadas en su sitio:
 ${senalesTexto}
 
 Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA (ChatGPT) podría no mencionarlo o mencionarlo poco cuando alguien busca este tipo de negocio. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
 {"razones": ["...", "...", "..."]}`,
-        },
-      ],
-    },
-    { maxRetries: 5 }
-  );
+  });
 
-  const bloque = respuesta.content.find((b) => b.type === "text");
-  if (!bloque || bloque.type !== "text") {
+  const texto = respuesta.text;
+  if (!texto) {
     throw new Error("Sin resultado de razones");
   }
-  const datos = extraerJson(bloque.text) as { razones?: unknown };
+  const datos = extraerJson(texto) as { razones?: unknown };
   return Array.isArray(datos.razones) ? datos.razones : [];
 }
 

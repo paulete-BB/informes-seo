@@ -1,7 +1,15 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenAI } from "@google/genai";
 import * as cheerio from "cheerio";
 
-export const client = new Anthropic();
+export const MODELO_TEXTO = "gemini-2.5-flash";
+export const MODELO_VISION = "gemini-2.5-flash";
+
+export const ia = new GoogleGenAI({});
+
+export function extraerJson(texto: string): unknown {
+  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  return JSON.parse(limpio);
+}
 
 export async function fetchConTimeout(url: string, timeoutMs: number): Promise<Response> {
   const controller = new AbortController();
