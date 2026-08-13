@@ -111,7 +111,7 @@ ${senalesTexto}
 Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA no lo menciona o lo menciona poco. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.`,
       },
     ],
-  });
+  }, { maxRetries: 3 });
 
   const bloque = respuesta.content.find((b) => b.type === "text");
   if (!bloque || bloque.type !== "text") {

@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       max_tokens: 1024,
       tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 1 }],
       messages: [{ role: "user", content: pregunta }],
-    });
+    }, { maxRetries: 3 });
 
     const texto = respuesta.content
       .filter((b) => b.type === "text")
