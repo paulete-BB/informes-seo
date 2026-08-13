@@ -119,9 +119,8 @@ Para cada dimensión da un score de 0 a 100, un veredicto de una frase, y hallaz
     });
   } catch (error) {
     console.error("Error en análisis CRO:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia(error instanceof Error ? error.message : String(error))
+      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
     );
   }
 
