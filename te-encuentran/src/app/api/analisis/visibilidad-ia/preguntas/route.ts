@@ -44,10 +44,9 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
     return Response.json({ ok: true, preguntas });
   } catch (error) {
     console.error("Error generando preguntas de visibilidad IA:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json({
       ok: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: "No pudimos generar las preguntas de prueba.",
       preguntas: [],
     });
   }
