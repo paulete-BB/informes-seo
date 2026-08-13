@@ -160,9 +160,8 @@ export async function POST(request: Request) {
     razones = await generarRazones(hostname, rubro, ciudad, senales);
   } catch (error) {
     console.error("Error generando razones de visibilidad IA:", error);
-    razones = [
-      "No pudimos generar el detalle de por qué la IA no te menciona en este momento. Intenta de nuevo más tarde.",
-    ];
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
+    razones = [error instanceof Error ? error.message : String(error)];
   }
 
   const preguntasEvaluadas: PreguntaVisibilidad[] = preguntas.map((pregunta, i) => ({
