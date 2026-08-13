@@ -82,9 +82,8 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
     });
   } catch (error) {
     console.error("Error en análisis CRO:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia(error instanceof Error ? error.message : String(error))
+      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
     );
   }
 
