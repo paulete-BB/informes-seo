@@ -35,6 +35,11 @@ export default function EspejoIA({
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <TarjetaAnalisis
           titulo="Preguntas reales, evaluadas con IA"
+          puntaje={
+            visibilidad?.ok && visibilidad.totalPreguntas > 0
+              ? Math.round((visibilidad.scoreVisibilidad / visibilidad.totalPreguntas) * 100)
+              : undefined
+          }
           cargando={cargando}
           error={error}
           onReintentar={onReintentar}

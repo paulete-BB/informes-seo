@@ -6,6 +6,7 @@ import Formulario from "@/components/Formulario";
 import EspejoGoogle from "@/components/EspejoGoogle";
 import EspejoIA from "@/components/EspejoIA";
 import PlanAccion from "@/components/PlanAccion";
+import { estadoPorPuntaje, promedio } from "@/lib/puntajes";
 import {
   AnalisisCRO,
   AnalisisPageSpeed,
@@ -13,6 +14,12 @@ import {
   AnalisisVisibilidadIA,
   DatosFormulario,
 } from "@/lib/tipos";
+
+const CLASES_PUNTAJE_GENERAL = {
+  ok: "bg-emerald-50 text-emerald-700",
+  alerta: "bg-amber-50 text-amber-700",
+  critico: "bg-red-50 text-red-700",
+};
 
 const ERROR_CONEXION = "No pudimos conectar con el servidor. Intenta de nuevo.";
 
@@ -51,7 +58,7 @@ export default function Home() {
       });
       setTecnico(await res.json());
     } catch {
-      setTecnico({ ok: false, error: ERROR_CONEXION, hallazgos: [] });
+      setTecnico({ ok: false, error: ERROR_CONEXION, score: 0, hallazgos: [] });
     } finally {
       setCargandoTecnico(false);
     }
@@ -182,6 +189,17 @@ export default function Home() {
     setVisibilidadIA(null);
   }
 
+  const puntajesSecciones = [
+    tecnico?.ok ? tecnico.score : null,
+    pagespeed?.ok ? promedio([pagespeed.scorePerformance, pagespeed.scoreSeo, pagespeed.scoreAccesibilidad]) : null,
+    cro?.ok ? promedio(cro.dimensiones.map((d) => d.score)) : null,
+    visibilidadIA?.ok && visibilidadIA.totalPreguntas > 0
+      ? Math.round((visibilidadIA.scoreVisibilidad / visibilidadIA.totalPreguntas) * 100)
+      : null,
+  ].filter((v): v is number => v !== null);
+
+  const puntajeGeneral = puntajesSecciones.length > 0 ? promedio(puntajesSecciones) : null;
+
   return (
     <main className="min-h-screen bg-marca-blanco pb-24">
       <header className="border-b border-zinc-200 bg-white px-6 py-8 sm:py-10">
@@ -220,12 +238,32 @@ export default function Home() {
                   {datosEnviados.url} · {datosEnviados.rubro} · {datosEnviados.ciudad}
                 </p>
               </div>
-              <button
-                onClick={reiniciar}
-                className="rounded-xl border border-marca-magenta/30 px-4 py-2 text-base font-semibold text-marca-purpura hover:bg-marca-magenta/5"
-              >
-                Analizar otro sitio
-              </button>
+              {puntajeGeneral !== null && (
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full text-2xl font-extrabold ${CLASES_PUNTAJE_GENERAL[estadoPorPuntaje(puntajeGeneral)]}`}
+                  >
+                    {puntajeGeneral}
+                  </span>
+                  <span className="max-w-[10rem] text-sm font-semibold text-zinc-500">
+                    Puntaje general del informe
+                  </span>
+                </div>
+              )}
+              <div className="flex flex-wrap gap-3 print:hidden">
+                <button
+                  onClick={() => window.print()}
+                  className="rounded-xl border border-marca-magenta/30 px-4 py-2 text-base font-semibold text-marca-purpura hover:bg-marca-magenta/5"
+                >
+                  Descargar informe (PDF)
+                </button>
+                <button
+                  onClick={reiniciar}
+                  className="rounded-xl border border-marca-magenta/30 px-4 py-2 text-base font-semibold text-marca-purpura hover:bg-marca-magenta/5"
+                >
+                  Analizar otro sitio
+                </button>
+              </div>
             </div>
 
             <EspejoGoogle
@@ -246,7 +284,9 @@ export default function Home() {
               onReintentar={() => cargarVisibilidadIA(datosEnviados)}
             />
 
-            <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} />
+            <div className="print:hidden">
+              <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} />
+            </div>
           </div>
         )}
       </div>

@@ -324,43 +324,50 @@ function revisarConfianza(html: string): Hallazgo {
   };
 }
 
+function respuestaVacia(error: string): AnalisisTecnico {
+  return { ok: false, error, score: 0, hallazgos: [] };
+}
+
+const PESO_ESTADO: Record<EstadoSemaforo, number> = { ok: 100, alerta: 50, critico: 0 };
+
+function calcularScore(hallazgos: Hallazgo[]): number {
+  const suma = hallazgos.reduce((acc, h) => acc + PESO_ESTADO[h.estado], 0);
+  return Math.round(suma / hallazgos.length);
+}
+
 export async function POST(request: Request) {
   let body: { url?: string };
   try {
     body = await request.json();
   } catch {
-    return Response.json({ ok: false, error: "Solicitud inválida.", hallazgos: [] });
+    return Response.json(respuestaVacia("Solicitud inválida."));
   }
 
   const url = body.url;
   if (!url) {
-    return Response.json({ ok: false, error: "Falta la URL a analizar.", hallazgos: [] });
+    return Response.json(respuestaVacia("Falta la URL a analizar."));
   }
 
   let origen: string;
   try {
     origen = new URL(url).origin;
   } catch {
-    return Response.json({ ok: false, error: "La URL no es válida.", hallazgos: [] });
+    return Response.json(respuestaVacia("La URL no es válida."));
   }
 
   let html: string;
   try {
     const res = await fetchConTimeout(url, 10000);
     if (!res.ok) {
-      return Response.json({
-        ok: false,
-        error: `Tu sitio respondió con un error (código ${res.status}). Revisa que la URL esté bien escrita.`,
-        hallazgos: [],
-      });
+      return Response.json(
+        respuestaVacia(`Tu sitio respondió con un error (código ${res.status}). Revisa que la URL esté bien escrita.`)
+      );
     }
     html = await res.text();
   } catch {
-    return Response.json({
-      ok: false,
-      error: "No pudimos acceder a tu sitio. Revisa que la URL esté bien escrita y que el sitio esté funcionando.",
-      hallazgos: [],
-    });
+    return Response.json(
+      respuestaVacia("No pudimos acceder a tu sitio. Revisa que la URL esté bien escrita y que el sitio esté funcionando.")
+    );
   }
 
   const $ = cheerio.load(html);
@@ -382,6 +389,6 @@ export async function POST(request: Request) {
     revisarConfianza(html),
   ];
 
-  const resultado: AnalisisTecnico = { ok: true, hallazgos };
+  const resultado: AnalisisTecnico = { ok: true, score: calcularScore(hallazgos), hallazgos };
   return Response.json(resultado);
 }

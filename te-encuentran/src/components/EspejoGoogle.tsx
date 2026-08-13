@@ -1,4 +1,5 @@
 import { AnalisisCRO, AnalisisPageSpeed, AnalisisTecnico, EstadoSemaforo } from "@/lib/tipos";
+import { promedio } from "@/lib/puntajes";
 import TarjetaAnalisis from "./TarjetaAnalisis";
 import Semaforo from "./Semaforo";
 import Puntaje from "./Puntaje";
@@ -51,6 +52,7 @@ export default function EspejoGoogle({
 
       <TarjetaAnalisis
         titulo="Estructura técnica"
+        puntaje={tecnico?.ok ? tecnico.score : undefined}
         cargando={cargandoTecnico}
         error={tecnico?.ok === false ? tecnico.error : undefined}
         onReintentar={onReintentarTecnico}
@@ -76,6 +78,11 @@ export default function EspejoGoogle({
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <TarjetaAnalisis
           titulo="Velocidad (PageSpeed)"
+          puntaje={
+            pagespeed?.ok
+              ? promedio([pagespeed.scorePerformance, pagespeed.scoreSeo, pagespeed.scoreAccesibilidad])
+              : undefined
+          }
           cargando={cargandoPagespeed}
           error={pagespeed?.ok === false ? pagespeed.error : undefined}
           onReintentar={onReintentarPagespeed}
@@ -109,6 +116,7 @@ export default function EspejoGoogle({
 
         <TarjetaAnalisis
           titulo="Primera impresión (visual)"
+          puntaje={cro?.ok ? promedio(cro.dimensiones.map((d) => d.score)) : undefined}
           cargando={cargandoCro}
           error={cro?.ok === false ? cro.error : undefined}
           onReintentar={onReintentarCro}
