@@ -68,6 +68,19 @@ export interface AnalisisVisibilidadIA {
   porQueNoTeMencionan: string[];
 }
 
+export interface TareaPlanAccion {
+  tarea: string;
+  porQueImporta: string;
+  esfuerzo: string;
+  urgencia: EstadoSemaforo;
+}
+
+export interface PlanAccionCRO {
+  ok: boolean;
+  error?: string;
+  tareas: TareaPlanAccion[];
+}
+
 export interface DatosFormulario {
   url: string;
   rubro: string;
