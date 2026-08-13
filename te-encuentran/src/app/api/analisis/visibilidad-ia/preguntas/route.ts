@@ -1,6 +1,11 @@
 import { client } from "@/lib/visibilidad-ia";
 
-export const maxDuration = 45;
+export const maxDuration = 30;
+
+function extraerJson(texto: string): unknown {
+  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  return JSON.parse(limpio);
+}
 
 export async function POST(request: Request) {
   let body: { rubro?: string; ciudad?: string };
@@ -16,26 +21,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const respuesta = await client.messages.create({
-      model: "claude-sonnet-5",
-      max_tokens: 1024,
-      output_config: {
-        format: {
-          type: "json_schema",
-          schema: {
-            type: "object",
-            properties: {
-              preguntas: { type: "array", items: { type: "string" } },
-            },
-            required: ["preguntas"],
-            additionalProperties: false,
-          },
-        },
-      },
-      messages: [
-        {
-          role: "user",
-          content: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
+    const respuesta = await client.messages.create(
+      {
+        model: "claude-sonnet-5",
+        max_tokens: 1024,
+        messages: [
+          {
+            role: "user",
+            content: `Genera exactamente 10 preguntas realistas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
 
 Mezcla estos tipos de intención (al menos 2 de cada uno):
 - Descubrimiento: "¿dónde puedo encontrar...?"
@@ -43,16 +36,20 @@ Mezcla estos tipos de intención (al menos 2 de cada uno):
 - Recomendación directa: "recomiéndame..."
 - Con un problema concreto: "se me rompió X, ¿qué hago?"
 
-Las preguntas deben sonar naturales, como las escribiría una persona real, no un buscador.`,
-        },
-      ],
-    }, { maxRetries: 5 });
+Las preguntas deben sonar naturales, como las escribiría una persona real, no un buscador.
+
+Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código: {"preguntas": ["...", "..."]}`,
+          },
+        ],
+      },
+      { maxRetries: 5 }
+    );
 
     const bloque = respuesta.content.find((b) => b.type === "text");
     if (!bloque || bloque.type !== "text") {
       return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });
     }
-    const datos = JSON.parse(bloque.text);
+    const datos = extraerJson(bloque.text) as { preguntas?: unknown };
     const preguntas = Array.isArray(datos.preguntas) ? datos.preguntas : [];
     if (preguntas.length === 0) {
       return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });
@@ -60,11 +57,6 @@ Las preguntas deben sonar naturales, como las escribiría una persona real, no u
     return Response.json({ ok: true, preguntas });
   } catch (error) {
     console.error("Error generando preguntas de visibilidad IA:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
-    return Response.json({
-      ok: false,
-      error: error instanceof Error ? error.message : String(error),
-      preguntas: [],
-    });
+    return Response.json({ ok: false, error: "No pudimos generar las preguntas de prueba.", preguntas: [] });
   }
 }

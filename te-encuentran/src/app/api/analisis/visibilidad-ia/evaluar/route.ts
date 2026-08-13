@@ -53,43 +53,6 @@ async function evaluarRespuestas(
   const respuesta = await client.messages.create({
     model: "claude-sonnet-5",
     max_tokens: 3072,
-    output_config: {
-      format: {
-        type: "json_schema",
-        schema: {
-          type: "object",
-          properties: {
-            resultados: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  apareceNegocio: { type: "boolean" },
-                  posicion: { anyOf: [{ type: "integer" }, { type: "null" }] },
-                },
-                required: ["apareceNegocio", "posicion"],
-                additionalProperties: false,
-              },
-            },
-            competidores: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  nombre: { type: "string" },
-                  vecesMencionado: { type: "integer" },
-                },
-                required: ["nombre", "vecesMencionado"],
-                additionalProperties: false,
-              },
-            },
-            razones: { type: "array", items: { type: "string" } },
-          },
-          required: ["resultados", "competidores", "razones"],
-          additionalProperties: false,
-        },
-      },
-    },
     messages: [
       {
         role: "user",
@@ -108,16 +71,20 @@ Luego, mirando las ${preguntas.length} respuestas en conjunto: ¿qué otros nego
 Finalmente, estas son las señales técnicas reales detectadas en el sitio del negocio:
 ${senalesTexto}
 
-Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA no lo menciona o lo menciona poco. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.`,
+Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA no lo menciona o lo menciona poco. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.
+
+Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
+{"resultados": [{"apareceNegocio": true, "posicion": 1}, ...], "competidores": [{"nombre": "...", "vecesMencionado": 2}], "razones": ["...", "...", "..."]}`,
       },
     ],
-  }, { maxRetries: 3 });
+  }, { maxRetries: 5 });
 
   const bloque = respuesta.content.find((b) => b.type === "text");
   if (!bloque || bloque.type !== "text") {
     throw new Error("Sin resultado de evaluación");
   }
-  return JSON.parse(bloque.text);
+  const limpio = bloque.text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  return JSON.parse(limpio);
 }
 
 export async function POST(request: Request) {
