@@ -60,6 +60,11 @@ Las preguntas deben sonar naturales, como las escribiría una persona real, no u
     return Response.json({ ok: true, preguntas });
   } catch (error) {
     console.error("Error generando preguntas de visibilidad IA:", error);
-    return Response.json({ ok: false, error: "No pudimos generar las preguntas de prueba.", preguntas: [] });
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
+    return Response.json({
+      ok: false,
+      error: error instanceof Error ? error.message : String(error),
+      preguntas: [],
+    });
   }
 }
