@@ -15,26 +15,29 @@ function respuestaVacia(error: string): AnalisisVisibilidadIA {
   };
 }
 
+function extraerJson(texto: string): unknown {
+  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
+  return JSON.parse(limpio);
+}
+
 interface ResultadoEvaluacion {
   apareceNegocio: boolean;
   posicion: number | null;
 }
 
-interface EvaluacionCompleta {
+interface Menciones {
   resultados: ResultadoEvaluacion[];
   competidores: Competidor[];
-  razones: string[];
 }
 
-async function evaluarRespuestas(
+async function evaluarMenciones(
   hostname: string,
   raiz: string,
   rubro: string,
   ciudad: string,
   preguntas: string[],
-  respuestas: string[],
-  senales: SenalesTecnicas
-): Promise<EvaluacionCompleta> {
+  respuestas: string[]
+): Promise<Menciones> {
   const bloquesQyA = preguntas
     .map(
       (p, i) =>
@@ -44,19 +47,14 @@ async function evaluarRespuestas(
     )
     .join("\n\n---\n\n");
 
-  const senalesTexto = [
-    `Datos estructurados (Schema LocalBusiness/Organization): ${senales.tieneSchemaNegocio ? "SÍ tiene" : "NO tiene"}`,
-    `Archivo llms.txt: ${senales.tieneLlmsTxt ? "SÍ tiene" : "NO tiene"}`,
-    `Contenido de texto en su sitio: ${senales.contenidoEscaso ? "escaso" : "razonable"}`,
-  ].join("\n");
-
-  const respuesta = await client.messages.create({
-    model: "claude-sonnet-5",
-    max_tokens: 1536,
-    messages: [
-      {
-        role: "user",
-        content: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
+  const respuesta = await client.messages.create(
+    {
+      model: "claude-sonnet-5",
+      max_tokens: 1024,
+      messages: [
+        {
+          role: "user",
+          content: `El negocio que estamos evaluando es "${rubro}" en "${ciudad}", con sitio web ${hostname} (nombre de marca aproximado: "${raiz}", considera variantes con y sin tildes y con sufijos tipo SpA o Ltda).
 
 Abajo hay ${preguntas.length} preguntas que una persona real le haría a ChatGPT, junto con la respuesta real que se obtuvo (con búsqueda web activada):
 
@@ -68,23 +66,59 @@ Para cada una de las ${preguntas.length} preguntas, en el mismo orden:
 
 Luego, mirando las ${preguntas.length} respuestas en conjunto: ¿qué otros negocios (competidores, no el que estamos evaluando) aparecieron mencionados? Lista hasta 5, con el nombre y en cuántas de las ${preguntas.length} respuestas aparece cada uno, ordenados de mayor a menor.
 
-Finalmente, estas son las señales técnicas reales detectadas en el sitio del negocio:
-${senalesTexto}
-
-Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA no lo menciona o lo menciona poco. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.
-
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
-{"resultados": [{"apareceNegocio": true, "posicion": 1}, ...], "competidores": [{"nombre": "...", "vecesMencionado": 2}], "razones": ["...", "...", "..."]}`,
-      },
-    ],
-  }, { maxRetries: 5 });
+{"resultados": [{"apareceNegocio": true, "posicion": 1}, ...], "competidores": [{"nombre": "...", "vecesMencionado": 2}]}`,
+        },
+      ],
+    },
+    { maxRetries: 5 }
+  );
 
   const bloque = respuesta.content.find((b) => b.type === "text");
   if (!bloque || bloque.type !== "text") {
-    throw new Error("Sin resultado de evaluación");
+    throw new Error("Sin resultado de menciones");
   }
-  const limpio = bloque.text.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
-  return JSON.parse(limpio);
+  return extraerJson(bloque.text) as Menciones;
+}
+
+async function generarRazones(
+  hostname: string,
+  rubro: string,
+  ciudad: string,
+  senales: SenalesTecnicas
+): Promise<string[]> {
+  const senalesTexto = [
+    `Datos estructurados (Schema LocalBusiness/Organization): ${senales.tieneSchemaNegocio ? "SÍ tiene" : "NO tiene"}`,
+    `Archivo llms.txt: ${senales.tieneLlmsTxt ? "SÍ tiene" : "NO tiene"}`,
+    `Contenido de texto en su sitio: ${senales.contenidoEscaso ? "escaso" : "razonable"}`,
+  ].join("\n");
+
+  const respuesta = await client.messages.create(
+    {
+      model: "claude-sonnet-5",
+      max_tokens: 512,
+      messages: [
+        {
+          role: "user",
+          content: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estas son las señales técnicas reales detectadas en su sitio:
+${senalesTexto}
+
+Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA (ChatGPT) podría no mencionarlo o mencionarlo poco cuando alguien busca este tipo de negocio. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.
+
+Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
+{"razones": ["...", "...", "..."]}`,
+        },
+      ],
+    },
+    { maxRetries: 5 }
+  );
+
+  const bloque = respuesta.content.find((b) => b.type === "text");
+  if (!bloque || bloque.type !== "text") {
+    throw new Error("Sin resultado de razones");
+  }
+  const datos = extraerJson(bloque.text) as { razones?: unknown };
+  return Array.isArray(datos.razones) ? datos.razones : [];
 }
 
 export async function POST(request: Request) {
@@ -111,20 +145,30 @@ export async function POST(request: Request) {
 
   const senales = await detectarSenalesTecnicas(url);
 
-  let evaluacion: EvaluacionCompleta;
+  let menciones: Menciones;
   try {
-    evaluacion = await evaluarRespuestas(hostname, raiz, rubro, ciudad, preguntas, respuestas, senales);
+    menciones = await evaluarMenciones(hostname, raiz, rubro, ciudad, preguntas, respuestas);
   } catch (error) {
-    console.error("Error evaluando visibilidad IA:", error);
+    console.error("Error evaluando menciones de visibilidad IA:", error);
     return Response.json(
       respuestaVacia("Obtuvimos las respuestas de la IA, pero no pudimos evaluarlas. Intenta de nuevo.")
     );
   }
 
+  let razones: string[] = [];
+  try {
+    razones = await generarRazones(hostname, rubro, ciudad, senales);
+  } catch (error) {
+    console.error("Error generando razones de visibilidad IA:", error);
+    razones = [
+      "No pudimos generar el detalle de por qué la IA no te menciona en este momento. Intenta de nuevo más tarde.",
+    ];
+  }
+
   const preguntasEvaluadas: PreguntaVisibilidad[] = preguntas.map((pregunta, i) => ({
     pregunta,
-    apareceNegocio: evaluacion.resultados[i]?.apareceNegocio ?? false,
-    posicion: evaluacion.resultados[i]?.posicion ?? undefined,
+    apareceNegocio: menciones.resultados[i]?.apareceNegocio ?? false,
+    posicion: menciones.resultados[i]?.posicion ?? undefined,
   }));
 
   const scoreVisibilidad = preguntasEvaluadas.filter((p) => p.apareceNegocio).length;
@@ -134,8 +178,8 @@ export async function POST(request: Request) {
     scoreVisibilidad,
     totalPreguntas: preguntas.length,
     preguntas: preguntasEvaluadas,
-    competidores: evaluacion.competidores,
-    porQueNoTeMencionan: evaluacion.razones,
+    competidores: menciones.competidores,
+    porQueNoTeMencionan: razones,
   };
 
   return Response.json(resultado);
