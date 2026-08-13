@@ -13,6 +13,7 @@ export interface Hallazgo {
 export interface AnalisisTecnico {
   ok: boolean;
   error?: string;
+  score: number;
   hallazgos: Hallazgo[];
 }
 
