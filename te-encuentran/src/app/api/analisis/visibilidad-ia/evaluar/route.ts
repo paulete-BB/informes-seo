@@ -52,7 +52,7 @@ async function evaluarRespuestas(
 
   const respuesta = await client.messages.create({
     model: "claude-sonnet-5",
-    max_tokens: 3072,
+    max_tokens: 1536,
     messages: [
       {
         role: "user",
