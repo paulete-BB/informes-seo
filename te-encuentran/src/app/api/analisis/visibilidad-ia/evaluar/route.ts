@@ -116,9 +116,8 @@ export async function POST(request: Request) {
     evaluacion = await evaluarRespuestas(hostname, raiz, rubro, ciudad, preguntas, respuestas, senales);
   } catch (error) {
     console.error("Error evaluando visibilidad IA:", error);
-    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia(error instanceof Error ? error.message : String(error))
+      respuestaVacia("Obtuvimos las respuestas de la IA, pero no pudimos evaluarlas. Intenta de nuevo.")
     );
   }
 
