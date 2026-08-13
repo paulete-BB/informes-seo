@@ -1,8 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 import * as cheerio from "cheerio";
 
-export const MODELO_TEXTO = "gemini-flash-latest";
-export const MODELO_VISION = "gemini-flash-latest";
+// "gemini-flash-latest" apunta hoy a un modelo recién lanzado
+// (gemini-3.6-flash) cuya cuota gratis es de solo 20 solicitudes/día.
+// "gemini-flash-lite-latest" apunta a la variante "lite", ya establecida,
+// con cuota gratuita mucho mayor.
+export const MODELO_TEXTO = "gemini-flash-lite-latest";
+export const MODELO_VISION = "gemini-flash-lite-latest";
 
 export const ia = new GoogleGenAI({});
 
