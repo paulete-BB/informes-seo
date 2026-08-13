@@ -1,10 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
+import { extraerJson, fetchConTimeout, ia, MODELO_VISION } from "@/lib/visibilidad-ia";
 import { AnalisisCRO, DimensionCRO } from "@/lib/tipos";
 
 export const maxDuration = 60;
-
-const ia = new GoogleGenAI({});
-const MODELO = "gemini-flash-latest";
 
 interface DimensionRespuesta {
   score: number;
@@ -20,21 +17,6 @@ interface RespuestaCRO {
 
 function respuestaVacia(error: string): AnalisisCRO {
   return { ok: false, error, dimensiones: [] };
-}
-
-function extraerJson(texto: string): unknown {
-  const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
-  return JSON.parse(limpio);
-}
-
-async function fetchConTimeout(url: string, timeoutMs: number): Promise<Response> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { signal: controller.signal });
-  } finally {
-    clearTimeout(timeout);
-  }
 }
 
 export async function POST(request: Request) {
@@ -72,7 +54,7 @@ export async function POST(request: Request) {
   let respuesta;
   try {
     respuesta = await ia.models.generateContent({
-      model: MODELO,
+      model: MODELO_VISION,
       contents: [
         {
           role: "user",
@@ -95,7 +77,7 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
       ],
       config: {
         maxOutputTokens: 2048,
-        httpOptions: { timeout: 35000, retryOptions: { attempts: 2 } },
+        httpOptions: { timeout: 35000, retryOptions: { attempts: 2, initialDelay: 2, maxDelay: 15 } },
       },
     });
   } catch (error) {

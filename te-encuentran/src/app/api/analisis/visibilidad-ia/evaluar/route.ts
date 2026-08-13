@@ -1,4 +1,4 @@
-import { detectarSenalesTecnicas, dominioRaiz, extraerJson, ia, MODELO_TEXTO, SenalesTecnicas } from "@/lib/visibilidad-ia";
+import { CONFIG_REINTENTOS, detectarSenalesTecnicas, dominioRaiz, extraerJson, ia, MODELO_TEXTO, SenalesTecnicas } from "@/lib/visibilidad-ia";
 import { AnalisisVisibilidadIA, Competidor, PreguntaVisibilidad } from "@/lib/tipos";
 
 export const maxDuration = 60;
@@ -58,6 +58,7 @@ Luego, mirando las ${preguntas.length} respuestas en conjunto: ¿qué otros nego
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
 {"resultados": [{"apareceNegocio": true, "posicion": 1}, ...], "competidores": [{"nombre": "...", "vecesMencionado": 2}]}`,
+    config: CONFIG_REINTENTOS,
   });
 
   const texto = respuesta.text;
@@ -88,6 +89,7 @@ Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un d
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
 {"razones": ["...", "...", "..."]}`,
+    config: CONFIG_REINTENTOS,
   });
 
   const texto = respuesta.text;

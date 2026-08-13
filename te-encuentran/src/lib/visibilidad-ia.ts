@@ -6,6 +6,10 @@ export const MODELO_VISION = "gemini-flash-latest";
 
 export const ia = new GoogleGenAI({});
 
+export const CONFIG_REINTENTOS = {
+  httpOptions: { retryOptions: { attempts: 5, initialDelay: 2, maxDelay: 15 } },
+};
+
 export function extraerJson(texto: string): unknown {
   const limpio = texto.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/i, "");
   return JSON.parse(limpio);

@@ -95,10 +95,12 @@ export default function Home() {
         throw new Error(datosPreguntas.error ?? "No se generaron preguntas.");
       }
 
-      // Paso 2: cada pregunta se busca en su propia llamada, todas en
-      // paralelo desde el navegador (cada una con su propio límite de tiempo).
+      // Paso 2: cada pregunta se busca en su propia llamada. Se escalonan
+      // (no todas al mismo instante) para no chocar con el límite de
+      // solicitudes por minuto del plan gratuito de Gemini.
       const resultadosBusqueda = await Promise.all(
-        preguntas.map(async (pregunta) => {
+        preguntas.map(async (pregunta, i) => {
+          await new Promise((resolve) => setTimeout(resolve, i * 700));
           try {
             const res = await fetch("/api/analisis/visibilidad-ia/buscar", {
               method: "POST",
