@@ -19,10 +19,10 @@ export default function EspejoIA({
   return (
     <section>
       <div className="mb-6">
-        <span className="text-sm font-bold uppercase tracking-wide text-purple-700">
+        <span className="text-sm font-bold uppercase tracking-wide text-marca-magenta">
           Espejo 2
         </span>
-        <h2 className="text-3xl font-extrabold text-zinc-900 sm:text-4xl">
+        <h2 className="font-display text-3xl font-extrabold text-zinc-900 sm:text-4xl">
           Cómo te ve la IA
         </h2>
         <p className="mt-2 max-w-2xl text-lg text-zinc-600">
@@ -99,7 +99,7 @@ export default function EspejoIA({
                     </div>
                     <div className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-100">
                       <div
-                        className="h-full rounded-full bg-purple-500"
+                        className="h-full rounded-full bg-marca-magenta"
                         style={{
                           width: `${(c.vecesMencionado / maxMenciones) * 100}%`,
                         }}

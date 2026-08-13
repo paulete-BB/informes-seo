@@ -181,9 +181,9 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-50 pb-24">
+    <main className="min-h-screen bg-marca-blanco pb-24">
       <header className="border-b border-zinc-200 bg-white px-6 py-10 text-center sm:py-14">
-        <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-6xl">
+        <h1 className="bg-gradient-to-r from-marca-purpura via-marca-magenta to-marca-coral bg-clip-text font-display text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl">
           ¿Te encuentran?
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-zinc-600 sm:text-xl">
@@ -208,7 +208,7 @@ export default function Home() {
               </div>
               <button
                 onClick={reiniciar}
-                className="rounded-xl border border-zinc-300 px-4 py-2 text-base font-semibold text-zinc-700 hover:bg-zinc-50"
+                className="rounded-xl border border-marca-magenta/30 px-4 py-2 text-base font-semibold text-marca-purpura hover:bg-marca-magenta/5"
               >
                 Analizar otro sitio
               </button>
