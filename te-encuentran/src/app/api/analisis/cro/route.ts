@@ -4,7 +4,7 @@ import { AnalisisCRO, DimensionCRO } from "@/lib/tipos";
 export const maxDuration = 60;
 
 const ia = new GoogleGenAI({});
-const MODELO = "gemini-2.5-flash";
+const MODELO = "gemini-flash-latest";
 
 interface DimensionRespuesta {
   score: number;

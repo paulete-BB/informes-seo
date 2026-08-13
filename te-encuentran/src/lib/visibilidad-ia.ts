@@ -1,8 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import * as cheerio from "cheerio";
 
-export const MODELO_TEXTO = "gemini-2.5-flash";
-export const MODELO_VISION = "gemini-2.5-flash";
+export const MODELO_TEXTO = "gemini-flash-latest";
+export const MODELO_VISION = "gemini-flash-latest";
 
 export const ia = new GoogleGenAI({});
 
