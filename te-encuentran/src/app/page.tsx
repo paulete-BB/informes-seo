@@ -198,15 +198,19 @@ export default function Home() {
             <EspejoGoogle
               tecnico={tecnico}
               cargandoTecnico={cargandoTecnico}
+              onReintentarTecnico={() => cargarTecnico(datosEnviados)}
               pagespeed={pagespeed}
               cargandoPagespeed={cargandoPagespeed}
+              onReintentarPagespeed={() => cargarPagespeed(datosEnviados)}
               cro={cro}
               cargandoCro={cargandoCro}
+              onReintentarCro={() => cargarCro(datosEnviados)}
             />
 
             <EspejoIA
               visibilidad={visibilidadIA}
               cargando={cargandoVisibilidadIA}
+              onReintentar={() => cargarVisibilidadIA(datosEnviados)}
             />
           </div>
         )}

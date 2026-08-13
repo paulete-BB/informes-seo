@@ -12,17 +12,23 @@ const ORDEN_URGENCIA: Record<EstadoSemaforo, number> = {
 export default function EspejoGoogle({
   tecnico,
   cargandoTecnico,
+  onReintentarTecnico,
   pagespeed,
   cargandoPagespeed,
+  onReintentarPagespeed,
   cro,
   cargandoCro,
+  onReintentarCro,
 }: {
   tecnico: AnalisisTecnico | null;
   cargandoTecnico: boolean;
+  onReintentarTecnico: () => void;
   pagespeed: AnalisisPageSpeed | null;
   cargandoPagespeed: boolean;
+  onReintentarPagespeed: () => void;
   cro: AnalisisCRO | null;
   cargandoCro: boolean;
+  onReintentarCro: () => void;
 }) {
   const hallazgosOrdenados = [...(tecnico?.hallazgos ?? [])].sort(
     (a, b) => ORDEN_URGENCIA[a.estado] - ORDEN_URGENCIA[b.estado]
@@ -47,6 +53,7 @@ export default function EspejoGoogle({
         titulo="Estructura técnica"
         cargando={cargandoTecnico}
         error={tecnico?.ok === false ? tecnico.error : undefined}
+        onReintentar={onReintentarTecnico}
       >
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {hallazgosOrdenados.map((h) => (
@@ -71,6 +78,7 @@ export default function EspejoGoogle({
           titulo="Velocidad (PageSpeed)"
           cargando={cargandoPagespeed}
           error={pagespeed?.ok === false ? pagespeed.error : undefined}
+          onReintentar={onReintentarPagespeed}
         >
           {pagespeed?.ok && (
             <>
@@ -103,6 +111,7 @@ export default function EspejoGoogle({
           titulo="Primera impresión (visual)"
           cargando={cargandoCro}
           error={cro?.ok === false ? cro.error : undefined}
+          onReintentar={onReintentarCro}
         >
           {cro?.ok && (
             <div className="space-y-5">

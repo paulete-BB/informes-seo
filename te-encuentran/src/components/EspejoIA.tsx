@@ -4,9 +4,11 @@ import TarjetaAnalisis from "./TarjetaAnalisis";
 export default function EspejoIA({
   visibilidad,
   cargando,
+  onReintentar,
 }: {
   visibilidad: AnalisisVisibilidadIA | null;
   cargando: boolean;
+  onReintentar: () => void;
 }) {
   const maxMenciones = Math.max(
     1,
@@ -34,6 +36,7 @@ export default function EspejoIA({
           titulo="Preguntas reales, probadas en vivo"
           cargando={cargando}
           error={error}
+          onReintentar={onReintentar}
         >
           {visibilidad?.ok && (
             <>
@@ -80,6 +83,7 @@ export default function EspejoIA({
             titulo="Quién aparece en tu lugar"
             cargando={cargando}
             error={error}
+            onReintentar={onReintentar}
           >
             {visibilidad?.ok && (
               <ul className="space-y-4">
@@ -116,6 +120,7 @@ export default function EspejoIA({
             titulo="Por qué no te menciona"
             cargando={cargando}
             error={error}
+            onReintentar={onReintentar}
           >
             {visibilidad?.ok && (
               <ul className="space-y-3">

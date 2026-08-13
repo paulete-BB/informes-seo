@@ -2,11 +2,13 @@ export default function TarjetaAnalisis({
   titulo,
   cargando,
   error,
+  onReintentar,
   children,
 }: {
   titulo: string;
   cargando?: boolean;
   error?: string;
+  onReintentar?: () => void;
   children?: React.ReactNode;
 }) {
   return (
@@ -21,9 +23,19 @@ export default function TarjetaAnalisis({
         </div>
       )}
       {!cargando && error && (
-        <p className="rounded-xl bg-zinc-50 p-4 text-base text-zinc-600">
-          No pudimos completar este análisis: {error}
-        </p>
+        <div className="rounded-xl bg-zinc-50 p-4">
+          <p className="text-base text-zinc-600">
+            No pudimos completar este análisis: {error}
+          </p>
+          {onReintentar && (
+            <button
+              onClick={onReintentar}
+              className="mt-3 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-100"
+            >
+              Reintentar
+            </button>
+          )}
+        </div>
       )}
       {!cargando && !error && children}
     </div>
