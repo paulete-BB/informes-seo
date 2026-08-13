@@ -82,8 +82,9 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
     });
   } catch (error) {
     console.error("Error en análisis CRO:", error);
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia("No pudimos analizar visualmente tu sitio. Intenta de nuevo.")
+      respuestaVacia(error instanceof Error ? error.message : String(error))
     );
   }
 
@@ -110,8 +111,9 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
   try {
     datos = extraerJson(texto) as RespuestaCRO;
   } catch {
+    // TEMPORAL: exponemos el detalle para diagnosticar, se revierte después.
     return Response.json(
-      respuestaVacia("No pudimos interpretar el resultado del análisis visual.")
+      respuestaVacia(`No pudimos interpretar el resultado: ${texto.slice(0, 500)}`)
     );
   }
 
