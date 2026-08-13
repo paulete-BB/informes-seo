@@ -107,8 +107,11 @@ export async function POST(request: Request) {
 
   // Captura más liviana: una imagen grande puede hacer que el modelo de
   // visión tarde mucho más (o se cuelgue) sin ganar precisión relevante
-  // para este análisis de primera impresión.
-  const screenshotUrl = `https://image.thum.io/get/width/600/crop/900/wait/4/${url}`;
+  // para este análisis de primera impresión. "noanimate" es clave: sin él,
+  // la primera vez que se captura una URL (sin caché en thum.io) devuelve
+  // un GIF animado cuyo primer frame es un spinner de "cargando", y el
+  // modelo de visión termina analizando ese spinner en vez del sitio real.
+  const screenshotUrl = `https://image.thum.io/get/width/600/crop/900/noanimate/wait/4/${url}`;
 
   let imagenBase64: string;
   let mediaType: string;
