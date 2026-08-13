@@ -42,6 +42,7 @@ async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Prom
 
   for (let intento = 1; intento <= 2; intento++) {
     let respuesta;
+    const t0 = Date.now();
     try {
       respuesta = await ia.models.generateContent({
         model: MODELO_VISION,
@@ -60,7 +61,10 @@ async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Prom
         },
       });
     } catch (error) {
-      console.error(`Error en análisis CRO (intento ${intento}):`, error);
+      // TEMPORAL: instrumentación de tiempos para diagnosticar, se revierte después.
+      const detalle = error instanceof Error ? error.message : String(error);
+      ultimoError = `[intento ${intento}, ${Date.now() - t0}ms] ${detalle}`;
+      console.error(`Error en análisis CRO (intento ${intento}, ${Date.now() - t0}ms):`, error);
       continue;
     }
 
