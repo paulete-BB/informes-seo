@@ -1,12 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 import * as cheerio from "cheerio";
 
-// Los alias "-latest" (incluido "-lite-latest") apuntan hoy a
-// gemini-3.6-flash, recién lanzado, cuya cuota gratis es de solo 20
-// solicitudes/día y ya la agotamos. Se fija un modelo concreto de una
-// generación anterior y establecida, con cuota gratuita muy superior.
-export const MODELO_TEXTO = "gemini-2.5-flash-lite";
-export const MODELO_VISION = "gemini-2.5-flash-lite";
+// Toda la generación 2.5 (flash y flash-lite) está bloqueada para API
+// keys nuevas ("no longer available to new users"). Los alias "-latest"
+// apuntan a gemini-3.6-flash, cuya cuota gratis (20/día) ya se agotó.
+// Se usa una variante "lite" dentro de la generación 3.x disponible, que
+// tiene su propia cuota separada de la del modelo flash principal.
+export const MODELO_TEXTO = "gemini-3.1-flash-lite";
+export const MODELO_VISION = "gemini-3.1-flash-lite";
 
 export const ia = new GoogleGenAI({});
 
