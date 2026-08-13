@@ -32,17 +32,17 @@ Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicio
 
 class ErrorAnalisisVisual extends Error {}
 
-// El modelo de visión a veces tarda más de lo esperado o devuelve un JSON
-// mal formado; se reintenta la generación completa (no solo la conexión)
-// una vez más antes de rendirse. Cada intento tiene su propio timeout, y el
-// peor caso (2 intentos agotando su timeout) todavía cabe con margen dentro
-// del maxDuration del endpoint, incluso sumando el tiempo de la captura.
+// El modelo de visión a veces tarda más de lo esperado (sobre todo con
+// capturas más pesadas) o devuelve un JSON mal formado; se reintenta la
+// generación completa (no solo la conexión) una vez más antes de rendirse.
+// Cada intento tiene su propio timeout, y el peor caso (2 intentos agotando
+// su timeout) todavía cabe con margen dentro del maxDuration del endpoint,
+// incluso sumando el tiempo de la captura.
 async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Promise<RespuestaCRO> {
   let ultimoError = "No pudimos analizar visualmente tu sitio. Intenta de nuevo.";
 
-  for (let intento = 1; intento <= 1; intento++) {
+  for (let intento = 1; intento <= 2; intento++) {
     let respuesta;
-    const t0 = Date.now();
     try {
       respuesta = await ia.models.generateContent({
         model: MODELO_VISION,
@@ -56,16 +56,12 @@ async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Prom
           },
         ],
         config: {
-          // TEMPORAL: timeout muy amplio para diagnosticar cuánto tarda realmente.
           maxOutputTokens: 3072,
-          httpOptions: { timeout: 42000, retryOptions: { attempts: 1 } },
+          httpOptions: { timeout: 20000, retryOptions: { attempts: 1 } },
         },
       });
     } catch (error) {
-      // TEMPORAL: instrumentación de tiempos para diagnosticar, se revierte después.
-      const detalle = error instanceof Error ? error.message : String(error);
-      ultimoError = `[intento ${intento}, ${Date.now() - t0}ms] ${detalle}`;
-      console.error(`Error en análisis CRO (intento ${intento}, ${Date.now() - t0}ms):`, error);
+      console.error(`Error en análisis CRO (intento ${intento}):`, error);
       continue;
     }
 
@@ -108,7 +104,10 @@ export async function POST(request: Request) {
     return Response.json(respuestaVacia("Falta la URL a analizar."));
   }
 
-  const screenshotUrl = `https://image.thum.io/get/width/900/crop/1200/wait/4/${url}`;
+  // Captura más liviana: una imagen grande puede hacer que el modelo de
+  // visión tarde mucho más (o se cuelgue) sin ganar precisión relevante
+  // para este análisis de primera impresión.
+  const screenshotUrl = `https://image.thum.io/get/width/600/crop/900/wait/4/${url}`;
 
   let imagenBase64: string;
   let mediaType: string;
