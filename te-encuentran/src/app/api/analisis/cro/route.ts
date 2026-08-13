@@ -40,7 +40,7 @@ class ErrorAnalisisVisual extends Error {}
 async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Promise<RespuestaCRO> {
   let ultimoError = "No pudimos analizar visualmente tu sitio. Intenta de nuevo.";
 
-  for (let intento = 1; intento <= 2; intento++) {
+  for (let intento = 1; intento <= 1; intento++) {
     let respuesta;
     const t0 = Date.now();
     try {
@@ -56,8 +56,9 @@ async function generarAnalisisCRO(imagenBase64: string, mediaType: string): Prom
           },
         ],
         config: {
+          // TEMPORAL: timeout muy amplio para diagnosticar cuánto tarda realmente.
           maxOutputTokens: 3072,
-          httpOptions: { timeout: 18000, retryOptions: { attempts: 1 } },
+          httpOptions: { timeout: 42000, retryOptions: { attempts: 1 } },
         },
       });
     } catch (error) {
