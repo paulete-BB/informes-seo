@@ -80,10 +80,10 @@ async function generarRazones(
   ].join("\n");
 
   const respuesta = await generarConFallback({
-    contents: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estas son las señales técnicas reales detectadas en su sitio:
+    contents: `El negocio es "${rubro}" en "${ciudad}", con sitio web ${hostname}. Estamos evaluando por qué un modelo de IA, usando solo lo que aprendió durante su entrenamiento (sin buscar en internet en tiempo real), podría no reconocer o mencionar poco a este negocio. Estas son las señales técnicas reales detectadas en su sitio:
 ${senalesTexto}
 
-Dame EXACTAMENTE 3 razones concretas y accionables, en lenguaje simple para un dueño de negocio (no técnico), de por qué la IA (ChatGPT) podría no mencionarlo o mencionarlo poco cuando alguien busca este tipo de negocio. Prioriza razones respaldadas por las señales técnicas reales de arriba. Si necesitas una tercera razón y no hay más señales técnicas confirmadas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) pero sin inventar datos específicos que no tengas.
+Dame EXACTAMENTE 3 razones concretas, en lenguaje simple para un dueño de negocio (no técnico). Una razón válida y muy común, sobre todo en negocios locales o nuevos, es que el modelo simplemente nunca tuvo información sobre este negocio durante su entrenamiento; inclúyela si aplica, aclarando que esto NO significa que asistentes de IA con búsqueda web en tiempo real (como ChatGPT navegando) no lo recomienden. Las demás razones deben estar respaldadas por las señales técnicas reales de arriba, ya que más contenido y presencia online ayuda a que futuros modelos aprendan sobre el negocio. Si te falta una tercera razón respaldada por señales técnicas, usa una causa común y razonable (poca presencia en directorios o reseñas externas) sin inventar datos específicos que no tengas.
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código:
 {"razones": ["...", "...", "..."]}`,

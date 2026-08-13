@@ -26,28 +26,37 @@ export default function EspejoIA({
           Cómo te ve la IA
         </h2>
         <p className="mt-2 max-w-2xl text-lg text-zinc-600">
-          Si ChatGPT y Claude te recomiendan cuando alguien busca lo que
-          vendes, y a quién recomiendan en tu lugar.
+          Qué tan presente está tu negocio en el conocimiento entrenado de
+          la IA cuando alguien busca lo que vendes, y a quién menciona en
+          tu lugar.
         </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <TarjetaAnalisis
-          titulo="Preguntas reales, probadas en vivo"
+          titulo="Preguntas reales, evaluadas con IA"
           cargando={cargando}
           error={error}
           onReintentar={onReintentar}
         >
           {visibilidad?.ok && (
             <>
-              <div className="mb-6 flex items-baseline gap-3">
+              <div className="mb-3 flex items-baseline gap-3">
                 <span className="text-4xl font-extrabold text-red-600">
                   {visibilidad.scoreVisibilidad}/{visibilidad.totalPreguntas}
                 </span>
                 <span className="text-base text-zinc-600">
-                  veces que la IA te mencionó al responder
+                  veces que apareciste en el conocimiento entrenado de la IA
                 </span>
               </div>
+              <p className="mb-6 text-sm text-zinc-500">
+                Esto mide el conocimiento con el que fue entrenado el
+                modelo, no una búsqueda en internet en tiempo real. Un
+                puntaje bajo no significa que asistentes de IA con
+                búsqueda web (como ChatGPT) no te recomienden — puede que
+                el modelo simplemente no tenga datos de entrenamiento
+                sobre tu negocio, algo común en negocios locales o nuevos.
+              </p>
               <ol className="space-y-3">
                 {visibilidad.preguntas.map((p, i) => (
                   <li
