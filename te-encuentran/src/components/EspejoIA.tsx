@@ -18,7 +18,7 @@ export default function EspejoIA({
 
   return (
     <section>
-      <div className="mb-6">
+      <div className="imprimir-titulo mb-6">
         <span className="text-sm font-bold uppercase tracking-wide text-marca-magenta">
           Espejo 2
         </span>
@@ -43,6 +43,7 @@ export default function EspejoIA({
           cargando={cargando}
           error={error}
           onReintentar={onReintentar}
+          partibleAlImprimir
         >
           {visibilidad?.ok && (
             <>

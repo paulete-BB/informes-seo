@@ -53,4 +53,13 @@ body {
     break-inside: avoid;
     page-break-inside: avoid;
   }
+
+  /* Evita que un título de sección quede solo al final de una página,
+     separado de su bajada o del contenido que le sigue. */
+  .imprimir-titulo {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
 }
