@@ -1,4 +1,4 @@
-import { CONFIG_ESTANDAR, generarConFallback } from "@/lib/visibilidad-ia";
+import { buscarEnTavily, CONFIG_ESTANDAR, generarConFallback } from "@/lib/visibilidad-ia";
 
 export const maxDuration = 60;
 
@@ -16,8 +16,23 @@ export async function POST(request: Request) {
   }
 
   try {
+    const resultados = await buscarEnTavily(pregunta);
+
+    const contexto =
+      resultados.length > 0
+        ? resultados
+            .map((r, i) => `${i + 1}. ${r.titulo}\n${r.contenido}\n(fuente: ${r.url})`)
+            .join("\n\n")
+        : "La búsqueda no encontró resultados relevantes para esta pregunta.";
+
     const respuesta = await generarConFallback({
-      contents: pregunta,
+      contents: `Actúa como un asistente de IA (como ChatGPT) respondiendo la pregunta de una persona real. Usa ÚNICAMENTE la siguiente información de búsqueda web reciente para responder; no inventes ni asumas negocios que no aparezcan en estos resultados:
+
+${contexto}
+
+Pregunta de la persona: "${pregunta}"
+
+Responde de forma natural y útil, como lo haría un asistente de IA, mencionando negocios específicos solo si aparecen respaldados por los resultados de arriba.`,
       config: CONFIG_ESTANDAR,
     });
 
