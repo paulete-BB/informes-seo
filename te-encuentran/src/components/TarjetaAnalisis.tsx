@@ -22,7 +22,7 @@ export default function TarjetaAnalisis({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+    <div className="imprimir-bloque rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-xl font-semibold text-zinc-900 sm:text-2xl">{titulo}</h3>
         {typeof puntaje === "number" && !cargando && !error && (

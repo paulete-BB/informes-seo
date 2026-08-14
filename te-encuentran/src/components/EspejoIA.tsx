@@ -66,7 +66,7 @@ export default function EspejoIA({
                 {visibilidad.preguntas.map((p, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-3"
+                    className="imprimir-bloque flex items-start gap-3 rounded-xl border border-zinc-100 bg-zinc-50 p-3"
                   >
                     <span
                       className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold ${
@@ -102,7 +102,7 @@ export default function EspejoIA({
             {visibilidad?.ok && (
               <ul className="space-y-4">
                 {visibilidad.competidores.map((c) => (
-                  <li key={c.nombre}>
+                  <li key={c.nombre} className="imprimir-bloque">
                     <div className="mb-1 flex items-center justify-between">
                       <span className="text-base font-semibold text-zinc-800">
                         {c.nombre}
@@ -139,7 +139,7 @@ export default function EspejoIA({
             {visibilidad?.ok && (
               <ul className="space-y-3">
                 {visibilidad.porQueNoTeMencionan.map((razon, i) => (
-                  <li key={i} className="text-base text-zinc-600">
+                  <li key={i} className="imprimir-bloque text-base text-zinc-600">
                     <span className="font-bold text-zinc-800">{i + 1}. </span>
                     {razon}
                   </li>
