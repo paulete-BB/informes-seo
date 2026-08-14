@@ -112,7 +112,7 @@ export default function Home() {
       const resPreguntas = await fetch("/api/analisis/visibilidad-ia/preguntas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rubro: datos.rubro, ciudad: datos.ciudad }),
+        body: JSON.stringify({ url: datos.url, rubro: datos.rubro, ciudad: datos.ciudad }),
       });
       const datosPreguntas = await resPreguntas.json();
       const preguntas: string[] = datosPreguntas.preguntas ?? [];
