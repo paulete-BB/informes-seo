@@ -201,7 +201,7 @@ export default function Home() {
   const puntajeGeneral = puntajesSecciones.length > 0 ? promedio(puntajesSecciones) : null;
 
   return (
-    <main className="min-h-screen bg-marca-blanco pb-24">
+    <main className="min-h-screen bg-marca-blanco pb-24 print:pb-0">
       <header className="border-b border-zinc-200 bg-white px-6 py-8 sm:py-10">
         <div className="mx-auto max-w-5xl">
           <Image
@@ -229,7 +229,7 @@ export default function Home() {
 
         {datosEnviados && (
           <div className="space-y-16">
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-6">
+            <div className="imprimir-bloque flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-6">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
                   Informe para

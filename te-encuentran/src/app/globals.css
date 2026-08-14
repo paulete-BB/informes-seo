@@ -35,3 +35,22 @@ body {
     var(--color-marca-naranja)
   );
 }
+
+/* El navegador no respeta los bordes de las tarjetas al paginar la
+   impresión y las corta a la mitad; .imprimir-bloque evita que un bloque
+   quede partido entre dos páginas del PDF. */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .imprimir-bloque {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

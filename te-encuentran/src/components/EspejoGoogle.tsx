@@ -61,7 +61,7 @@ export default function EspejoGoogle({
           {hallazgosOrdenados.map((h) => (
             <div
               key={h.id}
-              className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-4"
+              className="imprimir-bloque flex flex-col gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-4"
             >
               <span className="text-sm font-bold text-zinc-800">
                 {h.titulo}
@@ -96,7 +96,7 @@ export default function EspejoGoogle({
               </div>
               <ul className="space-y-4">
                 {pagespeed.metricas.map((m) => (
-                  <li key={m.id} className="flex flex-col gap-2">
+                  <li key={m.id} className="imprimir-bloque flex flex-col gap-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="text-base font-semibold text-zinc-800">
                         {m.nombre}{" "}
@@ -124,7 +124,7 @@ export default function EspejoGoogle({
           {cro?.ok && (
             <div className="space-y-5">
               {cro.dimensiones.map((d) => (
-                <div key={d.nombre}>
+                <div key={d.nombre} className="imprimir-bloque">
                   <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
                     <span className="text-base font-semibold text-zinc-800">
                       {d.nombre}
