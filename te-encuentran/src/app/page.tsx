@@ -201,7 +201,7 @@ export default function Home() {
   const puntajeGeneral = puntajesSecciones.length > 0 ? promedio(puntajesSecciones) : null;
 
   return (
-    <main className="min-h-screen bg-marca-blanco pb-24 print:pb-0">
+    <main className="min-h-screen bg-marca-blanco pb-24 print:min-h-0 print:pb-0">
       <header className="border-b border-zinc-200 bg-white px-6 py-8 sm:py-10">
         <div className="mx-auto max-w-5xl">
           <Image
