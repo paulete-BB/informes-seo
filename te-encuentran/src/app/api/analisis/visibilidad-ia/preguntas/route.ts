@@ -4,10 +4,10 @@ import { CONFIG_RAPIDA, extraerJson, fetchConTimeout, generarConFallback } from 
 export const maxDuration = 30;
 
 // Sin esto, las preguntas solo se basan en el rubro genérico que escribió
-// la persona en el formulario (ej. "agencia de marketing"), y salen
-// preguntas de manual en vez de preguntas específicas a lo que el negocio
-// realmente ofrece. Con el título y la descripción de su propio sitio, el
-// modelo puede afinar mucho más las preguntas.
+// la persona en el formulario (ej. "agencia de marketing"), sin nada del
+// negocio real. Con el título y la descripción de su propio sitio, las
+// 2 preguntas de variedad pueden ser algo más específicas sin volverse
+// escenarios complejos.
 async function obtenerContextoSitio(url: string): Promise<string | null> {
   try {
     const res = await fetchConTimeout(url, 8000);
@@ -38,44 +38,48 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "Faltan datos para generar las preguntas.", preguntas: [] });
   }
 
+  // Preguntas directas garantizadas: llevan a la IA a listar negocios del
+  // rubro, que es justo lo que se necesita para detectar si el negocio
+  // aparece o no. No dependen de que el modelo las redacte bien.
+  const preguntasBase = [
+    `¿Cuáles son las mejores opciones de ${rubro} en ${ciudad}?`,
+    `¿Qué ${rubro} me recomiendas en ${ciudad}?`,
+    `Recomiéndame algunas empresas de ${rubro} en ${ciudad}.`,
+  ];
+
   const contextoSitio = url ? await obtenerContextoSitio(url) : null;
 
+  let preguntasVariedad: string[] = [];
   try {
     const respuesta = await generarConFallback({
-      contents: `Genera exactamente 5 preguntas realistas y específicas que una persona de verdad le escribiría a ChatGPT cuando está buscando "${rubro}" en "${ciudad}". No nombres ningún negocio específico.
+      contents: `Genera exactamente 2 preguntas cortas y simples que una persona real le escribiría a ChatGPT buscando "${rubro}" en "${ciudad}", pidiendo directamente una recomendación o lista de negocios. No nombres ningún negocio específico.
 ${
   contextoSitio
-    ? `\nEsto es lo que el negocio dice de sí mismo en su propio sitio web. Úsalo para que las preguntas apunten a lo que realmente ofrece, no preguntas genéricas del rubro:\n${contextoSitio}\n`
+    ? `\nEsto es lo que el negocio dice de sí mismo en su propio sitio, úsalo solo como inspiración leve para que no sean idénticas a preguntas genéricas de rubro, sin volverlas complejas:\n${contextoSitio}\n`
     : ""
 }
-Mezcla estos tipos de intención, sin repetir el mismo ángulo dos veces:
-- Descubrimiento: "¿dónde puedo encontrar...?"
-- Comparación: "¿cuál es mejor...?"
-- Recomendación directa: "recomiéndame..."
-- Con un problema concreto: "se me rompió X, ¿qué hago?"
-
-Prioriza calidad sobre cantidad: cada pregunta debe sonar como la escribiría una persona real con una necesidad concreta y específica a este tipo de negocio, no una pregunta genérica de buscador.
+Reglas importantes:
+- Deben sonar como algo que alguien escribe rápido en el chat, no un párrafo largo con un escenario detallado.
+- El objetivo de la pregunta debe ser conseguir nombres de negocios (recomendación, comparación, o "dónde encuentro"), no un consejo genérico.
+- Evita preguntas tan específicas o de nicho que la IA no pueda responder con una lista de negocios reales.
 
 Responde ÚNICAMENTE con un JSON válido con esta forma exacta, sin texto adicional ni bloques de código: {"preguntas": ["...", "..."]}`,
       config: CONFIG_RAPIDA,
     });
 
     const texto = respuesta.text;
-    if (!texto) {
-      return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });
+    if (texto) {
+      const datos = extraerJson(texto) as { preguntas?: unknown };
+      if (Array.isArray(datos.preguntas)) {
+        preguntasVariedad = datos.preguntas.filter((p): p is string => typeof p === "string");
+      }
     }
-    const datos = extraerJson(texto) as { preguntas?: unknown };
-    const preguntas = Array.isArray(datos.preguntas) ? datos.preguntas : [];
-    if (preguntas.length === 0) {
-      return Response.json({ ok: false, error: "No pudimos generar las preguntas.", preguntas: [] });
-    }
-    return Response.json({ ok: true, preguntas });
   } catch (error) {
-    console.error("Error generando preguntas de visibilidad IA:", error);
-    return Response.json({
-      ok: false,
-      error: "No pudimos generar las preguntas de prueba.",
-      preguntas: [],
-    });
+    console.error("Error generando preguntas de variedad:", error);
+    // Seguimos solo con las preguntas base; no es un fallo crítico.
   }
+
+  const preguntas = [...preguntasBase, ...preguntasVariedad].slice(0, 5);
+
+  return Response.json({ ok: true, preguntas });
 }
