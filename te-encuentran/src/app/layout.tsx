@@ -24,9 +24,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${montserratAlternates.variable} ${roboto.variable} h-full antialiased`}
+      className={`${montserratAlternates.variable} ${roboto.variable} h-full antialiased print:h-auto`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col print:min-h-0">
         <div className="barra-marca h-1.5 w-full" />
         {children}
       </body>
