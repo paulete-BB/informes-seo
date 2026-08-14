@@ -12,6 +12,7 @@ export default function TarjetaAnalisis({
   cargando,
   error,
   onReintentar,
+  partibleAlImprimir,
   children,
 }: {
   titulo: string;
@@ -19,10 +20,17 @@ export default function TarjetaAnalisis({
   cargando?: boolean;
   error?: string;
   onReintentar?: () => void;
+  /** Tarjetas muy largas (ej. listas de 10 preguntas) no caben enteras en
+   * una página al imprimir. En vez de forzarlas completas (lo que deja a
+   * veces una página casi en blanco), se permite partirlas; cada ítem
+   * interno ya se protege por separado con su propio "imprimir-bloque". */
+  partibleAlImprimir?: boolean;
   children?: React.ReactNode;
 }) {
   return (
-    <div className="imprimir-bloque rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+    <div
+      className={`${partibleAlImprimir ? "" : "imprimir-bloque"} rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8`}
+    >
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="text-xl font-semibold text-zinc-900 sm:text-2xl">{titulo}</h3>
         {typeof puntaje === "number" && !cargando && !error && (
