@@ -51,17 +51,56 @@ export function extraerJson(texto: string): unknown {
   return JSON.parse(limpio);
 }
 
-export async function fetchConTimeout(url: string, timeoutMs: number): Promise<Response> {
+export async function fetchConTimeout(url: string, timeoutMs: number, init?: RequestInit): Promise<Response> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(url, {
+      ...init,
       signal: controller.signal,
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; TeEncuentranBot/1.0)" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; TeEncuentranBot/1.0)", ...init?.headers },
     });
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export interface ResultadoBusqueda {
+  titulo: string;
+  url: string;
+  contenido: string;
+}
+
+// Búsqueda web real (Tavily, gratis hasta 1000 búsquedas/mes sin tarjeta).
+// Esto es lo que le da a "buscar" datos actuales de internet en vez de
+// depender solo del conocimiento entrenado de Gemini.
+export async function buscarEnTavily(pregunta: string): Promise<ResultadoBusqueda[]> {
+  const apiKey = process.env.TAVILY_API_KEY;
+  if (!apiKey) {
+    throw new Error("Falta configurar TAVILY_API_KEY.");
+  }
+
+  const res = await fetchConTimeout("https://api.tavily.com/search", 12000, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({ query: pregunta, search_depth: "basic", max_results: 5 }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Tavily respondió con error ${res.status}`);
+  }
+
+  const datos = await res.json();
+  const resultados: unknown = datos?.results;
+  if (!Array.isArray(resultados)) return [];
+
+  return resultados
+    .filter((r): r is { title?: string; url?: string; content?: string } => typeof r === "object" && r !== null)
+    .map((r) => ({
+      titulo: typeof r.title === "string" ? r.title : "",
+      url: typeof r.url === "string" ? r.url : "",
+      contenido: typeof r.content === "string" ? r.content : "",
+    }));
 }
 
 export function dominioRaiz(url: string): { hostname: string; raiz: string } {
