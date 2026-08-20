@@ -3,6 +3,7 @@ import {
   AnalisisCRO,
   AnalisisPageSpeed,
   AnalisisTecnico,
+  AnalisisVisibilidadIA,
   EstadoSemaforo,
   PlanAccionCRO,
   TareaPlanAccion,
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
     tecnico?: AnalisisTecnico;
     pagespeed?: AnalisisPageSpeed;
     cro?: AnalisisCRO;
+    visibilidadIA?: AnalisisVisibilidadIA;
   };
   try {
     body = await request.json();
@@ -37,8 +39,8 @@ export async function POST(request: Request) {
     return Response.json(respuestaVacia("Solicitud inválida."));
   }
 
-  const { tecnico, pagespeed, cro } = body;
-  if (!tecnico?.ok && !pagespeed?.ok && !cro?.ok) {
+  const { tecnico, pagespeed, cro, visibilidadIA } = body;
+  if (!tecnico?.ok && !pagespeed?.ok && !cro?.ok && !visibilidadIA?.ok) {
     return Response.json(respuestaVacia("No hay suficientes datos para armar un plan de acción."));
   }
 
@@ -69,9 +71,23 @@ export async function POST(request: Request) {
     );
   }
 
+  if (visibilidadIA?.ok) {
+    bloques.push(
+      `Visibilidad en IA: aparece en ${visibilidadIA.scoreVisibilidad} de ${visibilidadIA.totalPreguntas} preguntas probadas.\n` +
+        (visibilidadIA.porQueNoTeMencionan.length > 0
+          ? `Razones por las que no lo mencionan:\n- ${visibilidadIA.porQueNoTeMencionan.join("\n- ")}\n`
+          : "") +
+        (visibilidadIA.competidores.length > 0
+          ? `Competidores que la IA recomienda en su lugar: ${visibilidadIA.competidores
+              .map((c) => `${c.nombre} (${c.vecesMencionado} veces)`)
+              .join(", ")}.`
+          : "")
+    );
+  }
+
   try {
     const respuesta = await generarConFallback({
-      contents: `Eres un consultor CRO que le va a armar una cotización de trabajo a un cliente. Con estos hallazgos técnicos, de velocidad y visuales de su sitio web, genera entre 5 y 8 tareas concretas de optimización, priorizadas por impacto sobre esfuerzo.
+      contents: `Eres un consultor CRO que le va a armar una cotización de trabajo a un cliente. Con estos hallazgos técnicos, de velocidad, visuales y de visibilidad en inteligencia artificial de su sitio web, genera entre 5 y 8 tareas concretas de optimización, priorizadas por impacto sobre esfuerzo. Si hay hallazgos de visibilidad en IA, incluye al menos una tarea que apunte directamente a eso (por ejemplo datos estructurados, presencia en directorios, o contenido que la IA pueda citar).
 
 ${bloques.join("\n\n")}
 

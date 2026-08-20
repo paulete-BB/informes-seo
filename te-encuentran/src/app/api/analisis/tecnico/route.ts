@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { AnalisisTecnico, EstadoSemaforo, Hallazgo } from "@/lib/tipos";
+import { AnalisisTecnico, EstadoSemaforo, Hallazgo, Plataforma } from "@/lib/tipos";
 
 export const maxDuration = 60;
 
@@ -325,7 +325,90 @@ function revisarConfianza(html: string): Hallazgo {
 }
 
 function respuestaVacia(error: string): AnalisisTecnico {
-  return { ok: false, error, score: 0, hallazgos: [] };
+  return { ok: false, error, score: 0, hallazgos: [], plataforma: null };
+}
+
+// Firmas de plataformas conocidas: se revisan en orden porque algunas
+// (Next.js, por ejemplo) son un indicio genérico que solo debería ganar
+// si no hay una plataforma de arriendo más específica antes.
+const FIRMAS_PLATAFORMA: Array<{
+  nombre: string;
+  detalle: string;
+  test: (html: string, headers: Headers) => boolean;
+}> = [
+  {
+    nombre: "WordPress",
+    detalle: "Detectado por rutas propias de WordPress (wp-content, wp-json) o su etiqueta de generador.",
+    test: (html) => /wp-content|wp-includes|\/wp-json\//i.test(html) || /generator["'][^>]*wordpress/i.test(html),
+  },
+  {
+    nombre: "Shopify",
+    detalle: "Detectado por scripts y dominios propios de Shopify.",
+    test: (html, headers) =>
+      /cdn\.shopify\.com|myshopify\.com|Shopify\.theme/i.test(html) || Boolean(headers.get("x-shopid")),
+  },
+  {
+    nombre: "Wix",
+    detalle: "Detectado por scripts propios de Wix o su cabecera de servidor.",
+    test: (html, headers) =>
+      /static\.wixstatic\.com|parastorage\.com/i.test(html) ||
+      /wix/i.test(headers.get("x-wix-request-id") ?? "") ||
+      /wix/i.test(headers.get("server") ?? ""),
+  },
+  {
+    nombre: "Squarespace",
+    detalle: "Detectado por dominios de recursos propios de Squarespace.",
+    test: (html) => /squarespace\.com|static1\.squarespace\.com/i.test(html),
+  },
+  {
+    nombre: "Webflow",
+    detalle: "Detectado por el atributo data-wf-site propio de Webflow.",
+    test: (html) => /data-wf-site|assets\.website-files\.com/i.test(html),
+  },
+  {
+    nombre: "Tienda Nube / Nuvemshop",
+    detalle: "Detectado por scripts propios de Tienda Nube.",
+    test: (html) => /tiendanube\.com|nuvemshop/i.test(html),
+  },
+  {
+    nombre: "Jimdo",
+    detalle: "Detectado por dominios propios de Jimdo.",
+    test: (html) => /jimdo\.com/i.test(html),
+  },
+  {
+    nombre: "Joomla",
+    detalle: "Detectado por su etiqueta de generador.",
+    test: (html) => /generator["'][^>]*joomla/i.test(html),
+  },
+  {
+    nombre: "Drupal",
+    detalle: "Detectado por su etiqueta de generador o rutas propias de Drupal.",
+    test: (html) => /generator["'][^>]*drupal/i.test(html) || /sites\/default\/files/i.test(html),
+  },
+  {
+    nombre: "Magento",
+    detalle: "Detectado por scripts propios de Magento.",
+    test: (html) => /Mage\.Cookies|\/static\/version\d+\/frontend/i.test(html),
+  },
+  {
+    nombre: "PrestaShop",
+    detalle: "Detectado por su etiqueta de generador.",
+    test: (html) => /generator["'][^>]*prestashop/i.test(html),
+  },
+  {
+    nombre: "Next.js (desarrollo a medida)",
+    detalle: "Detectado por el bundle de Next.js (_next/static). No es una plataforma de arriendo, es un sitio construido a medida.",
+    test: (html) => /_next\/static|__NEXT_DATA__/i.test(html),
+  },
+];
+
+function detectarPlataforma(html: string, headers: Headers): Plataforma | null {
+  for (const firma of FIRMAS_PLATAFORMA) {
+    if (firma.test(html, headers)) {
+      return { nombre: firma.nombre, detalle: firma.detalle };
+    }
+  }
+  return null;
 }
 
 const PESO_ESTADO: Record<EstadoSemaforo, number> = { ok: 100, alerta: 50, critico: 0 };
@@ -356,6 +439,7 @@ export async function POST(request: Request) {
   }
 
   let html: string;
+  let headers: Headers;
   try {
     const res = await fetchConTimeout(url, 10000);
     if (!res.ok) {
@@ -363,6 +447,7 @@ export async function POST(request: Request) {
         respuestaVacia(`Tu sitio respondió con un error (código ${res.status}). Revisa que la URL esté bien escrita.`)
       );
     }
+    headers = res.headers;
     html = await res.text();
   } catch {
     return Response.json(
@@ -370,6 +455,7 @@ export async function POST(request: Request) {
     );
   }
 
+  const plataforma = detectarPlataforma(html, headers);
   const $ = cheerio.load(html);
 
   const [robots, sitemap, llms] = await Promise.all([
@@ -389,6 +475,6 @@ export async function POST(request: Request) {
     revisarConfianza(html),
   ];
 
-  const resultado: AnalisisTecnico = { ok: true, score: calcularScore(hallazgos), hallazgos };
+  const resultado: AnalisisTecnico = { ok: true, score: calcularScore(hallazgos), hallazgos, plataforma };
   return Response.json(resultado);
 }
