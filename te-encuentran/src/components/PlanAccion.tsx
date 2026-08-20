@@ -5,6 +5,7 @@ import {
   AnalisisCRO,
   AnalisisPageSpeed,
   AnalisisTecnico,
+  AnalisisVisibilidadIA,
   PlanAccionCRO,
 } from "@/lib/tipos";
 import Semaforo from "./Semaforo";
@@ -22,17 +23,19 @@ export default function PlanAccion({
   tecnico,
   pagespeed,
   cro,
+  visibilidadIA,
 }: {
   tecnico: AnalisisTecnico | null;
   pagespeed: AnalisisPageSpeed | null;
   cro: AnalisisCRO | null;
+  visibilidadIA: AnalisisVisibilidadIA | null;
 }) {
   const [expandido, setExpandido] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [plan, setPlan] = useState<PlanAccionCRO | null>(null);
   const [copiado, setCopiado] = useState(false);
 
-  const hayDatos = Boolean(tecnico?.ok || pagespeed?.ok || cro?.ok);
+  const hayDatos = Boolean(tecnico?.ok || pagespeed?.ok || cro?.ok || visibilidadIA?.ok);
 
   async function generarPlan() {
     setCargando(true);
@@ -40,7 +43,7 @@ export default function PlanAccion({
       const res = await fetch("/api/analisis/plan-accion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tecnico, pagespeed, cro }),
+        body: JSON.stringify({ tecnico, pagespeed, cro, visibilidadIA }),
       });
       setPlan(await res.json());
     } catch {

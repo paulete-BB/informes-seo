@@ -285,7 +285,7 @@ export default function Home() {
             />
 
             <div className="print:hidden">
-              <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} />
+              <PlanAccion tecnico={tecnico} pagespeed={pagespeed} cro={cro} visibilidadIA={visibilidadIA} />
             </div>
           </div>
         )}

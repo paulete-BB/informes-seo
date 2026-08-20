@@ -10,11 +10,17 @@ export interface Hallazgo {
   explicacion: string;
 }
 
+export interface Plataforma {
+  nombre: string;
+  detalle: string;
+}
+
 export interface AnalisisTecnico {
   ok: boolean;
   error?: string;
   score: number;
   hallazgos: Hallazgo[];
+  plataforma?: Plataforma | null;
 }
 
 export interface MetricaPageSpeed {
